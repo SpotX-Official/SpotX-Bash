@@ -1,5 +1,5 @@
   <p align="center">
-  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/.github/Pic/banner-logo.png" />
+  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/.github/images/banner-logo.png" />
 </p>
 
 <p align="center">        
