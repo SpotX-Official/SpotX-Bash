@@ -1,0 +1,99 @@
+name: ❌ Bug report
+description: Report errors or unexpected behavior
+labels: ❌ bug
+body:
+- type: checkboxes
+  attributes:
+      label: 🧐 Have you fully read the README and viewed similar issues?
+      description: Please read the <a href="https://github.com/jetfir3/SpotX-Bash/blob/main/README.md">README</a>. Also check the open and closed <a href="https://github.com/jetfir3/SpotX-Bash/issues">issue</a> because your issue may have already been fixed.
+      options:
+        - label: I have read the README
+          required: true
+        - label: I have checked older issues, open and closed
+          required: true
+        - label: I did a clean install of Spotify and SpotX-Bash
+          required: true
+- type: markdown
+  attributes:
+    value: "###"    
+- type: input
+  id: lang_spoti
+  attributes:
+    label: Сountry of your account
+    description: You can view your country on your account page, in paragraph <a href="https://www.spotify.com/account/">Country or region</a>.
+    placeholder: "e.g. Ukraine"
+  validations:
+    required: true 
+- type: markdown
+  attributes:
+    value: "###"     
+- type: dropdown
+  id: plan
+  attributes:
+    label: What is your Spotify Plan?
+    description: You can view your plan on your account page, under <a href="https://www.spotify.com/account/">Your plan</a>.
+    options:
+      - Free
+      - Premium
+  validations:
+    required: true
+- type: markdown
+  attributes:
+    value: "###"        
+- type: dropdown
+  id: spicetify
+  attributes:
+    label: Do you have Spicetify installed?
+    description: <a href="https://spicetify.app/">Spicetify</a> is a command line tool to customize Spotify client.
+    options:
+      - "Yes"
+      - "No"
+  validations:
+    required: true
+- type: markdown
+  attributes:
+    value: "###"       
+- type: textarea
+  attributes:
+    label: ℹ Computer information
+    description: |
+      - Spotify version: e.g. <kbd>Spotify for macOS (Apple Silicon) 1.1.98.683</kbd>
+      - OS: e.g. <kbd>macOS Ventura 13.1</kbd> or <kbd>Ubuntu 22.04.1 LTS</kbd>
+      - Shell: e.g. <kbd>bash</kbd>
+        - macOS: View the top bar in the Terminal window -- it should display bash, zsh, etc
+        - Linux: Enter the following command in your terminal window: `echo $0` -- it should display bash, zsh, etc
+    placeholder: |
+        - Spotify version: 
+        - OS: 
+        - Shell:  
+    value: |
+        - Spotify version: 
+        - OS: 
+        - Shell: 
+    render: markdown   
+  validations:
+    required: true    
+- type: textarea
+  attributes:
+    label: 📝 Description
+    description: List steps to reproduce the error and details on what happens and what you expected to happen.
+    value: |
+      1.
+      2.
+      3.
+      ...
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 🖥️ Terminal Input/Output
+    description: Copy input/output from Terminal -- the SpotX-Bash command you entered and everything that followed.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 📸 Screenshots
+    description: Place any screenshots of the issue here if needed
+  validations:
+    required: false    
+    
