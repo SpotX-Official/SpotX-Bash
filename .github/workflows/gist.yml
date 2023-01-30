@@ -1,0 +1,25 @@
+name: The Gist Of It
+on: [workflow_dispatch]
+
+jobs:
+  update-last-updated:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy spotx.sh
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+         token: ${{ secrets.TOKEN }}
+         gist_id: ${{ secrets.GID }}
+         file_path: spotx.sh
+         file_type: text
+
+      - uses: actions/checkout@v3
+      - name: Deploy README.md
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+         token: ${{ secrets.TOKEN }}
+         gist_id: ${{ secrets.GID }}
+         file_path: README.md
+         file_type: text
