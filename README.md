@@ -1,5 +1,5 @@
   <p align="center">
-  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/.github/images/banner-logo.png" />
+  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/.github/Pic/banner-logo.png" />
 </p>
 
 <p align="center">        
@@ -44,12 +44,12 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 `-u`        : block Spotify updates (macOS only)  
 `-U`        : uninstall SpotX  
 
-`--disablemadeforyou`
-`--disableleftsidebar`
-`--disablerightsidebar`
-`--disablesidebarcolors`
-`--disablesidebarlyrics`
-`--installspotify` (macOS only)
+`--disablemadeforyou`  
+`--disableleftsidebar`  
+`--disablerightsidebar`  
+`--disablesidebarcolors`  
+`--disablesidebarlyrics`  
+`--installspotify` (macOS only)  
 
 Example usage -- clearing app cache, blocking updates and disabling right sidebar colors:
 ```
