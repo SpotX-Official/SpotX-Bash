@@ -25,7 +25,7 @@
 
 ### Install:
 
-- Run The following command in Terminal:
+- Run the following command in Terminal:
 ```
 bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx.sh)
 ```
