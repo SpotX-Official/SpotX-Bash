@@ -60,7 +60,6 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/insta
 - Supports desktop client v1.1.84.716+
 - Snap installs on Linux are not supported
 - SpotX-Bash must be run prior to setting up Spicetify
-- Features such as audio quality, downloading/offline playback, etc are determined by account type (Free/Premium)
 
 ### Credits
 

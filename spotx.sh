@@ -292,6 +292,7 @@ if [[ "${INTERACTIVE_FLAG}" == "true" ]]; then
 
 if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
   if [[ "${INSTALLSPOTIFY_OPT}" == "true" ]]; then
+    curl -f -I -s -o /dev/null $GRAB2 || { echo -e "\n${RED}Error:${CLEAR} Spotify download failed. Exiting...\n"; exit 1; }
     curl -# -f -o ${HOME}/Downloads/spotify-$SXB_VERSION $GRAB2 || { echo -e "\n${RED}Error:${CLEAR} Spotify download failed. Exiting...\n"; exit 1; }
     perl -e 'print "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"'
     rm -rf "${APP_PATH}" 2>/dev/null
