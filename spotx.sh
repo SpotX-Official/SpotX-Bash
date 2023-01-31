@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SXB_VERSION="1.2.4.905"
+SXB_VERSION="1.2.4.907"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) PLATFORM_TYPE='macOS' ;;
@@ -11,7 +11,7 @@ CLEAR='\033[0m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
-BD86="LmdhZjNiMWU2NC0xMDIudGJ6"
+BD86="LmcxMjY0NTFkNS0xMzQudGJ6"
 BD64="${BD86}"
 
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
@@ -297,7 +297,7 @@ if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
     rm -rf "${APP_PATH}" 2>/dev/null
     mkdir "${APP_PATH}"
     tar -xpjf ~/Downloads/spotify-$SXB_VERSION -C "${APP_PATH}" || { echo -e "\n${RED}Error:${CLEAR} Spotify install failed. Exiting...\n"; rm ${HOME}/Downloads/spotify-$SXB_VERSION 2>/dev/null; exit 1; }
-    perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x61\x74\x69\x6F\x6E\n"'
+    perl -e 'print "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'${INSTALL_PATH}'\n"'
     rm ${HOME}/Downloads/spotify-$SXB_VERSION
     CLIENT_VERSION="${SXB_VERSION}"
   else

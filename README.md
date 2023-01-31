@@ -11,7 +11,7 @@
 <center>
     <h4 align="center">Adblock for Spotify clients on Linux & macOS</h4>
     <p align="center">
-        <strong>Lastest supported version:</strong> 1.2.4.905
+        <strong>Lastest supported version:</strong> 1.2.4.907
     </p> 
 </center>
 
@@ -33,23 +33,22 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 
 #### Optional Arguments:
 `-c`        : clear Spotify app cache  
+`--disablemadeforyou`  
+`--disableleftsidebar`  
+`--disablerightsidebar`  
+`--disablesidebarcolors`  
+`--disablesidebarlyrics`  
 `-e`        : exclude all experimental features  
 `-f`        : force SpotX to run  
 `-h`        : print help message (also --help)  
 `-i`        : enable interactive mode  
+`--installspotify` (macOS only)  
 `-o`        : use old home screen UI  
 `-p`        : set if paid premium-tier subscriber  
 `-P [path]` : set path to Spotify  
 `-r`        : remove non-music categories on home screen  
 `-u`        : block Spotify updates (macOS only)  
 `-U`        : uninstall SpotX  
-
-`--disablemadeforyou`  
-`--disableleftsidebar`  
-`--disablerightsidebar`  
-`--disablesidebarcolors`  
-`--disablesidebarlyrics`  
-`--installspotify` (macOS only)  
 
 Example usage -- clearing app cache, blocking updates and disabling right sidebar colors:
 ```
