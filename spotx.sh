@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SXB_VERSION="1.2.4.907"
+SXB_VERSION="1.2.4.912"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) PLATFORM_TYPE='macOS' ;;
@@ -11,7 +11,7 @@ CLEAR='\033[0m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
-BD86="LmcxMjY0NTFkNS0xMzQudGJ6"
+BD86="Lmc5NDlkNWZkMC0yNjcudGJ6"
 BD64="${BD86}"
 
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
