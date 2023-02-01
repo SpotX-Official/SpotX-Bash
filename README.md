@@ -23,7 +23,7 @@
 - Enables [experimental features](https://github.com/SpotX-CLI/SpotX-Win/discussions/50) (optional)
 - Removes audiobooks, episodes & podcasts on home screen (optional)
 
-### Install:
+### Usage:
 
 - Run the following command in terminal:
 ```
@@ -31,7 +31,6 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 ```
 - Default setup enables all supported experimental features and enables new UI
 
-#### Optional Arguments:
 | Argument | Description |
 | --- | --- |
 | `-c` | Clear Spotify app cache |  
