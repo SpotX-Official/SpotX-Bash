@@ -34,7 +34,7 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 #### Optional Arguments:
 | Argument | Description |
 | --- | --- |
-| `-c` | clear Spotify app cache |  
+| `-c` | Clear Spotify app cache |  
 | `--disableleftsidebar` | Disable experimental left sidebar |  
 | `--disablemadeforyou` | Disable 'Made for You'
 | `--disablerightsidebar` | Disable experimental right sidebar |
