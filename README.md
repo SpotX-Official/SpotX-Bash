@@ -32,23 +32,25 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 - Default setup enables all supported experimental features and enables new UI
 
 #### Optional Arguments:
-`-c`        : clear Spotify app cache  
-`--disableleftsidebar`  
-`--disablemadeforyou`  
-`--disablerightsidebar`  
-`--disablesidebarcolors`  
-`--disablesidebarlyrics`  
-`-e`        : exclude all experimental features  
-`-f`        : force SpotX to run  
-`-h`        : print help message (also --help)  
-`-i`        : enable interactive mode  
-`--installspotify` (macOS only)  
-`-o`        : use old home screen UI  
-`-p`        : set if paid premium-tier subscriber  
-`-P [path]` : set path to Spotify  
-`-r`        : remove non-music categories on home screen  
-`-u`        : block Spotify updates (macOS only)  
-`-U`        : uninstall SpotX  
+| Argument | Description |
+| --- | --- |
+| `-c` | clear Spotify app cache |  
+| `--disableleftsidebar` | Disable experimental left sidebar |  
+| `--disablemadeforyou` | Disable 'Made for You'
+| `--disablerightsidebar` | Disable experimental right sidebar |
+| `--disablesidebarcolors` | Disable colors in experimental sidebar |
+| `--disablesidebarlyrics` | Disable lyrics in experimental sidebar |  
+| `-e` | Exclude all experimental features |  
+| `-f` | Force SpotX to run | 
+| `-h` | Print help message (also --help) |
+| `-i` | Enable interactive mode |  
+| `--installspotify` | Install latest supported Spotify (macOS only) |  
+| `-o` | Use old home screen UI | 
+| `-p` | Set if paid premium-tier subscriber | 
+|`-P [path]` | Set path to Spotify |
+|`-r` | Remove non-music categories on home screen |
+|`-u` | Block Spotify updates (macOS only) |
+|`-U` | Uninstall SpotX |
 
 Example usage -- clearing app cache, blocking updates and disabling right sidebar colors:
 ```
