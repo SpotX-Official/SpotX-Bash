@@ -461,7 +461,7 @@ if [[ "${XPUI_SKIP}" == "false" ]]; then
 
 if [[ "${XPUI_SKIP}" == "false" ]]; then
   if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
-    codesign -f -s - "{$APP_BINARY}"
+    codesign -f -s - "${APP_BINARY}"
     xattr -cr "${APP_PATH}"
     perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; fi; fi
 
