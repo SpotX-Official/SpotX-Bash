@@ -14,6 +14,7 @@ YELLOW='\033[0;33m'
 BD86="Lmc5NDlkNWZkMC0yNjcudGJ6"
 BD64="${BD86}"
 
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall commandline tools with the following command in terminal then try again. Exiting...\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v unzip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} unzip command not found.\nInstall unzip on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v zip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} zip command not found.\nInstall zip on your system then try again. Exiting...\n" >&2; exit 1; }
@@ -457,6 +458,12 @@ if [[ "${XPUI_SKIP}" == "false" ]]; then
 if [[ "${XPUI_SKIP}" == "false" ]]; then
   (cd "${XPUI_DIR}"; zip -qq -r ../xpui.spa .)
   rm -rf "${XPUI_DIR}"; fi
+
+if [[ "${XPUI_SKIP}" == "false" ]]; then
+  if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
+    codesign -f -s - "{$APP_BINARY}"
+    xattr -cr "${APP_PATH}"
+    perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; fi; fi
 
 perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"'
 exit
