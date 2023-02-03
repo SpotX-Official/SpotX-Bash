@@ -11,13 +11,8 @@ CLEAR='\033[0m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
-BD86="Lmc5NDlkNWZkMC0yNjcudGJ6"
+BD86="6JGducjNy0CMkZWNklDN5cmL"
 BD64="${BD86}"
-
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
-command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
-command -v unzip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} unzip command not found.\nInstall unzip on your system then try again. Exiting...\n" >&2; exit 1; }
-command -v zip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} zip command not found.\nInstall zip on your system then try again. Exiting...\n" >&2; exit 1; }
 
 DISABLEMADEFORYOU_OPT='false'
 DISABLESEARCHV3_OPT='false'
@@ -28,6 +23,7 @@ DISABLESIDEBARLYRICS_OPT='false'
 HELP_OPT='false'
 INSTALLSPOTIFY_OPT='false'
 LOGO_OPT='false'
+SKIPCODESIGN_OPT='false'
 CACHE_FLAG='false'
 EXCLUDE_FLAG=''
 EXCLUDE_EXPERIMENTAL_FLAG='false'
@@ -53,6 +49,7 @@ while getopts 'cefhioP:prUu-:' flag; do
         help) HELP_OPT='true' ;;
         installspotify) INSTALLSPOTIFY_OPT='true' ;;
         logo) LOGO_OPT='true' ;;
+        skipcodesign) SKIPCODESIGN_OPT='true' ;;
         *)
           echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
           exit ;;
@@ -76,7 +73,7 @@ while getopts 'cefhioP:prUu-:' flag; do
   esac
 done
 
-if [[ "${HELP_OPT}" == "true" ]]; then if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then echo -e "Options:\n-c        : clear Spotify app cache\n--disableleftsidebar\n--disablemadeforyou\n--disablerightsidebar\n--disablesidebarcolors\n--disablesidebarlyrics\n-e        : exclude all experimental features\n-f        : force SpotX to run\n-h        : print this help message (also --help)\n-i        : enable interactive mode\n--installspotify\n-o        : use old home screen UI\n-p        : set if paid premium-tier subscriber\n-P [path] : set path to Spotify\n-r        : remove non-music categories on home screen\n-u        : block Spotify updates\n-U        : uninstall SpotX\n\nEx. usage: bash spotx.sh -cru --disablesidebarcolors\n"; else echo -e "Options:\n-c        : clear Spotify app cache\n--disableleftsidebar\n--disablemadeforyou\n--disablerightsidebar\n--disablesidebarcolors\n--disablesidebarlyrics\n-e        : exclude all experimental features\n-f        : force SpotX to run\n-h        : print this help message (also --help)\n-i        : enable interactive mode\n-o        : use old home screen UI\n-p        : set if paid premium-tier subscriber\n-P [path] : set path to Spotify\n-r        : remove non-music categories on home screen\n-U        : uninstall SpotX by restoring backup\n\nEx. usage: bash spotx.sh -cru --disablesidebarcolors\n"; fi; exit; fi
+if [[ "${HELP_OPT}" == "true" ]]; then if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then echo -e "Options:\n-c        : clear Spotify app cache\n--disableleftsidebar\n--disablemadeforyou\n--disablerightsidebar\n--disablesidebarcolors\n--disablesidebarlyrics\n-e        : exclude all experimental features\n-f        : force SpotX to run\n-h        : print this help message (also --help)\n-i        : enable interactive mode\n--installspotify\n-o        : use old home screen UI\n-p        : set if paid premium-tier subscriber\n-P [path] : set path to Spotify\n-r        : remove non-music categories on home screen\n--skipcodesign\n-u        : block Spotify updates\n-U        : uninstall SpotX\n\nEx. usage: bash spotx.sh -cru --disablesidebarcolors\n"; else echo -e "Options:\n-c        : clear Spotify app cache\n--disableleftsidebar\n--disablemadeforyou\n--disablerightsidebar\n--disablesidebarcolors\n--disablesidebarlyrics\n-e        : exclude all experimental features\n-f        : force SpotX to run\n-h        : print this help message (also --help)\n-i        : enable interactive mode\n-o        : use old home screen UI\n-p        : set if paid premium-tier subscriber\n-P [path] : set path to Spotify\n-r        : remove non-music categories on home screen\n-U        : uninstall SpotX by restoring backup\n\nEx. usage: bash spotx.sh -cru --disablesidebarcolors\n"; fi; exit; fi
 
 clear
 echo
@@ -90,9 +87,14 @@ echo
 
 if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
 
+if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesiggn >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
+command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
+command -v unzip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} unzip command not found.\nInstall unzip on your system then try again. Exiting...\n" >&2; exit 1; }
+command -v zip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} zip command not found.\nInstall zip on your system then try again. Exiting...\n" >&2; exit 1; }
+
 if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
   osascript -e 'quit app "Spotify"'
-  if [[ $(sysctl -n machdep.cpu.brand_string) =~ "Apple" ]]; then ARCH='arm64'; BLD64=$(echo ${BD64} | base64 -D); BLDNO="${BLD64}"; else ARCH='x86_64'; BLD86=$(echo ${BD86} | base64 -D); BLDNO="${BLD86}"; fi
+  if [[ $(sysctl -n machdep.cpu.brand_string) =~ "Apple" ]]; then ARCH='arm64'; BLD64=$(echo ${BD64} | rev | base64 -D); BLDNO="${BLD64}"; else ARCH='x86_64'; BLD86=$(echo ${BD86} | rev | base64 -D); BLDNO="${BLD86}"; fi
   if [[ ${OSTYPE:6} -lt 15 ]]; then echo -e "\n${RED}Error:${CLEAR} OS version unsupported. Exiting...\n"; fi
   PT1=$(echo YUhSMGNITTZMeTkxY0dkeVlXUmxMbk5qWkc0dVkyOHZkWEJuY21Ga1pTOWpiR2xsYm5RdmIzTjRMUT09 | base64 -D | base64 -D)
   PT2=$(echo TDNOd2IzUnBabmt0WVhWMGIzVndaR0YwWlMwPQ== | base64 -D | base64 -D)
@@ -133,13 +135,16 @@ if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then
     if [[ ! -d "${INSTALL_PATH}" ]]; then echo -e "${RED}Error:${CLEAR} Directory path set by '-P' not found. Exiting...\n"; exit
     elif [[ ! -f "${INSTALL_PATH}/Apps/xpui.spa" ]]; then echo -e "${RED}Error:${CLEAR} Spotify not found in path set by '-P'.\nConfirm directory and try again or re-install Spotify. Exiting...\n"; exit; fi; fi; fi
 
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then APP_PATH="${INSTALL_PATH}/Spotify.app"; fi
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then APP_BINARY="${APP_PATH}/Contents/MacOS/Spotify"; fi
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then CACHE_PATH="${HOME}/Library/Caches/com.spotify.client"; fi
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then XPUI_PATH="${INSTALL_PATH}/Spotify.app/Contents/Resources/Apps"; fi
-if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then APP_BINARY="${INSTALL_PATH}/spotify"; fi
-if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then CACHE_PATH="${HOME}/.cache/spotify/"; fi
-if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then XPUI_PATH="${INSTALL_PATH}/Apps"; fi
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then 
+  APP_PATH="${INSTALL_PATH}/Spotify.app"
+  APP_BINARY="${APP_PATH}/Contents/MacOS/Spotify"
+  CACHE_PATH="${HOME}/Library/Caches/com.spotify.client"
+  XPUI_PATH="${INSTALL_PATH}/Spotify.app/Contents/Resources/Apps"
+  if [[ "${SKIPCODESIGN_OPT}" == "true" ]]; then echo -e "${YELLOW}Warning:${CLEAR} Codesigning has been skipped.\nIf launching Spotify fails, reinstallation is needed.\n"; fi; fi
+if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then 
+  APP_BINARY="${INSTALL_PATH}/spotify"
+  CACHE_PATH="${HOME}/.cache/spotify/"
+  XPUI_PATH="${INSTALL_PATH}/Apps"; fi
 XPUI_DIR="${XPUI_PATH}/xpui"
 XPUI_BAK="${XPUI_PATH}/xpui.bak"
 XPUI_SPA="${XPUI_PATH}/xpui.spa"
@@ -461,9 +466,10 @@ if [[ "${XPUI_SKIP}" == "false" ]]; then
 
 if [[ "${XPUI_SKIP}" == "false" ]]; then
   if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
-    codesign -f -s - "${APP_BINARY}" 2>/dev/null
-    xattr -cr "${APP_PATH}" 2>/dev/null
-    perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; fi; fi
+    if [[ "${SKIPCODESIGN_OPT}" == "false" ]]; then
+      codesign -f -s - "${APP_BINARY}"
+      perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; fi
+    xattr -cr "${APP_PATH}"; fi; fi
 
 perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"'
 exit
