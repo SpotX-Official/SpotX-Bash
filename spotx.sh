@@ -467,9 +467,9 @@ if [[ "${XPUI_SKIP}" == "false" ]]; then
 if [[ "${XPUI_SKIP}" == "false" ]]; then
   if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
     if [[ "${SKIPCODESIGN_OPT}" == "false" ]]; then
-      codesign -f -s - "${APP_BINARY}"
+      codesign -f -s - "${APP_BINARY}" 2>/dev/null
       perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; fi
-    xattr -cr "${APP_PATH}"; fi; fi
+    xattr -cr "${APP_PATH}" 2>/dev/null; fi; fi
 
 perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"'
 exit
