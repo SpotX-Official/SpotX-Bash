@@ -3,6 +3,7 @@
 </p>
 
 <p align="center">        
+      <a href="https://github.com/amd64fox/SpotX"><img src="https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/.github/images/spotx.svg"></a>
       <a href="https://t.me/SpotxCommunity"><img src="https://raw.githubusercontent.com/amd64fox/SpotX/main/.github/Pic/Shields/SpotX_Community.svg"></a>
       </p>
 
