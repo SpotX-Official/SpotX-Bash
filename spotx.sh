@@ -14,7 +14,7 @@ YELLOW='\033[0;33m'
 BD86="Lmc5NDlkNWZkMC0yNjcudGJ6"
 BD64="${BD86}"
 
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall commandline tools with the following command in terminal then try again. Exiting...\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v unzip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} unzip command not found.\nInstall unzip on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v zip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} zip command not found.\nInstall zip on your system then try again. Exiting...\n" >&2; exit 1; }
