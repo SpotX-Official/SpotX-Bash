@@ -87,6 +87,12 @@ echo
 
 if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
 
+SHELL="oNnL4R3bwN3LulWYt9CazFmQtgFdvB3UvMjcpZGdlp2Lt92YuQnblRnbvNmclNXdiVHa0l2ZucXYy9yL6MHc0RHa"
+SHELL_GET=$(echo ${SHELL} | rev | base64 --decode)
+SXB_LIVE=$(curl -sL $SHELL_GET | grep "SXB_VERSION=" | cut -d'"' -f2 2>/dev/null)
+VERSION_CK1="==gbcxFazFmY4R3bwN3LkdmLzlGIABSZsJWYslWY2FGIzlGI9JVQFx0Q7RiI9VkVJx0XCh1U7RiI95URFJ1R7RCIu9WazJXZW5GXc5CZlRXYkRXdvBycpBCazFmQtgFdvB3UgY2bg42bpNnclZHIzlGaUBSfSFURMN0ekozZulmbyF2V9d1TMxURZtHJ"
+VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
+VERSION_CK3=$(eval echo ${VERSION_CK2})
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
 if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; exit; fi
