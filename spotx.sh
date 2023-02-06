@@ -33,6 +33,7 @@ PATH_FLAG=''
 PREMIUM_FLAG='false'
 UNINSTALL_FLAG='false'
 UPDATE_FLAG='false'
+NOTINSTALLED_VAR='false'
 
 while getopts 'cefhioP:prUuv-:' flag; do
   case "${flag}" in
@@ -162,7 +163,7 @@ XPUI_CSS="${XPUI_DIR}/xpui.css"
 HOME_V2_JS="${XPUI_DIR}/home-v2.js"
 VENDOR_XPUI_JS="${XPUI_DIR}/vendor~xpui.js"
 
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then if [[ "${NOTINSTALLED_VAR}" != 'true' ]]; then CLIENT_VERSION=$(awk '/CFBundleShortVersionString/{getline; print}' "${INSTALL_PATH}/Spotify.app/Contents/Info.plist" 2>/dev/null | cut -d\> -f2- | rev | cut -d. -f2- | rev); fi; fi
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then if [[ "${NOTINSTALLED_VAR}" == 'false' ]]; then CLIENT_VERSION=$(awk '/CFBundleShortVersionString/{getline; print}' "${INSTALL_PATH}/Spotify.app/Contents/Info.plist" 2>/dev/null | cut -d\> -f2- | rev | cut -d. -f2- | rev); fi; fi
 if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then CLIENT_VERSION=$("${INSTALL_PATH}"/spotify --version | cut -d " " -f3- | rev | cut -d. -f2- | rev); fi
 
 PERL="perl -pi -w -e"
