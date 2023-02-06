@@ -11,8 +11,6 @@ CLEAR='\033[0m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
-BD86="6JGducjNy0CMkZWNklDN5cmL"
-BD64="${BD86}"
 
 DISABLEMADEFORYOU_OPT='false'
 DISABLESEARCHV3_OPT='false'
@@ -25,7 +23,6 @@ INSTALLSPOTIFY_OPT='false'
 LOGO_OPT='false'
 SKIPCODESIGN_OPT='false'
 CACHE_FLAG='false'
-EXCLUDE_FLAG=''
 EXCLUDE_EXPERIMENTAL_FLAG='false'
 FORCE_FLAG='false'
 HIDE_PODCASTS_FLAG='false'
@@ -87,18 +84,31 @@ echo
 
 if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
 
+SHELL="oNnL4R3bwN3LulWYt9CazFmQtgFdvB3UvMjcpZGdlp2Lt92YuQnblRnbvNmclNXdiVHa0l2ZucXYy9yL6MHc0RHa"
+SHELL_GET=$(echo ${SHELL} | rev | base64 --decode)
+SXB_LIVE=$(curl -sL $SHELL_GET | grep "SXB_VERSION=" | cut -d'"' -f2 2>/dev/null)
+VERSION_CK1="==gbcxFazFmY4R3bwN3LkdmLzlGIABSZsJWYslWY2FGIzlGI9JVQFx0Q7RiI9VkVJx0XCh1U7RiI95URFJ1R7RCIu9WazJXZW5GXc5CZlRXYkRXdvBycpBCazFmQtgFdvB3UgY2bg42bpNnclZHIzlGaUBSfSFURMN0ekozZulmbyF2V9d1TMxURZtHJ"
+VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
+VERSION_CK3=$(eval echo ${VERSION_CK2})
+function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
+
 if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v unzip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} unzip command not found.\nInstall unzip on your system then try again. Exiting...\n" >&2; exit 1; }
 command -v zip >/dev/null || { echo -e "\n${RED}Error:${CLEAR} zip command not found.\nInstall zip on your system then try again. Exiting...\n" >&2; exit 1; }
 
 if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
+  BD86="6JGducjNy0CMkZWNklDN5cmL"
+  BD64="${BD86}"
   osascript -e 'quit app "Spotify"'
   if [[ $(sysctl -n machdep.cpu.brand_string) =~ "Apple" ]]; then ARCH='arm64'; BLD64=$(echo ${BD64} | rev | base64 -D); BLDNO="${BLD64}"; else ARCH='x86_64'; BLD86=$(echo ${BD86} | rev | base64 -D); BLDNO="${BLD86}"; fi
   if [[ ${OSTYPE:6} -lt 15 ]]; then echo -e "\n${RED}Error:${CLEAR} OS version unsupported. Exiting...\n"; fi
-  PT1=$(echo YUhSMGNITTZMeTkxY0dkeVlXUmxMbk5qWkc0dVkyOHZkWEJuY21Ga1pTOWpiR2xsYm5RdmIzTjRMUT09 | base64 -D | base64 -D)
-  PT2=$(echo TDNOd2IzUnBabmt0WVhWMGIzVndaR0YwWlMwPQ== | base64 -D | base64 -D)
-  GRAB1=$(echo Skh0UVZERjlKSHRCVWtOSWZTUjdVRlF5ZlNSN1UxaENYMVpGVWxOSlQwNTlKSHRDVEVST1QzMD0= | base64 -D | base64 -D)
+  STRING1="90TUMRjTzImdR5mYsx2RipWOTp1aG12YuJEWkZHOykVd0ckWq5kbMxmUXlVekd0YxkTeMZTTINGMShUY"
+  STRING2="==QPwMlWwY0RadnVzIGMWhVW0tmbaBnUzI2dONDT"
+  STRING3="=0DMzQ1TSVEVDRHSKlTNwQlSOxWVGpVMYNEaxU1NSNlZ5FlRVdjUTZWSOtWVCRHSKljREZVU0hkS"
+  PT1=$(echo ${STRING1} | rev | base64 -D | base64 -D)
+  PT2=$(echo ${STRING2} | rev | base64 -D | base64 -D)
+  GRAB1=$(echo ${STRING3} | rev | base64 -D | base64 -D)
   GRAB2=$(eval echo ${GRAB1})
   if [ -z ${INSTALL_PATH+x} ]; then
     APP_PATH="/Applications/Spotify.app"
@@ -155,8 +165,6 @@ VENDOR_XPUI_JS="${XPUI_DIR}/vendor~xpui.js"
 
 if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then if [[ "${NOTINSTALLED_VAR}" != 'true' ]]; then CLIENT_VERSION=$(awk '/CFBundleShortVersionString/{getline; print}' "${INSTALL_PATH}/Spotify.app/Contents/Info.plist" 2>/dev/null | cut -d\> -f2- | rev | cut -d. -f2- | rev); fi; fi
 if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then CLIENT_VERSION=$("${INSTALL_PATH}"/spotify --version | cut -d " " -f3- | rev | cut -d. -f2- | rev); fi
-
-function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
 PERL="perl -pi -w -e"
 
@@ -242,6 +250,7 @@ UPDATE_ENABLE='s|\x00\x00\x67\x3A\x2F\x2F\x64|\x00\x77\x67\x3A\x2F\x2F\x64|'
 
 echo -e "Latest supported version: ${SXB_VERSION}"
 if [[ "${NOTINSTALLED_VAR}" == 'true' ]];then echo -e "Detected Spotify version: ${RED}N/A${CLEAR}\n"; elif [[ $(ver "${CLIENT_VERSION}") -le $(ver "${SXB_VERSION}") ]]; then echo -e "Detected Spotify version: ${GREEN}${CLIENT_VERSION}${CLEAR}\n"; elif [[ $(ver "${CLIENT_VERSION}") -gt $(ver "${SXB_VERSION}") ]]; then echo -e "Detected Spotify version: ${RED}${CLIENT_VERSION}${CLEAR}\n"; fi
+if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then echo -e "${VERSION_CK3}"; fi
 
 if [[ "${UNINSTALL_FLAG}" == "true" ]]; then
   if [[ ! -f "${XPUI_BAK}" ]]; then
