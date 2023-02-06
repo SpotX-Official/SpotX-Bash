@@ -95,7 +95,7 @@ VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
 VERSION_CK3=$(eval echo ${VERSION_CK2})
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
-if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; exit; fi
+if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then echo -e "${VERSION_CK3}"; fi; exit; fi
 
 if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
