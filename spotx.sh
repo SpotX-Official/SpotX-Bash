@@ -87,15 +87,9 @@ echo
 
 if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
 
-SHELL="oNnL4R3bwN3LulWYt9CazFmQtgFdvB3UvMjcpZGdlp2Lt92YuQnblRnbvNmclNXdiVHa0l2ZucXYy9yL6MHc0RHa"
-SHELL_GET=$(echo ${SHELL} | rev | base64 --decode)
-SXB_LIVE=$(curl -sL $SHELL_GET | grep "SXB_VERSION=" | cut -d'"' -f2 2>/dev/null)
-VERSION_CK1="==gbcxFazFmY4R3bwN3LkdmLzlGIABSZsJWYslWY2FGIzlGI9JVQFx0Q7RiI9VkVJx0XCh1U7RiI95URFJ1R7RCIu9WazJXZW5GXc5CZlRXYkRXdvBycpBCazFmQtgFdvB3UgY2bg42bpNnclZHIzlGaUBSfSFURMN0ekozZulmbyF2V9d1TMxURZtHJ"
-VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
-VERSION_CK3=$(eval echo ${VERSION_CK2})
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
-if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then echo -e "${VERSION_CK3}"; fi; exit; fi
+if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; fi
 
 if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
@@ -255,7 +249,6 @@ UPDATE_ENABLE='s|\x00\x00\x67\x3A\x2F\x2F\x64|\x00\x77\x67\x3A\x2F\x2F\x64|'
 
 echo -e "Latest supported version: ${SXB_VERSION}"
 if [[ "${NOTINSTALLED_VAR}" == 'true' ]];then echo -e "Detected Spotify version: ${RED}N/A${CLEAR}\n"; elif [[ $(ver "${CLIENT_VERSION}") -le $(ver "${SXB_VERSION}") ]]; then echo -e "Detected Spotify version: ${GREEN}${CLIENT_VERSION}${CLEAR}\n"; elif [[ $(ver "${CLIENT_VERSION}") -gt $(ver "${SXB_VERSION}") ]]; then echo -e "Detected Spotify version: ${RED}${CLIENT_VERSION}${CLEAR}\n"; fi
-if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then echo -e "${VERSION_CK3}"; fi
 
 if [[ "${UNINSTALL_FLAG}" == "true" ]]; then
   if [[ ! -f "${XPUI_BAK}" ]]; then
