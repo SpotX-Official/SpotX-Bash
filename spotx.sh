@@ -89,7 +89,7 @@ if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
 
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
-if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; fi
+if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; exit; fi
 
 if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
