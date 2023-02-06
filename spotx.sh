@@ -22,6 +22,7 @@ HELP_OPT='false'
 INSTALLSPOTIFY_OPT='false'
 LOGO_OPT='false'
 SKIPCODESIGN_OPT='false'
+VERSION_OPT='false'
 CACHE_FLAG='false'
 EXCLUDE_EXPERIMENTAL_FLAG='false'
 FORCE_FLAG='false'
@@ -33,7 +34,7 @@ PREMIUM_FLAG='false'
 UNINSTALL_FLAG='false'
 UPDATE_FLAG='false'
 
-while getopts 'cefhioP:prUu-:' flag; do
+while getopts 'cefhioP:prUuv-:' flag; do
   case "${flag}" in
     -)
       case "${OPTARG}" in
@@ -47,6 +48,7 @@ while getopts 'cefhioP:prUu-:' flag; do
         installspotify) INSTALLSPOTIFY_OPT='true' ;;
         logo) LOGO_OPT='true' ;;
         skipcodesign) SKIPCODESIGN_OPT='true' ;;
+        version) VERSION_OPT='true' ;;
         *)
           echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
           exit ;;
@@ -64,6 +66,7 @@ while getopts 'cefhioP:prUu-:' flag; do
     r) REMOVE_PODCASTS_FLAG='true' ;;
     U) UNINSTALL_FLAG='true' ;;
     u) UPDATE_FLAG='true' ;;
+    v) VERSION_OPT='true' ;;
     *)
       echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
       exit ;;
@@ -91,6 +94,8 @@ VERSION_CK1="==gbcxFazFmY4R3bwN3LkdmLzlGIABSZsJWYslWY2FGIzlGI9JVQFx0Q7RiI9VkVJx0
 VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
 VERSION_CK3=$(eval echo ${VERSION_CK2})
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
+
+if [[ "${VERSION_OPT}" == "true" ]]; then echo -e "SpotX-Bash version ${SXB_VERSION}\n"; if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then echo -e "${VERSION_CK3}"; fi; exit; fi
 
 if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2; exit 1; }; fi
 command -v perl >/dev/null || { echo -e "\n${RED}Error:${CLEAR} perl command not found.\nInstall perl on your system then try again. Exiting...\n" >&2; exit 1; }
@@ -289,7 +294,7 @@ if [[ "${INTERACTIVE_FLAG}" == "true" ]]; then
     esac
   done
   while true; do
-    read -p "Hide non-music categories on home screen? " yn
+    read -p "Remove non-music categories on home screen? " yn
     case "$yn" in
       [Yy]* ) REMOVE_PODCASTS_FLAG='true'; break ;;
       [Nn]* ) REMOVE_PODCASTS_FLAG='false'; break ;;

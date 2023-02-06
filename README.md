@@ -47,11 +47,12 @@ bash <(curl -sSL https://raw.githubusercontent.com/jetfir3/SpotX-Bash/main/spotx
 | `--installspotify` | Install latest supported Spotify (macOS only) |  
 | `-o` | Use old home screen UI | 
 | `-p` | Set if paid premium-tier subscriber | 
-|`-P [path]` | Set path to Spotify |
-|`-r` | Remove non-music categories on home screen |
+| `-P [path]` | Set path to Spotify |
+| `-r` | Remove non-music categories on home screen |
 | `--skipcodesign` | Skip [codesigning](https://github.com/jetfir3/SpotX-Bash/discussions/3) (macOS only) |
-|`-u` | Block Spotify updates (macOS only) |
-|`-U` | Uninstall SpotX |
+| `-u` | Block Spotify updates (macOS only) |
+| `-U` | Uninstall SpotX |
+| `-v` | Print version (also --version) |
 
 Example usage -- clearing app cache, blocking updates and disabling right sidebar colors:
 ```
