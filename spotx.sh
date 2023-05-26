@@ -18,11 +18,8 @@ DISABLELEFTSIDEBAR_OPT='false'
 DISABLERIGHTSIDEBAR_OPT='false'
 DISABLESIDEBARCOLORS_OPT='false'
 DISABLESIDEBARLYRICS_OPT='false'
-HELP_OPT='false'
 INSTALLCLIENT_OPT='false'
-LOGO_OPT='false'
 SKIPCODESIGN_OPT='false'
-VERSION_OPT='false'
 CACHE_FLAG='false'
 EXCLUDE_EXPERIMENTAL_FLAG='false'
 FORCE_SPOTX_FLAG='false'
@@ -35,50 +32,14 @@ UNINSTALL_FLAG='false'
 UPDATE_FLAG='false'
 NOTINSTALLED_VAR='false'
 
-while getopts 'ceF:fhioP:prUuv-:' flag; do
-  case "${flag}" in
-    -)
-      case "${OPTARG}" in
-        disablemadeforyou) DISABLEMADEFORYOU_OPT='true' ;;
-        disablesearchv3) DISABLESEARCHV3_OPT='true' ;;
-        disableleftsidebar) DISABLELEFTSIDEBAR_OPT='true' ;;
-        disablerightsidebar) DISABLERIGHTSIDEBAR_OPT='true' ;;
-        disablesidebarcolors) DISABLESIDEBARCOLORS_OPT='true' ;;
-        disablesidebarlyrics) DISABLESIDEBARLYRICS_OPT='true' ;;
-        help) HELP_OPT='true' ;;
-        installclient) INSTALLCLIENT_OPT='true' ;;
-        logo) LOGO_OPT='true' ;;
-        skipcodesign) SKIPCODESIGN_OPT='true' ;;
-        version) VERSION_OPT='true' ;;
-        *)
-          echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
-          exit ;;
-      esac ;;
-    c) CACHE_FLAG='true' ;;
-    e) EXCLUDE_EXPERIMENTAL_FLAG='true' ;;
-    F)
-      FORCE_VERSION_FLAG="${OPTARG}"
-      CLIENT_VERSION="${FORCE_VERSION_FLAG}" ;;
-    f) FORCE_SPOTX_FLAG='true' ;;
-    h) HELP_OPT='true' ;;
-    i) INTERACTIVE_FLAG='true' ;;
-    o) OLD_UI_FLAG='true' ;;
-    p) PREMIUM_FLAG='true' ;;
-    P)
-      PATH_FLAG="${OPTARG}"
-      INSTALL_PATH="${PATH_FLAG}" ;;
-    r) REMOVE_PODCASTS_FLAG='true' ;;
-    U) UNINSTALL_FLAG='true' ;;
-    u) UPDATE_FLAG='true' ;;
-    v) VERSION_OPT='true' ;;
-    *)
-      echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
-      exit ;;
-  esac
-done
+show_version () {
+	echo -e "SpotX-Bash version ${SXB_VERSION}\n"
+	[[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]] && echo -e "${VERSION_CK3}"
+	exit
+}
 
-if [[ "${HELP_OPT}" == "true" ]]; then 
-	if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then 
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
+	show_help () {
 		echo -e \
 "Options:
 -c        : clear Spotify app cache
@@ -102,7 +63,11 @@ if [[ "${HELP_OPT}" == "true" ]]; then
 -U        : uninstall SpotX
 -v        : print SpotX version (also --version)
 "
-	else echo -e \
+	exit
+}
+else 
+	show_help () {
+		echo -e \
 "Options:
 -c        : clear Spotify app cache
 --disableleftsidebar
@@ -121,40 +86,70 @@ if [[ "${HELP_OPT}" == "true" ]]; then
 -U        : uninstall SpotX
 -v        : print SpotX version (also --version)
 "
-	fi
 	exit
+}
 fi
 
-clear
 
-echo "
-████╗███╗  ███╗ █████╗█╗  █╗  ███╗  ██╗ ████╗█╗ █╗
-█╔══╝█╔═█╗█╔══█╗╚═█╔═╝╚█╗█╔╝  █╔═█╗█╔═█╗█╔══╝█║ █║
-████╗███╔╝█║  █║  █║   ╚█╔╝██╗███╔╝████║████╗████║
-╚══█║█╔═╝ █║  █║  █║   █╔█╗╚═╝█╔═█╗█╔═█║╚══█║█╔═█║
-████║█║   ╚███╔╝  █║  █╔╝ █╗  ███╔╝█║ █║████║█║ █║
-╚═══╝╚╝    ╚══╝   ╚╝  ╚╝  ╚╝  ╚══╝ ╚╝ ╚╝╚═══╝╚╝ ╚╝
-"
+while getopts 'ceF:fhioP:prUuv-:' flag; do
+  case "${flag}" in
+    -)
+      case "${OPTARG}" in
+        disablemadeforyou) DISABLEMADEFORYOU_OPT='true' ;;
+        disablesearchv3) DISABLESEARCHV3_OPT='true' ;;
+        disableleftsidebar) DISABLELEFTSIDEBAR_OPT='true' ;;
+        disablerightsidebar) DISABLERIGHTSIDEBAR_OPT='true' ;;
+        disablesidebarcolors) DISABLESIDEBARCOLORS_OPT='true' ;;
+        disablesidebarlyrics) DISABLESIDEBARLYRICS_OPT='true' ;;
+        help) show_help ;;
+        installclient) INSTALLCLIENT_OPT='true' ;;
+        logo) 
+					clear
+					echo "
+					████╗███╗  ███╗ █████╗█╗  █╗  ███╗  ██╗ ████╗█╗ █╗
+					█╔══╝█╔═█╗█╔══█╗╚═█╔═╝╚█╗█╔╝  █╔═█╗█╔═█╗█╔══╝█║ █║
+					████╗███╔╝█║  █║  █║   ╚█╔╝██╗███╔╝████║████╗████║
+					╚══█║█╔═╝ █║  █║  █║   █╔█╗╚═╝█╔═█╗█╔═█║╚══█║█╔═█║
+					████║█║   ╚███╔╝  █║  █╔╝ █╗  ███╔╝█║ █║████║█║ █║
+					╚═══╝╚╝    ╚══╝   ╚╝  ╚╝  ╚╝  ╚══╝ ╚╝ ╚╝╚═══╝╚╝ ╚╝
+					"
+					;;
+        skipcodesign) SKIPCODESIGN_OPT='true' ;;
+        version) show_version ;;
+        *)
+          echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
+          exit ;;
+      esac ;;
+    c) CACHE_FLAG='true' ;;
+    e) EXCLUDE_EXPERIMENTAL_FLAG='true' ;;
+    F)
+      FORCE_VERSION_FLAG="${OPTARG}"
+      CLIENT_VERSION="${FORCE_VERSION_FLAG}" ;;
+    f) FORCE_SPOTX_FLAG='true' ;;
+    h) show_help ;;
+    i) INTERACTIVE_FLAG='true' ;;
+    o) OLD_UI_FLAG='true' ;;
+    p) PREMIUM_FLAG='true' ;;
+    P)
+      PATH_FLAG="${OPTARG}"
+      INSTALL_PATH="${PATH_FLAG}" ;;
+    r) REMOVE_PODCASTS_FLAG='true' ;;
+    U) UNINSTALL_FLAG='true' ;;
+    u) UPDATE_FLAG='true' ;;
+    v) show_version ;;
+    *)
+      echo -e "${RED}Error:${CLEAR} Option not supported. Exiting...\n"
+      exit ;;
+  esac
+done
 
-if [[ "${LOGO_OPT}" == "true" ]]; then exit; fi
-
-SHELL="=g2cugHdvB3cvcXYy9SMidjZ0QzMkRTOwMWZlVTMmRTY2EmYlRGOmNGMzgDOl9yMylmZ0Vmav02bj5iY1hGdpdmL0NXan9yL6MHc0RHa"
-SHELL_GET=$(echo ${SHELL} | rev | base64 --decode)
-SXB_LIVE="$(curl -sL "${SHELL_GET}" | grep "g>" | cut -d ' ' -f12- 2>/dev/null)"
+SXB_LIVE="$(curl -sL $(echo "=g2cugHdvB3cvcXYy9SMidjZ0QzMkRTOwMWZlVTMmRTY2EmYlRGOmNGMzgDOl9yMylmZ0Vmav02bj5iY1hGdpdmL0NXan9yL6MHc0RHa" | rev | base64 --decode) | grep "g>" | cut -d ' ' -f12- 2>/dev/null)"
 VERSION_CK1="==gbcxFazFmY4R3bwN3LkdmLzlGIABSZsJWYslWY2FGIzlGI9JVQFx0Q7RiI9VkVJx0XCh1U7RiI95URFJ1R7RCIu9WazJXZW5GXc5CZlRXYkRXdvBycpBCazFmQtgFdvB3UgY2bg42bpNnclZHIzlGaUBSfSFURMN0ekozZulmbyF2V9d1TMxURZtHJ"
 VERSION_CK2=$(echo ${VERSION_CK1} | rev | base64 --decode)
 VERSION_CK3=$(eval echo "${VERSION_CK2}")
 function ver { echo "$@" | awk -F. '{ printf("%d%03d%04d%05d\n", $1,$2,$3,$4); }'; }
 
-if [[ "${VERSION_OPT}" == "true" ]]; then 
-	echo -e "SpotX-Bash version ${SXB_VERSION}\n"
-	if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then 
-		echo -e "${VERSION_CK3}"
-	fi
-	exit
-fi
-
-if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then 
+if [[ "${PLATFORM_TYPE}" == "macOS" && "${SKIPCODESIGN_OPT}" == "false" ]]; then
 	command -v codesign >/dev/null || { echo -e "\n${RED}Error:${CLEAR} codesign command not found.\nInstall Xcode Command Line Tools then try again. Exiting...\n\nEnter the following command in Terminal to install:\n${YELLOW}xcode-select --install${CLEAR}\n" >&2
 	exit 1
 	}
@@ -201,27 +196,47 @@ if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
     if [[ -d "${INSTALL_PATH}/Spotify.app" ]]; then
       : #INSTALL_PATH="${INSTALL_PATH}"
     else
-      echo -e "\n${RED}Error:${CLEAR} Spotify not found. Exiting...\n"; fi; fi; fi
+      echo -e "\n${RED}Error:${CLEAR} Spotify not found. Exiting...\n"
+		fi
+	fi
+fi
 
 if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then
   if [ -z ${INSTALL_PATH+x} ]; then
 		INSTALL_PATH="$(readlink -e "$(type -p spotify)" 2>/dev/null | rev | cut -d/ -f2- | rev)"
-    if [[ -d "${INSTALL_PATH}" && "${INSTALL_PATH}" != "/usr/bin" ]]; then echo -e "Found Spotify directory: ${INSTALL_PATH}\n"
+    if [[ -d "${INSTALL_PATH}" && "${INSTALL_PATH}" != "/usr/bin" ]]; then
+			echo -e "Found Spotify directory: ${INSTALL_PATH}\n"
     elif [[ ! -d "${INSTALL_PATH}" ]]; then
       echo -e "${YELLOW}Warning:${CLEAR} Spotify not found in PATH. Searching for Spotify directory...\n"
       INSTALL_PATH=$(timeout 10 find / -type f -path "*/spotify*Apps/*" -name "xpui.spa" -size -7M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-      if [[ -d "${INSTALL_PATH}" ]]; then echo -e "Found Spotify Directory: ${INSTALL_PATH}\n"
-      elif [[ ! -d "${INSTALL_PATH}" ]]; then echo -e "${RED}Error:${CLEAR} Spotify directory not found.\nSet directory path with '-P' flag. Exiting...\n"; exit; fi
+      if [[ -d "${INSTALL_PATH}" ]]; then
+				echo -e "Found Spotify Directory: ${INSTALL_PATH}\n"
+      elif [[ ! -d "${INSTALL_PATH}" ]]; then
+				echo -e "${RED}Error:${CLEAR} Spotify directory not found.\nSet directory path with '-P' flag. Exiting...\n"
+				exit
+			fi
     elif [[ "${INSTALL_PATH}" == "/usr/bin" ]]; then
       echo -e "\n${YELLOW}Warning:${CLEAR} Spotify PATH is set to /usr/bin, searching for Spotify directory...\n"
       INSTALL_PATH=$(timeout 10 find / -type f -path "*/spotify*Apps/*" -name "xpui.spa" -size -7M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-      if [[ -d "${INSTALL_PATH}" && "${INSTALL_PATH}" != "/usr/bin" ]]; then echo -e "Found Spotify directory: ${INSTALL_PATH}\n"
-      elif [[ "${INSTALL_PATH}" == "/usr/bin" ]] || [[ ! -d "${INSTALL_PATH}" ]]; then echo -e "${RED}Error:${CLEAR} Spotify directory not found.\nSet directory path with '-P' flag. Exiting...\n"; exit; fi; fi
+      if [[ -d "${INSTALL_PATH}" && "${INSTALL_PATH}" != "/usr/bin" ]]; then
+				echo -e "Found Spotify directory: ${INSTALL_PATH}\n"
+      elif [[ "${INSTALL_PATH}" == "/usr/bin" ]] || [[ ! -d "${INSTALL_PATH}" ]]; then
+				echo -e "${RED}Error:${CLEAR} Spotify directory not found.\nSet directory path with '-P' flag. Exiting...\n"
+				exit
+			fi
+		fi
   else
-    if [[ ! -d "${INSTALL_PATH}" ]]; then echo -e "${RED}Error:${CLEAR} Directory path set by '-P' not found. Exiting...\n"; exit
-    elif [[ ! -f "${INSTALL_PATH}/Apps/xpui.spa" ]]; then echo -e "${RED}Error:${CLEAR} Spotify not found in path set by '-P'.\nConfirm directory and try again or re-install Spotify. Exiting...\n"; exit; fi; fi; fi
+    if [[ ! -d "${INSTALL_PATH}" ]]; then
+			echo -e "${RED}Error:${CLEAR} Directory path set by '-P' not found. Exiting...\n"
+			exit
+    elif [[ ! -f "${INSTALL_PATH}/Apps/xpui.spa" ]]; then
+			echo -e "${RED}Error:${CLEAR} Spotify not found in path set by '-P'.\nConfirm directory and try again or re-install Spotify. Exiting...\n"
+			exit
+		fi
+	fi
+fi
 
-if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then 
+if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
   APP_PATH="${INSTALL_PATH}/Spotify.app"
   APP_BINARY="${APP_PATH}/Contents/MacOS/Spotify"
   APP_BAK="${APP_PATH}/Contents/MacOS/Spotify.bak"
@@ -231,7 +246,7 @@ if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
 		echo -e "${YELLOW}Warning:${CLEAR} Codesigning has been skipped.\nIf launching Spotify fails, reinstallation is needed.\n"
 	fi
 fi
-if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then 
+if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then
   APP_BINARY="${INSTALL_PATH}/spotify"
   APP_BAK="${INSTALL_PATH}/spotify.bak"
   CACHE_PATH="${HOME}/.cache/spotify/"
@@ -253,7 +268,7 @@ if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
 	fi
 fi
 if [[ "${PLATFORM_TYPE}" == "Linux" ]]; then
-	if [ -z ${FORCE_VERSION_FLAG+x} ]; then 
+	if [ -z ${FORCE_VERSION_FLAG+x} ]; then
 		CLIENT_VERSION=$("${INSTALL_PATH}"/spotify --version | cut -d " " -f3- | rev | cut -d. -f2- | rev)
 	fi
 fi
@@ -335,7 +350,7 @@ HIDE_DL_MENU=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
 HIDE_VERY_HIGH=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
 
 HIDE_PODCASTS='s|withQueryParameters\(.\)\{return this.queryParameters=.,this}|withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}|'
-HIDE_PODCASTS2='s/(!Array.isArray\(.\)\|\|.===..length\)return null;)/$1 for (let i = 0; i < (e.children ? e.children.length : e.length); i++) {const key = (e.children?.[i]?.key || e[i])?.key; if (!key || key.includes('\''episode'\'') || key.includes('\''show'\'')) { return null;}};/'    
+HIDE_PODCASTS2='s/(!Array.isArray\(.\)\|\|.===..length\)return null;)/$1 for (let i = 0; i < (e.children ? e.children.length : e.length); i++) {const key = (e.children?.[i]?.key || e[i])?.key; if (!key || key.includes('\''episode'\'') || key.includes('\''show'\'')) { return null;}};/'
 
 LOG_1='s|sp://logging/v3/\w+||g'
 LOG_SENTRY='s|this\.getStackTop\(\)\.client=e|return;$&|'
@@ -361,24 +376,22 @@ UPDATE_BLOCK='s|\x00\x77\x67\x3A\x2F\x2F\x64|\x00\x00\x67\x3A\x2F\x2F\x64|'
 echo -e "Latest supported version: ${SXB_VERSION}"
 if [[ "${NOTINSTALLED_VAR}" == 'true' ]];then
 	echo -e "Detected Spotify version: ${RED}N/A${CLEAR}\n"
-elif [[ $(ver "${CLIENT_VERSION}") -le $(ver "${SXB_VERSION}") ]]; then 
+elif [[ $(ver "${CLIENT_VERSION}") -le $(ver "${SXB_VERSION}") ]]; then
 	echo -e "Detected Spotify version: ${GREEN}${CLIENT_VERSION}${CLEAR}\n"
-elif [[ $(ver "${CLIENT_VERSION}") -gt $(ver "${SXB_VERSION}") ]]; then 
+elif [[ $(ver "${CLIENT_VERSION}") -gt $(ver "${SXB_VERSION}") ]]; then
 	echo -e "Detected Spotify version: ${RED}${CLIENT_VERSION}${CLEAR}\n"
 fi
-if [[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]]; then 
-	echo -e "${VERSION_CK3}"
-fi
+[[ $(ver "${SXB_VERSION}") -gt $(ver "1.1.0.0") && $(ver "${SXB_VERSION}") -lt $(ver "${SXB_LIVE}") ]] && echo -e "${VERSION_CK3}"
 
 if [[ "${UNINSTALL_FLAG}" == "true" ]]; then
   if [[ ! -f "${XPUI_BAK}" ]]; then
-    echo -e "${RED}Error:${CLEAR} No backup found. Exiting...\n"; exit 
-  else 
+    echo -e "${RED}Error:${CLEAR} No backup found. Exiting...\n"; exit
+  else
     rm "${XPUI_SPA}" 2>/dev/null
     mv "${XPUI_BAK}" "${XPUI_SPA}"
     rm "${APP_BINARY}" 2>/dev/null
     mv "${APP_BAK}" "${APP_BINARY}"
-    if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then 
+    if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
 			codesign -f -s - --deep "${APP_PATH}" 2>/dev/null
 		fi
     perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n"'
@@ -386,34 +399,41 @@ if [[ "${UNINSTALL_FLAG}" == "true" ]]; then
 	fi
 fi
 
+read_yn () {
+	while : ; do
+		read -p "$*" yn
+		case "$yn" in
+			[Yy]* ) return 0 ;;
+			[Nn]* ) return 1 ;;
+					* ) echo "Please answer yes or no.";;
+		esac
+	done
+}
+
 if [[ "${INTERACTIVE_FLAG}" == "true" ]]; then
   perl -e 'print "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n"';
   if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
-    while true; do
-      read -p "Download & install Spotify ${SXB_VERSION}? " yn
-        case "$yn" in
-          [Yy]* ) INSTALLCLIENT_OPT='true'; break ;;
-          [Nn]* ) INSTALLCLIENT_OPT='false'; break ;;
-              * ) echo "Please answer yes or no.";;
-        esac
-			done
+		if read_yn "Download & install Spotify ${SXB_VERSION}? " ; then
+    	INSTALLCLIENT_OPT='true';
+		else
+			INSTALLCLIENT_OPT='false';
+		fi
 	fi
-  while true; do
-    read -p "Enable experimental features? " yn
-    case "$yn" in
-      [Yy]* ) EXCLUDE_EXPERIMENTAL_FLAG='false'; break ;;
-      [Nn]* ) EXCLUDE_EXPERIMENTAL_FLAG='true'; break ;;
-          * ) echo "Please answer yes or no.";;
-    esac
-  done
-  while true; do
-    read -p "Enable new home screen UI? " yn
-    case "$yn" in
-      [Yy]* ) OLD_UI_FLAG='false'; break ;;
-      [Nn]* ) OLD_UI_FLAG='true'; break ;;
-          * ) echo "Please answer yes or no.";;
-    esac
-  done
+	if read_yn "Enable experimental features? " ; then
+		EXCLUDE_EXPERIMENTAL_FLAG='true';
+	else
+		EXCLUDE_EXPERIMENTAL_FLAG='false';
+	fi
+	if read_yn "Enable new home screen UI? " ; then
+		OLD_UI_FLAG='true';
+	else
+		OLD_UI_FLAG='false';
+	fi
+	if read_yn "Remove non-music categories on home screen? " ; then
+		REMOVE_PODCASTS_FLAG='true';
+	else
+		REMOVE_PODCASTS_FLAG='false';
+	fi
   while true; do
     read -p "Remove non-music categories on home screen? " yn
     case "$yn" in
@@ -447,7 +467,7 @@ if [[ "${PLATFORM_TYPE}" == "macOS" ]]; then
     rm "${HOME}/Downloads/spotify-$SXB_VERSION"
     CLIENT_VERSION="${SXB_VERSION}"
   else
-    if [[ "${NOTINSTALLED_VAR}" == "true" ]]; then 
+    if [[ "${NOTINSTALLED_VAR}" == "true" ]]; then
 			echo -e "${RED}Error:${CLEAR} Spotify not found. Exiting...\n"
 			exit
 		fi
@@ -593,29 +613,29 @@ if [[ "${XPUI_SKIP}" == "false" ]]; then
   if [[ "${OLD_UI_FLAG}" == "false" && $(ver "${CLIENT_VERSION}") -ge $(ver "1.1.93.896") && "${EXCLUDE_EXPERIMENTAL_FLAG}" == "false" ]]; then
     [[ $(ver "${CLIENT_VERSION}") -gt $(ver "1.1.93.896") && $(ver "${CLIENT_VERSION}") -lt $(ver "1.1.97.956") ]] && $PERL "${NEW_UI}" "${XPUI_JS}"
     [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.1.97.956") && $(ver "${CLIENT_VERSION}") -lt $(ver "1.2.3.1107") ]] && $PERL "${NEW_UI_2}" "${XPUI_JS}"
-    if [[ "${DISABLELEFTSIDEBAR_OPT}" == "true" ]]; then 
+    if [[ "${DISABLELEFTSIDEBAR_OPT}" == "true" ]]; then
 			perl -e 'print "\xE2\x9C\x94\x20\x44\x69\x73\x61\x62\x6C\x65\x64\x20\x6C\x65\x66\x74\x20\x73\x69\x64\x65\x62\x61\x72\n"'
 		elif [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.1.97.962") ]]; then
 			$PERL "${ENABLE_LEFT_SIDEBAR}" "${XPUI_JS}"
 		fi
     if [[ "${DISABLERIGHTSIDEBAR_OPT}" == "true" ]]; then
 			perl -e 'print "\xE2\x9C\x94\x20\x44\x69\x73\x61\x62\x6C\x65\x64\x20\x72\x69\x67\x68\x74\x20\x73\x69\x64\x65\x62\x61\x72\n"'
-		elif [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.1.98.683") ]]; then 
-			$PERL "${ENABLE_RIGHT_SIDEBAR}" "${XPUI_JS}"; 
-			if [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.2.7.1264") ]]; then 
+		elif [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.1.98.683") ]]; then
+			$PERL "${ENABLE_RIGHT_SIDEBAR}" "${XPUI_JS}";
+			if [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.2.7.1264") ]]; then
 				$PERL "${ENABLE_RIGHT_SIDEBAR_CREDITS}" "${XPUI_JS}"
 				$PERL "${ENABLE_RIGHT_SIDEBAR_MERCH_FALLBACK}" "${XPUI_JS}"
 				$PERL "${ENABLE_RIGHT_SIDEBAR_TRANSITION_ANIMATIONS}" "${XPUI_JS}"
 			fi
 		fi
-    if [[ "${DISABLESIDEBARCOLORS_OPT}" == "true" ]]; then 
+    if [[ "${DISABLESIDEBARCOLORS_OPT}" == "true" ]]; then
 			perl -e 'print "\xE2\x9C\x94\x20\x44\x69\x73\x61\x62\x6C\x65\x64\x20\x73\x69\x64\x65\x62\x61\x72\x20\x63\x6F\x6C\x6F\x72\x73\n"'
 		elif [[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.2.0.1165") ]]; then
 				$PERL "${ENABLE_RIGHT_SIDEBAR_COLORS}" "${XPUI_JS}"
 		fi
-    if [[ "${DISABLESIDEBARLYRICS_OPT}" == "true" ]]; then 
+    if [[ "${DISABLESIDEBARLYRICS_OPT}" == "true" ]]; then
 			perl -e 'print "\xE2\x9C\x94\x20\x44\x69\x73\x61\x62\x6C\x65\x64\x20\x73\x69\x64\x65\x62\x61\x72\x20\x6C\x79\x72\x69\x63\x73\n"'
-		else 
+		else
 			[[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.2.0.1165") ]] && $PERL "${ENABLE_RIGHT_SIDEBAR_LYRICS}" "${XPUI_JS}"
     	[[ $(ver "${CLIENT_VERSION}") -ge $(ver "1.2.7.1264") ]] &&	$PERL "${ENABLE_PANEL_SIZE_COORDINATION}" "${XPUI_JS}"
 		fi
