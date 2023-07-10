@@ -199,6 +199,7 @@ enableNavAltExperiment2='s|Enable the new home structure and navigation",values:
 enableYLXSidebar='s|Enable Your Library X view of the left sidebar",default:\K!1|true|s'
 enablePanelSizeCoordination='s|Enable Panel Size Coordination between the left sidebar, the main view and the right sidebar",default:\K!1|true|s'
 enableRightSidebar='s|Enable the view on the right sidebar",default:\K!1|true|s'
+enableRightSidebarArtistEnhanced='s|Enable Artist about V2 section in NPV",default:\K!1|true|s'
 enableRightSidebarColors='s|Extract background color based on artwork image",default:\K!1|true|s'
 enableRightSidebarCredits='s|Show credits in the right sidebar",default:\K!1|true|s'
 enableRightSidebarLyrics='s|Show lyrics in the right sidebar",default:\K!1|true|s'
@@ -462,6 +463,7 @@ if [[ -z "${oldUi+x}" ]] && (($(ver "${clientVer}") > $(ver "1.1.93.896"))); the
   (($(ver "${clientVer}") >= $(ver "1.2.7.1264"))) && { $perlVar "${enableRightSidebarCredits}" "${xpuiJs}"; $perlVar "${enableRightSidebarMerchFallback}" "${xpuiJs}"; $perlVar "${enableRightSidebarTransitionAnimations}" "${xpuiJs}"; }
   (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && $perlVar "${enableRightSidebarColors}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && $perlVar "${enableRightSidebarLyrics}" "${xpuiJs}"
+  (($(ver "${clientVer}") > $(ver "1.2.15.828"))) && $perlVar "${enableRightSidebarArtistEnhanced}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.7.1264"))) && $perlVar "${enablePanelSizeCoordination}" "${xpuiJs}"
   perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"'
 fi
