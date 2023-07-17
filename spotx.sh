@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.15.828.g79f41970"
+buildVer="1.2.16.947.gcfbaa410"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -128,7 +128,6 @@ echo
 if [[ "${platformType}" == "macOS" ]]; then
   (("${OSTYPE:6:2}" < 15)) && { echo -e "\n${red}Error:${clear} OS X 10.11+ required\n" >&2; exit 1; }
   [[ -z "${skipCodesign+x}" ]] && { command -v codesign >/dev/null || { echo -e "\n${red}Error:${clear} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clear}\n" >&2; exit 1; } }
-  command pgrep [sS]potify >/dev/null && osascript -e 'quit app "Spotify"'
   [[ -z ${versionVar+x} ]] && versionVar="${buildVer}"
   [[ $(sysctl -n machdep.cpu.brand_string) =~ "Apple" ]] && archVar="arm64" || archVar="x86_64"
   grab1="$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 -D | base64 -D)"
@@ -251,6 +250,7 @@ elif (($(ver "${clientVer}") > $(ver "${sxbVer}"))); then
 fi
 
 verCk3
+command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
 
 if [[ "${uninstallSpotx}" ]]; then
   [[ ! -f "${xpuiBak}" ]] && { echo -e "${red}Error:${clear} No backup found, exiting...\n" >&2; exit 1; }
@@ -388,6 +388,7 @@ else
   $perlVar 's|Enable support for adding a playlist to another playlist",default:\K!1|true|s' "${xpuiJs}" #enableAddPlaylistToPlaylist
   $perlVar 's|Enable the cover art modal on the Album page",default:\K!1|true|s' "${xpuiJs}" #enableAlbumCoverArtModal
   $perlVar 's|Enable album prerelease pages",default:\K!1|true|s' "${xpuiJs}" #enableAlbumPrerelease
+  $perlVar 's|Enable Aligned Curation",default:\K!1|true|s' "${xpuiJs}" #enableAlignedCuration
   $perlVar 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' "${xpuiJs}" #enableAttackOnTitanEasterEgg
   $perlVar 's|Enable Audiobooks feature on ClientX",default:\K!1|true|s' "${xpuiJs}" #enableAudiobooks
   $perlVar 's|Enable a different heart button for Bad Bunny",default:\K!1|true|s' "${xpuiJs}" #enableBadBunnyEasterEgg
@@ -464,7 +465,7 @@ if [[ -z "${oldUi+x}" ]] && (($(ver "${clientVer}") > $(ver "1.1.93.896"))); the
   (($(ver "${clientVer}") >= $(ver "1.2.7.1264"))) && { $perlVar "${enableRightSidebarCredits}" "${xpuiJs}"; $perlVar "${enableRightSidebarMerchFallback}" "${xpuiJs}"; $perlVar "${enableRightSidebarTransitionAnimations}" "${xpuiJs}"; }
   (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && $perlVar "${enableRightSidebarColors}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && $perlVar "${enableRightSidebarLyrics}" "${xpuiJs}"
-  (($(ver "${clientVer}") > $(ver "1.2.15.828"))) && $perlVar "${enableRightSidebarArtistEnhanced}" "${xpuiJs}"
+  (($(ver "${clientVer}") >= $(ver "1.2.16.947"))) && $perlVar "${enableRightSidebarArtistEnhanced}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.7.1264"))) && $perlVar "${enablePanelSizeCoordination}" "${xpuiJs}"
   perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"'
 fi
