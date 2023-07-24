@@ -258,7 +258,7 @@ if [[ "${uninstallSpotx}" ]]; then
   mv "${xpuiBak}" "${xpuiSpa}"
   rm "${appBinary}" 2>/dev/null
   mv "${appBak}" "${appBinary}"
-  perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n"'
+  printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n"
   exit 0
 fi
 
@@ -274,7 +274,7 @@ read_yn () {
 }
 
 if [[ "${interactiveMode}" ]]; then
-  perl -e 'print "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n"'
+  printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n"
   [[ "${platformType}" == "macOS" && -z "${installClient+x}" ]] && { read_yn "Download & install Spotify ${sxbVer}? " && installClient='true'; }
   [[ "${platformType}" == "macOS" ]] && { read_yn "Block Spotify auto-updates? " && blockUpdates='true'; }
   read_yn "Enable experimental features? " || excludeExp='true'
@@ -286,11 +286,11 @@ fi
 if [[ "${platformType}" == "macOS" && "${installClient}" ]]; then
   curl -q -f -I -s -o /dev/null "$grab2" || { echo -e "\n${red}Error:${clear} Client download failed\n" >&2; exit 1; }
   curl -q --progress-bar -f -o "$HOME/Downloads/${fileVar}" "$grab2" || { echo -e "\n${red}Error:${clear} Client download failed\n" >&2; exit 1; }
-  perl -e 'print "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"'
+  printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   rm -rf "${appPath}" 2>/dev/null
   mkdir "${appPath}"
   tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled || { echo -e "\n${red}Error:${clear} Client install failed. Exiting...\n" >&2; rm "$HOME/Downloads/${fileVar}" 2>/dev/null; exit 1; }
-  perl -e 'print "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installPath}"'\n"'
+  printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installPath}"'\n"
   rm "$HOME/Downloads/${fileVar}"
   clientVer="$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')"
 fi
@@ -307,26 +307,26 @@ fi
 if [[ -f "${appBak}" || -f "${xpuiBak}" ]] && [[ "${forceSpotx}" ]]; then
   [[ -f "${appBak}" ]] && { rm "${appBinary}"; cp "${appBak}" "${appBinary}"; }
   [[ -f "${xpuiBak}" ]] && { rm "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
-  perl -e 'print "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"'
+  printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
 elif [[ -f "${appBak}" || -f "${xpuiBak}" ]] && [[ -z "${forceSpotx+x}" ]]; then
-  perl -e 'print "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"'
+  printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
   echo -e "${yellow}Warning:${clear} SpotX has already been installed." >&2
   echo -e "Use the '-f' flag to force SpotX to run.\n" >&2
   xpuiSkip="true"
 else
   cp "${xpuiSpa}" "${xpuiBak}"
   cp "${appBinary}" "${appBak}"
-  perl -e 'print "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"'
+  printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
 fi
 
 if [[ "${clearCache}" ]]; then
   rm -rf "${cachePath}/Browser" 2>/dev/null
   rm -rf "${cachePath}/Data" 2>/dev/null
   rm "${cachePath}/LocalPrefs.json" 2>/dev/null
-  perl -e 'print "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"'
+  printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
 fi
 
-[[ "${xpuiSkip}" ]] && { perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"'; exit 1; }
+[[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 1; }
 
 unzip -qq "${xpuiSpa}" -d "${xpuiDir}"
 
@@ -365,11 +365,11 @@ if [[ -z "${paidPremium+x}" ]]; then
   (($(ver "${clientVer}") < $(ver "1.1.91.824"))) && { $perlVar "${connectOld1}" "${xpuiJs}"; $perlVar "${connectOld2}" "${xpuiJs}"; $perlVar "${connectOld3}" "${xpuiJs}"; }
   (($(ver "${clientVer}") >= $(ver "1.1.91.824") && $(ver "${clientVer}") < $(ver "1.1.96.783"))) && { $perlVar "${enableImprovedDevicePickerUI1}" "${xpuiJs}"; $perlVar "${connectNew}" "${xpuiJs}"; }
   (($(ver "${clientVer}") > $(ver "1.1.96.783"))) && $perlVar "${connectNew}" "${xpuiJs}"
-  perl -e 'print "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x61\x75\x64\x69\x6F\x2C\x20\x62\x61\x6E\x6E\x65\x72\x20\x26\x20\x76\x69\x64\x65\x6F\x20\x61\x64\x73\n"'
+  printf "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x61\x75\x64\x69\x6F\x2C\x20\x62\x61\x6E\x6E\x65\x72\x20\x26\x20\x76\x69\x64\x65\x6F\x20\x61\x64\x73\n"
 else
-  perl -e 'print "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n"'
+  printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n"
   $perlVar "${adSlot}" "${appBinary}"
-  perl -e 'print "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x70\x6F\x64\x63\x61\x73\x74\x20\x61\x64\x73\n"'
+  printf "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x70\x6F\x64\x63\x61\x73\x74\x20\x61\x64\x73\n"
 fi
 
 if [[ "${devMode}" ]] && (($(ver "${clientVer}") > $(ver "1.1.99.878"))); then
@@ -378,11 +378,11 @@ if [[ "${devMode}" ]] && (($(ver "${clientVer}") > $(ver "1.1.99.878"))); then
   [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\x91\xE2\x43\x02\x91\K..\x00\x94(?=\xF8\x03)|\x60\x00\x80\xD2|' "${appBinary}"
   $perlVar 's/(return ).{1,3}(\?(.{1,4}createElement|\(.{1,7}.jsxs\))\(.{3,7}\{displayText:"Debug Tools")/$1true$2/' "${xpuiJs}"
   $perlVar 's|(.{1,5},\{role.{25,35}children."Locales"\}\))||' "${xpuiJs}"
-  perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x64\x65\x76\x65\x6C\x6F\x70\x65\x72\x20\x6D\x6F\x64\x65\n"'
+  printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x64\x65\x76\x65\x6C\x6F\x70\x65\x72\x20\x6D\x6F\x64\x65\n"
 fi
 
 if [[ "${excludeExp}" ]]; then
-  perl -e 'print "\xE2\x9C\x94\x20\x53\x6B\x69\x70\x70\x65\x64\x20\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x61\x6C\x20\x66\x65\x61\x74\x75\x72\x65\x73\n"'
+  printf "\xE2\x9C\x94\x20\x53\x6B\x69\x70\x70\x65\x64\x20\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x61\x6C\x20\x66\x65\x61\x74\x75\x72\x65\x73\n"
 else
   [[ "${paidPremium}" ]] && $perlVar 's|addYourDJToLibraryOnPlayback",description:"Add Your DJ to library on playback",default:\K!1|true|s' "${xpuiJs}" #addYourDJToLibraryOnPlayback
   $perlVar 's|Enable support for adding a playlist to another playlist",default:\K!1|true|s' "${xpuiJs}" #enableAddPlaylistToPlaylist
@@ -448,12 +448,12 @@ else
   (($(ver "${clientVer}") >= $(ver "1.2.12.902"))) && $perlVar 's|Enable the what.s new feed panel",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeed
   $perlVar 's|jump to the first matching item",default:\K!1|true|s' "${xpuiJs}" #enableYLXTypeaheadSearch
   [[ "${paidPremium}" ]] && $perlVar 's|Enables the .Your DJ. feature.,default:\K!1|true|s' "${xpuiJs}" #enableYourDJ
-  perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x61\x6C\x20\x66\x65\x61\x74\x75\x72\x65\x73\n"'
+  printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x61\x6C\x20\x66\x65\x61\x74\x75\x72\x65\x73\n"
 fi
 
 if [[ "${oldUi}" ]]; then
   (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { $perlVar "${disableYLXSidebar}" "${xpuiJs}"; $perlVar "${disableRightSidebar}" "${xpuiJs}"; }
-  (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6F\x6C\x64\x20\x55\x49\n"'
+  (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6F\x6C\x64\x20\x55\x49\n"
   (($(ver "${clientVer}") > $(ver "1.2.13.661"))) && { echo -e "\n${yellow}Warning:${clear} Old UI not supported in clients after v1.2.13.661...\n" >&2; unset oldUi; }
 fi
 
@@ -467,13 +467,13 @@ if [[ -z "${oldUi+x}" ]] && (($(ver "${clientVer}") > $(ver "1.1.93.896"))); the
   (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && $perlVar "${enableRightSidebarLyrics}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.16.947"))) && $perlVar "${enableRightSidebarArtistEnhanced}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.2.7.1264"))) && $perlVar "${enablePanelSizeCoordination}" "${xpuiJs}"
-  perl -e 'print "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"'
+  printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"
 fi
 
 if [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))); then
   (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${hidePodcasts}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${hidePodcasts2}" "${xpuiJs}"
-  perl -e 'print "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"'
+  printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"
 fi
 
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
@@ -482,7 +482,7 @@ $perlVar "${enableUserFraudVerification}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerificationRequest}" "${xpuiJs}"
 $perlVar "${logV3}" "${xpuiJs}"
 $perlVar "${logSentry}" "${vendorXpuiJs}"
-perl -e 'print "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6C\x6F\x67\x67\x69\x6E\x67\n"'
+printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6C\x6F\x67\x67\x69\x6E\x67\n"
 
 $perlVar 's;((..createElement|children:\(.{1,7}\))\(.{1,7},\{source:).{1,7}get\("about.copyright",.\),paragraphClassName:.(?=\}\));$1"<h3>About SpotX / SpotX-Bash</h3><br><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'\'' fill='\''#fff'\''/></svg> Github</summary><a href='\''https://github.com/amd64fox/SpotX'\''>SpotX \(Windows\)</a><br><a href='\''https://github.com/jetfir3/SpotX-Bash'\''>SpotX-Bash \(Linux/macOS\)</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path id='\''telegram-1'\'' d='\''M18.384,22.779c0.322,0.228 0.737,0.285 1.107,0.145c0.37,-0.141 0.642,-0.457 0.724,-0.84c0.869,-4.084 2.977,-14.421 3.768,-18.136c0.06,-0.28 -0.04,-0.571 -0.26,-0.758c-0.22,-0.187 -0.525,-0.241 -0.797,-0.14c-4.193,1.552 -17.106,6.397 -22.384,8.35c-0.335,0.124 -0.553,0.446 -0.542,0.799c0.012,0.354 0.25,0.661 0.593,0.764c2.367,0.708 5.474,1.693 5.474,1.693c0,0 1.452,4.385 2.209,6.615c0.095,0.28 0.314,0.5 0.603,0.576c0.288,0.075 0.596,-0.004 0.811,-0.207c1.216,-1.148 3.096,-2.923 3.096,-2.923c0,0 3.572,2.619 5.598,4.062Zm-11.01,-8.677l1.679,5.538l0.373,-3.507c0,0 6.487,-5.851 10.185,-9.186c0.108,-0.098 0.123,-0.262 0.033,-0.377c-0.089,-0.115 -0.253,-0.142 -0.376,-0.064c-4.286,2.737 -11.894,7.596 -11.894,7.596Z'\'' fill='\''#fff'\''/></svg> Telegram</summary><a href='\''https://t.me/spotify_windows_mod'\''>SpotX Channel</a><br><a href='\''https://t.me/SpotxCommunity'\''>SpotX Community</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1.25 17c0 .69-.559 1.25-1.25 1.25-.689 0-1.25-.56-1.25-1.25s.561-1.25 1.25-1.25c.691 0 1.25.56 1.25 1.25zm1.393-9.998c-.608-.616-1.515-.955-2.551-.955-2.18 0-3.59 1.55-3.59 3.95h2.011c0-1.486.829-2.013 1.538-2.013.634 0 1.307.421 1.364 1.226.062.847-.39 1.277-.962 1.821-1.412 1.343-1.438 1.993-1.432 3.468h2.005c-.013-.664.03-1.203.935-2.178.677-.73 1.519-1.638 1.536-3.022.011-.924-.284-1.719-.854-2.297z'\'' fill='\''#fff'\''/></svg> FAQ</summary><a href='\''https://te.legra.ph/SpotX-FAQ-09-19'\''>Windows</a><br><a href='\''https://github.com/jetfir3/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ'\''>Linux/macOS</a></details><br><h4>DISCLAIMER</h4>SpotX is a modified version of the official Spotify&reg\; client, provided &quot\;as is&quot\; for the purpose of evaluation at user'\''s own risk. Source code for SpotX is available separately and free of charge under open source software license agreements. SpotX is not affiliated with Spotify&reg\;, Spotify AB or Spotify Group.<br><br>Spotify&reg\; is a registered trademark of Spotify Group.";' "${xpuiDesktopModalsJs}"
 
@@ -492,10 +492,10 @@ rm "${xpuiSpa}"
 rm -rf "${xpuiDir}"
 
 if [[ "${platformType}" == "macOS" ]]; then
-  [[ "${blockUpdates}" ]] && { $perlVar 's|\x00\K\x77(?=\x67\x3A\x2F\x2F\x64)|\x00|' "${appBinary}"; perl -e 'print "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x61\x75\x74\x6F\x6D\x61\x74\x69\x63\x20\x75\x70\x64\x61\x74\x65\x73\n"'; }
-  [[ -z "${skipCodesign+x}" ]] && { codesign -f -s - --deep "${appPath}" 2>/dev/null; perl -e 'print "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"'; }
+  [[ "${blockUpdates}" ]] && { $perlVar 's|\x00\K\x77(?=\x67\x3A\x2F\x2F\x64)|\x00|' "${appBinary}"; printf "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x61\x75\x74\x6F\x6D\x61\x74\x69\x63\x20\x75\x70\x64\x61\x74\x65\x73\n"; }
+  [[ -z "${skipCodesign+x}" ]] && { codesign -f -s - --deep "${appPath}" 2>/dev/null; printf "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"; }
   xattr -cr "${appPath}" 2>/dev/null
 fi
 
-perl -e 'print "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"'
+printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"
 exit 0
