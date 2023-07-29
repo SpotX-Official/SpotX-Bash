@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.16.947.gcfbaa410"
+buildVer="1.2.17.832.g15fa351e"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -230,6 +230,7 @@ enableConnectEsperantoState='s|Enable retrieving connect state from Esperanto in
 enableEsperantoMigration='s|Enable esperanto Migration for Ad Formats",default:\K!.(?=})|false|s'
 enableHptoLocationRefactor='s|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s'
 enableUserFraudCanvas='s|Enable user fraud Canvas Fingerprinting",default:\K!.(?=})|false|s'
+enableUserFraudCspViolation='s|description:"Enable CSP violation detection",default:\K!.(?=})|false|s'
 enableUserFraudSignals='s|Enable user fraud signals",default:\K!.(?=})|false|s'
 enableUserFraudVerification='s|Enable user fraud verification",default:\K!.(?=})|false|s'
 enableUserFraudVerificationRequest='s|Enable the IAV component make api requests",default:\K!.(?=})|false|s'
@@ -396,6 +397,7 @@ else
   $perlVar 's|rendering subtitles on the betamax SDK on DesktopX",default:\K!1|true|s' "${xpuiJs}" #enableBetamaxSdkSubtitlesDesktopX
   $perlVar 's|Panther Easter egg turning progress bar purple when playing official soundtrack",default:\K!1|true|s' "${xpuiJs}" #enableBlackPantherEasterEgg
   $perlVar 's|Enable block users feature in clientX",default:\K!1|true|s' "${xpuiJs}" #enableBlockUsers
+  $perlVar 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' "${xpuiJs}" #enableBrowseViaPathfinder
   $perlVar 's|Use carousels on Home",default:\K!1|true|s' "${xpuiJs}" #enableCarouselsOnHome
   $perlVar 's|Enable option in settings to clear all downloads",default:\K!1|true|s' "${xpuiJs}" #enableClearAllDownloads
   $perlVar 's|Enable Tour Card on This is Playlist",default:\K!1|true|s' "${xpuiJs}" #enableConcertsForThisIsPlaylist
@@ -426,28 +428,34 @@ else
   $perlVar 's|Mermaid playlist easter egg video background",default:\K!1|true|s' "${xpuiJs}" #enableMyLittleMermaidEasterEggVideo
   $perlVar 's|Enable New Entity Headers",default:\K!1|true|s' "${xpuiJs}" #enableNewEntityHeaders
   $perlVar 's|Enable the new episodes view",default:\K!1|true|s' "${xpuiJs}" #enableNewEpisodes
+  $perlVar 's|Enable showing podcast transcripts on desktop and web player",default:\K!1|true|s' "${xpuiJs}" #enableNewPodcastTranscripts
   $perlVar 's|Enable the next best episode block on the show page",default:\K!1|true|s' "${xpuiJs}" #enableNextBestEpisode
-  $perlVar 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' "${xpuiJs}" #enableBrowseViaPathfinder
   $perlVar 's|Enable pick and shuffle",default:\K!.(?=})|false|s' "${xpuiJs}" #enablePickAndShuffle
+  $perlVar 's|Enable the PiP Mini Player",default:\K!1|true|s' "${xpuiJs}" #enablePiPMiniPlayer
   $perlVar 's|Load context to enable play button on first load",default:\K!1|true|s' "${xpuiJs}" #enablePlayAtFirstTap
   $perlVar 's|Enables new playlist creation flow in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistCreationFlow
   $perlVar 's|Enable Playlist Permissions flows for Prod",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistPermissionsProd
-  $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
-  $perlVar 's|Enable showing podcast transcripts on desktop and web player",default:\K!1|true|s' "${xpuiJs}" #enableNewPodcastTranscripts
-  $perlVar 's|Enable silence trimming in podcasts",default:\K!1|true|s' "${xpuiJs}" #enableSilenceTrimmer
+  $perlVar 's|Enable read along transcripts in the NPV",default:\K!1|true|s' "${xpuiJs}" #enableReadAlongTranscripts
+  $perlVar 's|Enable the slide-in.out transition on the sidebars in the RootGrid",default:\K!1|true|s' "${xpuiJs}" #enableRootGridAnimations
   $perlVar 's|filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1|true|s' "${xpuiJs}" #enableSearchBox
   $perlVar 's|Enable new Search experience",default:\K!1|true|s' "${xpuiJs}" #enableSearchV3
-  $perlVar 's|Show Wrapped banner on wrapped genre page",default:\K!1|true|s' "${xpuiJs}" #showWrappedBanner
+  $perlVar 's|Display share icon for sharing an event",default:\K!1|true|s' "${xpuiJs}" #enableShareEvent
+  $perlVar 's|Enable silence trimming in podcasts",default:\K!1|true|s' "${xpuiJs}" #enableSilenceTrimmer
   $perlVar 's/,(.\.isOwnedBySelf&&)((\(.{0,11}\)|..createElement)\(.{1,3}Fragment,.+?{(uri:.|spec:.),(uri:.|spec:.).+?contextmenu.create-similar-playlist"\)}\),)/,$2$1/s' "${xpuiJs}" #createSimilarPlaylist
   $perlVar 's|Enables SingAlong in the Lyrics feature",default:\K!1|true|s' "${xpuiJs}" #enableSingAlong
+  $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
   (($(ver "${clientVer}") >= $(ver "1.2.14.1141"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
+  $perlVar 's|Display sold by spotify shelf on All Events tab",default:\K!1|true|s' "${xpuiJs}" #enableSoldBySpotifyShelf
   [[ "${paidPremium}" ]] && $perlVar 's|group listening sessions for Desktop",default:\K!.(?=})|true|s' "${xpuiJs}" #enableSocialConnectOnDesktop
   $perlVar 's|Enable the Stranger Things upside down Easter Egg",default:\K!1|true|s' "${xpuiJs}" #enableStrangerThingsEasterEgg
   $perlVar 's|label in the subtitle picker.,default:\K!1|true|s' "${xpuiJs}" #enableSubtitlesAutogeneratedLabel
+  $perlVar 's|Enable ability to toggle playlist column visibility",default:\K!1|true|s' "${xpuiJs}" #enableTogglePlaylistColumns
   $perlVar 's|Enables editing of user.s own profile in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enableUserProfileEdit
   (($(ver "${clientVer}") >= $(ver "1.2.12.902"))) && $perlVar 's|Enable the what.s new feed panel",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeed
+  $perlVar 's|Enable Whats new feed in the main view",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeedMainView
   $perlVar 's|jump to the first matching item",default:\K!1|true|s' "${xpuiJs}" #enableYLXTypeaheadSearch
   [[ "${paidPremium}" ]] && $perlVar 's|Enables the .Your DJ. feature.,default:\K!1|true|s' "${xpuiJs}" #enableYourDJ
+  $perlVar 's|Show Wrapped banner on wrapped genre page",default:\K!1|true|s' "${xpuiJs}" #showWrappedBanner
   printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x65\x78\x70\x65\x72\x69\x6D\x65\x6E\x74\x61\x6C\x20\x66\x65\x61\x74\x75\x72\x65\x73\n"
 fi
 
@@ -477,6 +485,7 @@ if [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))); 
 fi
 
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
+$perlVar "${enableUserFraudCspViolation}" "${xpuiJs}"
 $perlVar "${enableUserFraudSignals}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerification}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerificationRequest}" "${xpuiJs}"
