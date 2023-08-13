@@ -147,7 +147,7 @@ if [[ "${platformType}" == "macOS" ]]; then
   appBinary="${appPath}/Contents/MacOS/Spotify"
   appBak="${appPath}/Contents/MacOS/Spotify.bak"
   cachePath="${HOME}/Library/Caches/com.spotify.client"
-  xpuiPath="${appPath}/Spotify.app/Contents/Resources/Apps"
+  xpuiPath="${appPath}/Contents/Resources/Apps"
   [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clear} Codesigning has been skipped.\n" >&2
 fi
 
