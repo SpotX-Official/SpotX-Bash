@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.17.834.g26ee1129"
+buildVer="1.2.18.997.g167085cf"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -129,7 +129,7 @@ if [[ "${platformType}" == "macOS" ]]; then
   (("${OSTYPE:6:2}" < 15)) && { echo -e "\n${red}Error:${clear} OS X 10.11+ required\n" >&2; exit 1; }
   [[ -z "${skipCodesign+x}" ]] && { command -v codesign >/dev/null || { echo -e "\n${red}Error:${clear} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clear}\n" >&2; exit 1; } }
   [[ -z ${versionVar+x} ]] && versionVar="${buildVer}"
-  [[ $(sysctl -n machdep.cpu.brand_string) =~ "Apple" ]] && archVar="arm64" || archVar="x86_64"
+  archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
   grab1="$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 -D | base64 -D)"
   grab2="$(curl -q -sL "${grab1}" | perl -ne '/(ht.{6}u.{33}-'"${archVar}"'.{19}-'"${versionVar}"'.{1,20}bz)/ && print "$1"')"
   fileVar="$(echo "${grab2}" | grep -o "sp.*z")"
@@ -147,7 +147,7 @@ if [[ "${platformType}" == "macOS" ]]; then
   appBinary="${appPath}/Contents/MacOS/Spotify"
   appBak="${appPath}/Contents/MacOS/Spotify.bak"
   cachePath="${HOME}/Library/Caches/com.spotify.client"
-  xpuiPath="${installPath}/Spotify.app/Contents/Resources/Apps"
+  xpuiPath="${appPath}/Spotify.app/Contents/Resources/Apps"
   [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clear} Codesigning has been skipped.\n" >&2
 fi
 
@@ -159,10 +159,11 @@ if [[ "${platformType}" == "Linux" ]]; then
   else
     [[ -f "${installPath}/Apps/xpui.spa" ]] && echo -e "Using Spotify Directory: ${installPath}\n" || { echo -e "${red}Error:${clear} Spotify not found in path set by '-P'.\nConfirm directory and try again.\n" >&2; exit 1; }
   fi
-  appBinary="${installPath}/spotify"
-  appBak="${installPath}/spotify.bak"
+  appPath="${installPath}"
+  appBinary="${appPath}/spotify"
+  appBak="${appPath}/spotify.bak"
   cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
-  xpuiPath="${installPath}/Apps"
+  xpuiPath="${appPath}/Apps"
 fi
 
 xpuiDir="${xpuiPath}/xpui"
@@ -191,6 +192,9 @@ adSlot='s|\x00\K\x73(?=\x6C\x6F\x74\x73\x00)|\x00|'
 adUpgradeButton='s/(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===/$1"premium"===$2$3"free"===/g'
 enableInAppMessaging='s|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s'
 enableDesktopMusicLeavebehinds='s|Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})|false|s'
+enableNewAdsNpv='s|Enable showing new ads NPV",default:\K!.(?=})|false|s'
+enableNewAdsNpvVideoTakeover='s|Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})|false|s'
+enableNewAdsNpvColorExtraction='s|Enable CTA card color extraction for new ads NPV",default:\K!.(?=})|false|s'
 
 disableYLXSidebar='s|Enable Your Library X view of the left sidebar",default:\K!.(?=})|false|s'
 disableRightSidebar='s|Enable the view on the right sidebar",default:\K!.(?=})|false|s'
@@ -301,7 +305,7 @@ fi
 
 if [[ ! -w "${xpuiPath}" ]]; then
   echo -e "${yellow}Warning:${clear} SpotX does not have write permission in Spotify directory.\nRequesting sudo permission...\n" >&2
-  sudo chmod a+wr "${installPath}" && sudo chmod a+wr -R "${xpuiPath}"
+  sudo chmod a+wr -R "${appPath}"
   [[ ! -w "${xpuiPath}" ]] && { echo -e "\n${red}Error:${clear} SpotX was not given sudo permission. Exiting...\n" >&2; exit 1; }
 fi
 
@@ -359,6 +363,9 @@ if [[ -z "${paidPremium+x}" ]]; then
   $perlVar "${enableDsa}" "${xpuiJs}"
   $perlVar "${enableEsperantoMigration}" "${xpuiJs}"
   $perlVar "${enableHptoLocationRefactor}" "${xpuiJs}"
+  $perlVar "${enableNewAdsNpv}" "${xpuiJs}"
+  $perlVar "${enableNewAdsNpvVideoTakeover}" "${xpuiJs}"
+  $perlVar "${enableNewAdsNpvColorExtraction}" "${xpuiJs}"
   $perlVar "${hideDLQual}" "${xpuiJs}"
   $perlVar "${hptoEnabled}" "${xpuiJs}"
   (($(ver "${clientVer}") > $(ver "1.1.84.716"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
@@ -376,7 +383,7 @@ fi
 if [[ "${devMode}" ]] && (($(ver "${clientVer}") > $(ver "1.1.99.878"))); then
   [[ "${platformType}" == "Linux" ]] && $perlVar 's|\xFF\xFF\K\xE8..(?=\x00\x00\x89.\xF6\x85)|\xB8\x03\x00|' "${appBinary}"
   [[ "${platformType}" == "macOS" && "${archVar}" == "x86_64" ]] && $perlVar 's|\x95.\xFA\xFF\xFF\K\xE8..(?=\x00\x00\x89.\xF6)|\xB8\x03\x00|' "${appBinary}"
-  [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\x91\xE2\x43\x02\x91\K..\x00\x94(?=\xF8\x03)|\x60\x00\x80\xD2|' "${appBinary}"
+  [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\x00\xB9\xE1\xC3\x07\x91\xE2.\x02\x91\K..\x00\x94(?=\xF8\x03)|\x60\x00\x80\xD2|' "${appBinary}"
   $perlVar 's/(return ).{1,3}(\?(.{1,4}createElement|\(.{1,7}.jsxs\))\(.{3,7}\{displayText:"Debug Tools")/$1true$2/' "${xpuiJs}"
   $perlVar 's|(.{1,5},\{role.{25,35}children."Locales"\}\))||' "${xpuiJs}"
   printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x64\x65\x76\x65\x6C\x6F\x70\x65\x72\x20\x6D\x6F\x64\x65\n"
@@ -426,6 +433,7 @@ else
   $perlVar 's|Show "Made For You" entry point in the left sidebar.,default:\K!1|true|s' "${xpuiJs}" #enableMadeForYou
   $perlVar 's|Mermaid playlist easter egg",default:\K!1|true|s' "${xpuiJs}" #enableMyLittleMermaidEasterEgg
   $perlVar 's|Mermaid playlist easter egg video background",default:\K!1|true|s' "${xpuiJs}" #enableMyLittleMermaidEasterEggVideo
+  $perlVar 's|Display the new Artist events page",default:\K!1|true|s' "${xpuiJs}" #enableNewArtistEventsPage
   $perlVar 's|Enable New Entity Headers",default:\K!1|true|s' "${xpuiJs}" #enableNewEntityHeaders
   $perlVar 's|Enable the new episodes view",default:\K!1|true|s' "${xpuiJs}" #enableNewEpisodes
   $perlVar 's|Enable showing podcast transcripts on desktop and web player",default:\K!1|true|s' "${xpuiJs}" #enableNewPodcastTranscripts
@@ -435,6 +443,7 @@ else
   $perlVar 's|Load context to enable play button on first load",default:\K!1|true|s' "${xpuiJs}" #enablePlayAtFirstTap
   $perlVar 's|Enables new playlist creation flow in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistCreationFlow
   $perlVar 's|Enable Playlist Permissions flows for Prod",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistPermissionsProd
+  $perlVar 's|Enable Queue on the right panel.",default:\K!1|true|s' "${xpuiJs}" #enableQueueOnRightPanel
   $perlVar 's|Enable read along transcripts in the NPV",default:\K!1|true|s' "${xpuiJs}" #enableReadAlongTranscripts
   $perlVar 's|Enable the slide-in.out transition on the sidebars in the RootGrid",default:\K!1|true|s' "${xpuiJs}" #enableRootGridAnimations
   $perlVar 's|filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1|true|s' "${xpuiJs}" #enableSearchBox
@@ -443,6 +452,7 @@ else
   $perlVar 's|Enable silence trimming in podcasts",default:\K!1|true|s' "${xpuiJs}" #enableSilenceTrimmer
   $perlVar 's/,(.\.isOwnedBySelf&&)((\(.{0,11}\)|..createElement)\(.{1,3}Fragment,.+?{(uri:.|spec:.),(uri:.|spec:.).+?contextmenu.create-similar-playlist"\)}\),)/,$2$1/s' "${xpuiJs}" #createSimilarPlaylist
   $perlVar 's|Enables SingAlong in the Lyrics feature",default:\K!1|true|s' "${xpuiJs}" #enableSingAlong
+  $perlVar 's|Enable line height 1.5 on the .body ..",default:\K!1|true|s' "${xpuiJs}" #enableSmallerLineHeight
   $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
   (($(ver "${clientVer}") >= $(ver "1.2.14.1141"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
   $perlVar 's|Display sold by spotify shelf on All Events tab",default:\K!1|true|s' "${xpuiJs}" #enableSoldBySpotifyShelf
@@ -453,6 +463,7 @@ else
   $perlVar 's|Enables editing of user.s own profile in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enableUserProfileEdit
   (($(ver "${clientVer}") >= $(ver "1.2.12.902"))) && $perlVar 's|Enable the what.s new feed panel",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeed
   $perlVar 's|Enable Whats new feed in the main view",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeedMainView
+  $perlVar 's|Enable Your Library X Enhancements",default:\K!1|true|s' "${xpuiJs}" #enableYLXEnhancements
   $perlVar 's|jump to the first matching item",default:\K!1|true|s' "${xpuiJs}" #enableYLXTypeaheadSearch
   [[ "${paidPremium}" ]] && $perlVar 's|Enables the .Your DJ. feature.,default:\K!1|true|s' "${xpuiJs}" #enableYourDJ
   $perlVar 's|Show Wrapped banner on wrapped genre page",default:\K!1|true|s' "${xpuiJs}" #showWrappedBanner
