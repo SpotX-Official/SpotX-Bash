@@ -130,7 +130,7 @@ if [[ "${platformType}" == "macOS" ]]; then
   [[ -z "${skipCodesign+x}" ]] && { command -v codesign >/dev/null || { echo -e "\n${red}Error:${clear} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clear}\n" >&2; exit 1; } }
   [[ -z ${versionVar+x} ]] && versionVar="${buildVer}"
   archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
-  grab1="$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 -D | base64 -D)"
+  grab1="$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 -d | base64 -d)"
   grab2="$(curl -q -sL "${grab1}" | perl -ne '/(ht.{6}u.{33}-'"${archVar}"'.{19}-'"${versionVar}"'.{1,20}bz)/ && print "$1"')"
   fileVar="$(echo "${grab2}" | grep -o "sp.*z")"
   [[ "${installClient}" ]] && downloadVer="$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')"
