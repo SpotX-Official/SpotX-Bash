@@ -86,6 +86,6 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh) -B --installmac
 ```
 </details>
 
-### Thanks
+### Thanks:
 
 - [amd64fox](https://github.com/amd64fox/) of [SpotX](https://github.com/SpotX-Official/SpotX)
