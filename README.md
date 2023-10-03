@@ -1,10 +1,10 @@
   <p align="center">
-  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/.github/images/banner-logo.png" />
+  <a href="https://github.com/jetfir3/SpotX-Bash"><img src="https://spotx-official.github.io/images/logos/logo_sxb.png" />
 </p>
 
 <p align="center">        
-      <a href="https://github.com/amd64fox/SpotX"><img src="https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/.github/images/spotx.svg"></a>
-      <a href="https://t.me/SpotxCommunity"><img src="https://raw.githubusercontent.com/SpotX-Official/SpotX/main/.github/Pic/Shields/SpotX_Community.svg"></a>
+      <a href="https://github.com/amd64fox/SpotX"><img src="https://spotx-official.github.io/images/shields/spotx-win_sxb.svg"></a>
+      <a href="https://t.me/SpotxCommunity"><img src="https://spotx-official.github.io/images/shields/SpotX_Community.svg"></a>
       </p>
 
  ***     
