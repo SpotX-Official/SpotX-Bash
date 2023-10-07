@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.21.1104.g42cf0a50"
+buildVer="1.2.22.980.g8c845482"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -239,6 +239,7 @@ adUpgradeButton='s/(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===/$1"pre
 enableInAppMessaging='s|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s'
 enableDesktopMusicLeavebehinds='s|Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})|false|s'
 enableNewAdsNpv='s|Enable showing new ads NPV",default:\K!.(?=})|false|s'
+enableNewAdsNpvNewVideoTakeoverSlot='s|Enable new modal slot to position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})|false|s'
 enableNewAdsNpvVideoTakeover='s|Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})|false|s'
 enableNewAdsNpvColorExtraction='s|Enable CTA card color extraction for new ads NPV",default:\K!.(?=})|false|s'
 
@@ -281,7 +282,8 @@ enableConnectEsperantoState='s|Enable retrieving connect state from Esperanto in
 enableEsperantoMigration='s|Enable esperanto Migration for Ad Formats",default:\K!.(?=})|false|s'
 enableHptoLocationRefactor='s|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s'
 enableUserFraudCanvas='s|Enable user fraud Canvas Fingerprinting",default:\K!.(?=})|false|s'
-enableUserFraudCspViolation='s|description:"Enable CSP violation detection",default:\K!.(?=})|false|s'
+enableUserFraudCspViolation='s|Enable CSP violation detection",default:\K!.(?=})|false|s'
+enableFraudLoadSignals='sEnable user fraud signals emitted on page load",default:\K!.(?=})|false|s'
 enableUserFraudSignals='s|Enable user fraud signals",default:\K!.(?=})|false|s'
 enableUserFraudVerification='s|Enable user fraud verification",default:\K!.(?=})|false|s'
 enableUserFraudVerificationRequest='s|Enable the IAV component make api requests",default:\K!.(?=})|false|s'
@@ -475,6 +477,7 @@ if [[ -z "${paidPremium+x}" ]]; then
   $perlVar "${enableEsperantoMigration}" "${xpuiJs}"
   $perlVar "${enableHptoLocationRefactor}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpv}" "${xpuiJs}"
+  $perlVar "${enableNewAdsNpvNewVideoTakeoverSlot}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpvVideoTakeover}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpvColorExtraction}" "${xpuiJs}"
   $perlVar "${hideDLQual}" "${xpuiJs}"
@@ -547,21 +550,23 @@ else
   $perlVar 's|Enable Lyrics match labels in search results",default:\K!1|true|s' "${xpuiJs}" #ENABLE_LYRICS_MATCH
   $perlVar 's|Enable the new fullscreen lyrics page",default:\K!1|true|s' "${xpuiJs}" #enableLyricsNew
   $perlVar 's|Show "Made For You" entry point in the left sidebar.,default:\K!1|true|s' "${xpuiJs}" #enableMadeForYou
+  $perlVar 's|Route merchhub url to the new genre page for the wrapped takeover",default:\K!1|true|s' "${xpuiJs}" #enableMerchHubWrappedTakeover
   $perlVar 's|Mermaid playlist easter egg",default:\K!1|true|s' "${xpuiJs}" #enableMyLittleMermaidEasterEgg
   $perlVar 's|Mermaid playlist easter egg video background",default:\K!1|true|s' "${xpuiJs}" #enableMyLittleMermaidEasterEggVideo
   $perlVar 's|Display the new Artist events page",default:\K!1|true|s' "${xpuiJs}" #enableNewArtistEventsPage
   $perlVar 's|Enable New Entity Headers",default:\K!1|true|s' "${xpuiJs}" #enableNewEntityHeaders
   $perlVar 's|Enable the new episodes view",default:\K!1|true|s' "${xpuiJs}" #enableNewEpisodes
-  $perlVar 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' "${xpuiJs}" #enablePodcastDescriptionAutomaticLinkification
   $perlVar 's|Enable showing podcast transcripts on desktop and web player",default:\K!1|true|s' "${xpuiJs}" #enableNewPodcastTranscripts
   $perlVar 's|Enable the next best episode block on the show page",default:\K!1|true|s' "${xpuiJs}" #enableNextBestEpisode
+  $perlVar 's|Enable showing video in Now Playing Bar when all other video elements are closed",default:\K!1|true|s' "${xpuiJs}" #enableNowPlayingBarVideo
   $perlVar 's|Enable pick and shuffle",default:\K!.(?=})|false|s' "${xpuiJs}" #enablePickAndShuffle
   $perlVar 's|Enable the PiP Mini Player",default:\K!1|true|s' "${xpuiJs}" #enablePiPMiniPlayer
-  $perlVar 's|Enables desktop picture-in-picture surface using betamax SDK.",default:\K!1|true|s' "${xpuiJs}" #enableVideoPip
   $perlVar 's|Enable playback of video inside the PiP Mini Player",default:\K!1|true|s' "${xpuiJs}" #enablePiPMiniPlayerVideo
   $perlVar 's|Load context to enable play button on first load",default:\K!1|true|s' "${xpuiJs}" #enablePlayAtFirstTap
   $perlVar 's|Enables new playlist creation flow in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistCreationFlow
   $perlVar 's|Enable Playlist Permissions flows for Prod",default:\K!1|true|s' "${xpuiJs}" #enablePlaylistPermissionsProd
+  $perlVar 's|Enable showing podcast chapters in NPV",default:\K!1|true|s' "${xpuiJs}" #enablePodcastChaptersInNpv
+  $perlVar 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' "${xpuiJs}" #enablePodcastDescriptionAutomaticLinkification
   (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar 's|Enable Queue on the right panel.",default:\K!1|true|s' "${xpuiJs}" #enableQueueOnRightPanel
   $perlVar 's|Enable read along transcripts in the NPV",default:\K!1|true|s' "${xpuiJs}" #enableReadAlongTranscripts
   $perlVar 's|Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1|true|s' "${xpuiJs}" #enableRecentlyPlayedShortcut
@@ -582,6 +587,7 @@ else
   $perlVar 's|Enable the Stranger Things upside down Easter Egg",default:\K!1|true|s' "${xpuiJs}" #enableStrangerThingsEasterEgg
   $perlVar 's|label in the subtitle picker.,default:\K!1|true|s' "${xpuiJs}" #enableSubtitlesAutogeneratedLabel
   $perlVar 's|Enable ability to toggle playlist column visibility",default:\K!1|true|s' "${xpuiJs}" #enableTogglePlaylistColumns
+  $perlVar 's|Enables desktop picture-in-picture surface using betamax SDK.",default:\K!1|true|s' "${xpuiJs}" #enableVideoPip
   $perlVar 's|Enables editing of user.s own profile in Web Player and DesktopX",default:\K!1|true|s' "${xpuiJs}" #enableUserProfileEdit
   $perlVar 's|Enable the what.s new feed panel",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeed
   $perlVar 's|Enable Whats new feed in the main view",default:\K!1|true|s' "${xpuiJs}" #enableWhatsNewFeedMainView
@@ -620,6 +626,7 @@ fi
 
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
 $perlVar "${enableUserFraudCspViolation}" "${xpuiJs}"
+$perlVar "${enableFraudLoadSignals}" "${xpuiJs}"
 $perlVar "${enableUserFraudSignals}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerification}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerificationRequest}" "${xpuiJs}"
