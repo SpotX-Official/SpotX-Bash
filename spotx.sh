@@ -283,7 +283,7 @@ enableEsperantoMigration='s|Enable esperanto Migration for Ad Formats",default:\
 enableHptoLocationRefactor='s|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s'
 enableUserFraudCanvas='s|Enable user fraud Canvas Fingerprinting",default:\K!.(?=})|false|s'
 enableUserFraudCspViolation='s|Enable CSP violation detection",default:\K!.(?=})|false|s'
-enableFraudLoadSignals='sEnable user fraud signals emitted on page load",default:\K!.(?=})|false|s'
+enableFraudLoadSignals='s|Enable user fraud signals emitted on page load",default:\K!.(?=})|false|s'
 enableUserFraudSignals='s|Enable user fraud signals",default:\K!.(?=})|false|s'
 enableUserFraudVerification='s|Enable user fraud verification",default:\K!.(?=})|false|s'
 enableUserFraudVerificationRequest='s|Enable the IAV component make api requests",default:\K!.(?=})|false|s'
