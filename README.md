@@ -53,6 +53,7 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 | `-i` | enable interactive mode | 
 | `--installdeb` | install latest client deb pkg on APT-based distros (linux) |   
 | `--installmac` | install latest supported client (macOS) |  
+| `-l` | no lyrics background color |  
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | paid premium-tier subscriber |  
 | `-P [path]` | set path to Spotify |  

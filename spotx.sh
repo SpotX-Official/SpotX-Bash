@@ -20,6 +20,7 @@ if [[ "${platformType}" == "macOS" ]]; then
 --help       : print this help message
 -i           : enable interactive mode (--interactive)
 --installmac : install latest supported client version
+-l           : no lyrics background color (--lyricsnocolor)
 -o           : use old home screen UI (--oldui)
 -p           : paid premium-tier subscriber (--premium)
 -P [path]    : set path to Spotify
@@ -41,6 +42,7 @@ else
 --help       : print this help message
 -i           : enable interactive mode (--interactive)
 --installdeb : install latest client deb pkg on APT-based distros
+-l           : no lyrics background color (--lyricsnocolor)
 -o           : use old home screen UI (--oldui)
 -p           : paid premium-tier subscriber (--premium)
 -P [path]    : set path to Spotify
@@ -56,7 +58,7 @@ green='\033[0;32m'
 red='\033[0;31m'
 yellow='\033[0;33m'
 
-while getopts ':BcdefF:hiopP:SvV:-:' flag; do
+while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
     -)
       case "${OPTARG}" in
@@ -70,6 +72,7 @@ while getopts ':BcdefF:hiopP:SvV:-:' flag; do
         installmac) installMac='true' ;;
         interactive) interactiveMode='true' ;;
         logo) logoVar='true' ;;
+        lyricsnocolor) lyricsNoColor='true' ;;
         noexp) excludeExp='true' ;;
         oldui) oldUi='true' ;;
         premium) paidPremium='true' ;;
@@ -87,6 +90,7 @@ while getopts ':BcdefF:hiopP:SvV:-:' flag; do
     F) forceVer="${OPTARG}"; clientVer="${forceVer}" ;;
     h) hideNonMusic='true' ;;
     i) interactiveMode='true' ;;
+    l) lyricsNoColor='true' ;;
     o) oldUi='true' ;;
     p) paidPremium='true' ;;
     P) p="${OPTARG}"; installPath="${p}" ;;
@@ -264,6 +268,7 @@ hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display
 
 hidePodcasts='s|withQueryParameters\(.\)\{return this.queryParameters=.,this}|withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}|'
 hidePodcasts2='s#(!Array.isArray\(.\)\|\|.===..length\)return null;)#$1 for (let i=0; i<(e.children?e.children.length:e.length); i++) {const key=(e.children?.[i]||e[i])?.key; if(!key||key.match(/(episode|show)/)||(e.title||t)?.match(/podcasts/i)) return null;};#'
+lyricsBackground='s|--lyrics-color-inactive":([a-z]).inactive|--lyrics-color-inactive":$1.background|; s|--lyrics-color-background":([a-z]).background|--lyrics-color-background":$1.inactive|; s|--lyrics-color-inactive":([a-z]\.colors).text|--lyrics-color-inactive":$1.background|; s|--lyrics-color-background":([a-z]\.colors).background|--lyrics-color-background":$1.text|'
 
 logV3='s|sp://logging/v3/\w+||g'
 logSentry='s|this\.getStackTop\(\)\.client=e|return;$&|'
@@ -622,6 +627,11 @@ if [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))); 
   (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${hidePodcasts}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${hidePodcasts2}" "${xpuiJs}"
   printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"
+fi
+
+if [[ "${lyricsNoColor}" ]] && (($(ver "${clientVer}") >= $(ver "1.2.0.1155"))); then
+  $perlVar "${lyricsBackground}" "${xpuiJs}"
+  printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6C\x79\x72\x69\x63\x73\x20\x62\x61\x63\x6B\x67\x72\x6F\x75\x6E\x64\x20\x63\x6F\x6C\x6F\x72\n"
 fi
 
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
