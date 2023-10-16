@@ -538,8 +538,8 @@ else
   $perlVar 's|Enable the dynamic normalizer.compressor",default:\K!1|true|s' "${xpuiJs}" #enableDynamicNormalizer
   $perlVar 's|Enables all cards throughout app to be Encore Cards",default:\K!1|true|s' "${xpuiJs}" #enableEncoreCards
   $perlVar 's|Use Encore components in playback control components",default:\K!1|true|s' "${xpuiJs}" #enableEncorePlaybackButtons
-  $perlVar 's|Enable Enhance Playlist UI and functionality for end-users",default:\K!1|true|s' "${xpuiJs}" #enableEnhancePlaylistProd
-  $perlVar 's|Enable Enhance Liked Songs UI and functionality",default:\K!1|true|s' "${xpuiJs}" #enableEnhanceLikedSongs
+  (($(ver "${clientVer}") < $(ver "1.2.22.982"))) && $perlVar 's|Enable Enhance Playlist UI and functionality for end-users",default:\K!1|true|s' "${xpuiJs}" #enableEnhancePlaylistProd
+  (($(ver "${clientVer}") < $(ver "1.2.22.982"))) && $perlVar 's|Enable Enhance Liked Songs UI and functionality",default:\K!1|true|s' "${xpuiJs}" #enableEnhanceLikedSongs
   $perlVar 's|Enable audio equalizer for Desktop and Web Player",default:\K!1|true|s' "${xpuiJs}" #enableEqualizer
   $perlVar 's|control if followers and following lists are shown on profile",default:\K!1|true|s' "${xpuiJs}" #enableShowFollowsSetting
   $perlVar 's|Enable EA FC 24 easter egg",default:\K!1|true|s' "${xpuiJs}" #enableFC24EasterEgg
@@ -585,7 +585,7 @@ else
   $perlVar 's|Enables SingAlong in the Lyrics feature",default:\K!1|true|s' "${xpuiJs}" #enableSingAlong
   $perlVar 's|Enable line height 1.5 on the .body ..",default:\K!1|true|s' "${xpuiJs}" #enableSmallerLineHeight
   $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
-  #(($(ver "${clientVer}") >= $(ver "1.2.14.1141"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
+  (($(ver "${clientVer}") > $(ver "1.2.22.980"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
   $perlVar 's|Display sold by spotify shelf on All Events tab",default:\K!1|true|s' "${xpuiJs}" #enableSoldBySpotifyShelf
   [[ "${paidPremium}" ]] && $perlVar 's|group listening sessions for Desktop",default:\K!.(?=})|true|s' "${xpuiJs}" #enableSocialConnectOnDesktop
   $perlVar 's|Enable static image2 optimizer to optimize image urls",default:\K!.(?=})|true|s' "${xpuiJs}" #enableStaticImage2Optimizer
