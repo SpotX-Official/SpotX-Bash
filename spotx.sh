@@ -237,7 +237,8 @@ adBillboard='s|.(\?\[.{1,6}[a-zA-Z].leaderboard,)|false$1|'
 adEmptyBlock='s|adsEnabled:!0|adsEnabled:!1|'
 adEsper='s|(this\._product_state(?:_service)?=(.))|$1,$2.putOverridesValues({pairs:{ads:'\''0'\'',catalogue:'\''premium'\'',product:'\''premium'\'',type:'\''premium'\''}})|'
 adLogic='s|\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)|\x00|'
-adSponsors='s|allSponsorships||'
+adSponsors1='s|ht.{14}\...\..{7}\....\/.{8}ap4p\/|ht.{14}\...\..{7}\....\/.{2,30}\/v.\/||g'
+adSponsors2='s|allSponsorships||g'
 adSlot='s|\x00\K\x73(?=\x6C\x6F\x74\x73\x00)|\x00|'
 adUpgradeButton='s/(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===/$1"premium"===$2$3"free"===/g'
 enableInAppMessaging='s|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s'
@@ -470,15 +471,11 @@ if [[ -z "${paidPremium+x}" ]]; then
   $perlVar "${enableDesktopMusicLeavebehinds}" "${xpuiJs}"
   $perlVar "${adEmptyBlock}" "${xpuiJs}"
   (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${adEsper}" "${xpuiJs}"
-  $perlVar "${adLogic}" "${appBinary}"
-  $perlVar "${adSponsors}" "${xpuiJs}"
-  $perlVar "${adSlot}" "${appBinary}"
+  $perlVar "${adLogic}" "${appBinary}" 
   (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${adUpgradeButton}" "${xpuiJs}"
   $perlVar "${enableInAppMessaging}" "${xpuiJs}"
   $perlVar "${betamaxFilterNegativeDuration}" "${xpuiJs}"
   $perlVar "${enableConnectEsperantoState}" "${xpuiJs}"
-  $perlVar "${enableDsa}" "${xpuiJs}"
-  $perlVar "${enableDSASetting}" "${xpuiJs}"
   $perlVar "${enableEsperantoMigration}" "${xpuiJs}"
   $perlVar "${enableHptoLocationRefactor}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpv}" "${xpuiJs}"
@@ -493,11 +490,9 @@ if [[ -z "${paidPremium+x}" ]]; then
   (($(ver "${clientVer}") < $(ver "1.1.91.824"))) && { $perlVar "${connectOld1}" "${xpuiJs}"; $perlVar "${connectOld2}" "${xpuiJs}"; $perlVar "${connectOld3}" "${xpuiJs}"; }
   (($(ver "${clientVer}") >= $(ver "1.1.91.824") && $(ver "${clientVer}") < $(ver "1.1.96.783"))) && { $perlVar "${enableImprovedDevicePickerUI1}" "${xpuiJs}"; $perlVar "${connectNew}" "${xpuiJs}"; }
   (($(ver "${clientVer}") > $(ver "1.1.96.783"))) && $perlVar "${connectNew}" "${xpuiJs}"
-  printf "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x61\x75\x64\x69\x6F\x2C\x20\x62\x61\x6E\x6E\x65\x72\x20\x26\x20\x76\x69\x64\x65\x6F\x20\x61\x64\x73\n"
+  printf "\xE2\x9C\x94\x20\x41\x70\x70\x6C\x69\x65\x64\x20\x66\x72\x65\x65\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\x20\x70\x61\x74\x63\x68\x65\x73\n"
 else
   printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n"
-  $perlVar "${adSlot}" "${appBinary}"
-  printf "\xE2\x9C\x94\x20\x42\x6C\x6F\x63\x6B\x65\x64\x20\x70\x6F\x64\x63\x61\x73\x74\x20\x61\x64\x73\n"
 fi
 
 if [[ "${devMode}" ]] && (($(ver "${clientVer}") > $(ver "1.1.99.878"))); then
@@ -634,6 +629,11 @@ if [[ "${lyricsNoColor}" ]] && (($(ver "${clientVer}") >= $(ver "1.2.0.1155")));
   printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6C\x79\x72\x69\x63\x73\x20\x62\x61\x63\x6B\x67\x72\x6F\x75\x6E\x64\x20\x63\x6F\x6C\x6F\x72\n"
 fi
 
+$perlVar "${adSlot}" "${appBinary}"
+$perlVar "${adSponsors1}" "${xpuiJs}"
+$perlVar "${adSponsors2}" "${xpuiJs}"
+$perlVar "${enableDsa}" "${xpuiJs}"
+$perlVar "${enableDSASetting}" "${xpuiJs}"
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
 $perlVar "${enableUserFraudCspViolation}" "${xpuiJs}"
 $perlVar "${enableFraudLoadSignals}" "${xpuiJs}"
