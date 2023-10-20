@@ -227,7 +227,7 @@ vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
 xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
 
 [[ "${platformType}" == "macOS" ]] && [[ -z "${installMac+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { [[ -f "${appPath}/Contents/Info.plist" ]] && clientVer=$(perl -ne 'if($v=/ShortVersion/..undef){print if($v>1 && $v<=2)}' "${appPath}/Contents/Info.plist" 2>/dev/null | perl -ne '/\>(.*)\./ && print "$1"') || versionFailed='true'; }
-[[ "${platformType}" == "Linux" ]] && [[ -z "${installClient+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { "${appBinary}" --version >/dev/null 2>/dev/null && clientVer=$("${appBinary}" --version | cut -d " " -f3- | rev | cut -d. -f2- | rev) || versionFailed='true'; }
+[[ "${platformType}" == "Linux" ]] && [[ -z "${installClient+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { "${appBinary}" --version >/dev/null 2>/dev/null && clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev) || versionFailed='true'; }
 
 perlVar="perl -pi -w -e"
 
