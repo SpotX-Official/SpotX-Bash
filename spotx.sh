@@ -227,7 +227,7 @@ vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
 xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
 
 [[ "${platformType}" == "macOS" ]] && [[ -z "${installMac+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { [[ -f "${appPath}/Contents/Info.plist" ]] && clientVer=$(perl -ne 'if($v=/ShortVersion/..undef){print if($v>1 && $v<=2)}' "${appPath}/Contents/Info.plist" 2>/dev/null | perl -ne '/\>(.*)\./ && print "$1"') || versionFailed='true'; }
-[[ "${platformType}" == "Linux" ]] && [[ -z "${installClient+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { "${appBinary}" --version >/dev/null 2>/dev/null && clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev) || versionFailed='true'; }
+[[ "${platformType}" == "Linux" ]] && [[ -z "${installClient+x}" || -z "${notInstalled+x}" || -z "${forceVer+x}" ]] && { "${appBinary}" --version >/dev/null 2>/dev/null && clientVer=$("${appBinary}" --version | cut -d " " -f3- | rev | cut -d. -f2- | rev) || versionFailed='true'; }
 
 perlVar="perl -pi -w -e"
 
@@ -237,7 +237,7 @@ adBillboard='s|.(\?\[.{1,6}[a-zA-Z].leaderboard,)|false$1|'
 adEmptyBlock='s|adsEnabled:!0|adsEnabled:!1|'
 adEsper='s|(this\._product_state(?:_service)?=(.))|$1,$2.putOverridesValues({pairs:{ads:'\''0'\'',catalogue:'\''premium'\'',product:'\''premium'\'',type:'\''premium'\''}})|'
 adLogic='s|\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)|\x00|'
-adSponsors1='s|ht.{14}\...\..{7}\....\/.{8}ap4p\/|ht.{14}\...\..{7}\....\/.{2,30}\/v.\/||g'
+adSponsors1='s/ht.{14}\...\..{7}\....\/.{8}ap4p\/|ht.{14}\...\..{7}\....\/.{2,30}\/v.\///g'
 adSponsors2='s|allSponsorships||g'
 adSlot='s|\x00\K\x73(?=\x6C\x6F\x74\x73\x00)|\x00|'
 adUpgradeButton='s/(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===/$1"premium"===$2$3"free"===/g'
