@@ -367,11 +367,13 @@ read_yn () {
 
 if [[ "${interactiveMode}" ]]; then
   printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n"
-  [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install Spotify ${sxbVer}? " && installMac='true'; }
+  [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
+  [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install Spotify ${versionVar}? " && installMac='true'; }
   [[ "${platformType}" == "macOS" ]] && { read_yn "Block Spotify auto-updates? " && blockUpdates='true'; }
   read_yn "Enable experimental features? " || excludeExp='true'
-  read_yn "Enable new home screen UI? " || oldUi='true'
-  read_yn "Hide non-music categories on home screen? " && hideNonMusic='true'
+  (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
+  (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && { read_yn "Hide non-music categories on home screen? " && hideNonMusic='true'; }
+  (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && { read_yn "Set lyrics background color to black? " && lyricsNoColor='true'; }
   echo
 fi
 
