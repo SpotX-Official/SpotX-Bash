@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.24.756.g7a7fc7f0"
+buildVer="1.2.25.1009.g075ce884"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -283,10 +283,11 @@ enableImprovedDevicePickerUI1='s|Enable showing a new and improved device picker
 #enableImprovedDevicePickerUI2='s|Enable showing a new and improved device picker UI",default:\K!0|false|' # 1.1.96.783 - 1.1.97.962
 
 betamaxFilterNegativeDuration='s|for duration that is negative",default:\K!.(?=})|false|s'
+enableConnectEsperantoState='s|Enable retrieving connect state from Esperanto instead of Cosmos",default:\K!.(?=})|false|s'
 enableDsa='s|Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})|false|s' #enableDsaAds
 enableDSASetting='s|Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})|false|s'
-enableConnectEsperantoState='s|Enable retrieving connect state from Esperanto instead of Cosmos",default:\K!.(?=})|false|s'
 enableEsperantoMigration='s|Enable esperanto Migration for Ad Formats",default:\K!.(?=})|false|s'
+enableHomeAdStaticBanner='s|Enables temporary home banner, static version",default:\K!.(?=})|false|s'
 enableHptoLocationRefactor='s|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s'
 enableUserFraudCanvas='s|Enable user fraud Canvas Fingerprinting",default:\K!.(?=})|false|s'
 enableUserFraudCspViolation='s|Enable CSP violation detection",default:\K!.(?=})|false|s'
@@ -296,6 +297,7 @@ enableShowLeavebehindConsolidation='s|Enable show leavebehinds consolidated expe
 enableUserFraudSignals='s|Enable user fraud signals",default:\K!.(?=})|false|s'
 enableUserFraudVerification='s|Enable user fraud verification",default:\K!.(?=})|false|s'
 enableUserFraudVerificationRequest='s|Enable the IAV component make api requests",default:\K!.(?=})|false|s'
+enableYourListeningUpsell='s|Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})|false|s'
 gaboRequest='s|\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65)|\x00|g'
 hptoEnabled='s|hptoEnabled:!\K0|1|s'
 hptoShown='s|isHptoShown:!\K0|1|gs'
@@ -504,12 +506,11 @@ else
   printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n"
 fi
 
-if [[ "${devMode}" ]] && (($(ver "${clientVer}") > $(ver "1.1.99.878"))); then
-  [[ "${platformType}" == "Linux" ]] && $perlVar 's|\x72\x48\x89\x85.\xFA\xFF\xFF\xC6\x85.\xFA\xFF\xFF\x00\xC7\x85.[\xFD\xFE]\xFF\xFF\x00\x00\x00\x00\x48\x8D\xB5.\xFA\xFF\xFF\x48\x8D\x95.[\xFD\xFE]\xFF\xFF\K\xE8..(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
-  [[ "${platformType}" == "macOS" && "${archVar}" == "x86_64" ]] && $perlVar 's|\x5E\xFC\xFF\xFF\x00\xC7\x85[\x28\x38\xA0]\xFA\xFF\xFF\x00\x00\x00\x00\x48\x8D\xB5\x50\xFC\xFF\xFF\x48\x8D\x95[\x28\x38\xA0]\xFA\xFF\xFF\K\xE8..(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
-  [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\xF8\xFF[\x37\xF7][\x07\x08]\x39\xFF.\x00\xB9\xE1[\x03\xC3][\x07\x08]\x91\xE2.[\x02\x03]\x91\K..\x00\x94(?=[\xF7\xF8]\x03)|\x60\x00\x80\xD2|' "${appBinary}"
-  $perlVar 's/(return ).{1,3}(\?(.{1,4}createElement|\(.{1,7}.jsxs\))\(.{3,7}\{displayText:"Debug Tools")/$1true$2/' "${xpuiJs}"
-  $perlVar 's|(.{1,5},\{role.{25,35}children."Locales"\}\))||' "${xpuiJs}"
+if [[ "${devMode}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.84.716"))); then
+  [[ "${platformType}" == "Linux" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65\p{AHex}{5}\x48\p{AHex}{36,40}\K\xE8\p{AHex}{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
+  [[ "${platformType}" == "macOS" && "${archVar}" == "x86_64" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65\p{AHex}{5}\x48\p{AHex}{36,40}\K\xE8\p{AHex}{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
+  [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\xF8\xFF[\x37\x77\xF7][\x06\x07\x08]\x39\xFF.[\x00\x04]\xB9\xE1[\x03\x43\xC3][\x06\x07\x08]\x91\xE2.[\x02\x03\x13]\x91\K..\x00\x94(?=[\xF7\xF8]\x03)|\x60\x00\x80\xD2|' "${appBinary}"
+  (($(ver "${clientVer}") > $(ver "1.1.91.824"))) && $perlVar 's/(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)/$1true$2$4$6/' "${xpuiJs}"
   printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x64\x65\x76\x65\x6C\x6F\x70\x65\x72\x20\x6D\x6F\x64\x65\n"
 fi
 
@@ -531,6 +532,7 @@ else
   $perlVar 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' "${xpuiJs}" #enableBrowseViaPathfinder
   $perlVar 's|Use carousels on Home",default:\K!1|true|s' "${xpuiJs}" #enableCarouselsOnHome
   $perlVar 's|Enable option in settings to clear all downloads",default:\K!1|true|s' "${xpuiJs}" #enableClearAllDownloads
+  $perlVar 's|Use pathfinder for the concert entity page on DWP",default:\K!1|true|s' "${xpuiJs}" #enableConcertEntityPathfinderDWP
   $perlVar 's|Enable Tour Card on This is Playlist",default:\K!1|true|s' "${xpuiJs}" #enableConcertsForThisIsPlaylist
   $perlVar 's|Enable Save & Retrieve feature for concerts",default:\K!1|true|s' "${xpuiJs}" #enableConcertsInterested
   $perlVar 's|Enable Concerts Near You Playlist",default:\K!1|true|s' "${xpuiJs}" #enableConcertsNearYou
@@ -586,7 +588,7 @@ else
   $perlVar 's|Display share icon for sharing an event",default:\K!1|true|s' "${xpuiJs}" #enableShareEvent
   $perlVar 's|control if followers and following lists are shown on profile",default:\K!1|true|s' "${xpuiJs}" #enableShowFollowsSetting
   $perlVar 's|Enable silence trimming in podcasts",default:\K!1|true|s' "${xpuiJs}" #enableSilenceTrimmer
-  $perlVar 's/,(.\.isOwnedBySelf&&)((\(.{0,11}\)|..createElement)\(.{1,3}Fragment,.+?{(uri:.|spec:.),(uri:.|spec:.).+?contextmenu.create-similar-playlist"\)}\),)/,$2$1/s' "${xpuiJs}" #createSimilarPlaylist
+  (($(ver "${clientVer}") < $(ver "1.2.25.1009"))) && $perlVar 's/,(.\.isOwnedBySelf&&)((\(.{0,11}\)|..createElement)\(.{1,3}Fragment,.+?{(uri:.|spec:.),(uri:.|spec:.).+?contextmenu.create-similar-playlist"\)}\),)/,$2$1/s' "${xpuiJs}" #createSimilarPlaylist
   $perlVar 's|Enables SingAlong in the Lyrics feature",default:\K!1|true|s' "${xpuiJs}" #enableSingAlong
   $perlVar 's|Enable line height 1.5 on the .body ..",default:\K!1|true|s' "${xpuiJs}" #enableSmallerLineHeight
   $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
@@ -646,6 +648,7 @@ $perlVar "${adSponsors1}" "${xpuiJs}"
 $perlVar "${adSponsors2}" "${xpuiJs}"
 $perlVar "${enableDsa}" "${xpuiJs}"
 $perlVar "${enableDSASetting}" "${xpuiJs}"
+$perlVar "${enableHomeAdStaticBanner}" "${xpuiJs}"
 $perlVar "${enableUserFraudCanvas}" "${xpuiJs}"
 $perlVar "${enableUserFraudCspViolation}" "${xpuiJs}"
 $perlVar "${enableFraudLoadSignals}" "${xpuiJs}"
@@ -654,6 +657,7 @@ $perlVar "${enableUserFraudVerification}" "${xpuiJs}"
 $perlVar "${enableUserFraudVerificationRequest}" "${xpuiJs}"
 $perlVar "${enableNonUserTriggeredPopovers}" "${xpuiJs}"
 $perlVar "${enableShowLeavebehindConsolidation}" "${xpuiJs}"
+$perlVar "${enableYourListeningUpsell}" "${xpuiJs}"
 $perlVar "${gaboRequest}" "${appBinary}"
 $perlVar "${webgateRequest}" "${vendorXpuiJs}"
 $perlVar "${logV3}" "${xpuiJs}"
