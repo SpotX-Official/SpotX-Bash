@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.25.1009.g075ce884"
+buildVer="1.2.25.1011.g0348b2ea"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -190,7 +190,7 @@ search_path_linux () {
     local path="${path}"
     local timeLimit=$(($(date +%s) + timeout))
     while (( $(date +%s) < "${timeLimit}" )); do
-      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -name "xpui.spa" -size -10M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -name "xpui.spa" -size -10M -size +3M -print -quit 2>/dev/null | grep -v "snap" | rev | cut -d/ -f3- | rev)
       [[ -n "${installPath}" ]] && return 0
       pgrep -x find > /dev/null || break
       sleep 1
