@@ -247,6 +247,7 @@ enableNewAdsNpv='s|Enable showing new ads NPV",default:\K!.(?=})|false|s'
 enableNewAdsNpvNewVideoTakeoverSlot='s|Enable new modal slot to position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})|false|s'
 enableNewAdsNpvVideoTakeover='s|Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})|false|s'
 enableNewAdsNpvColorExtraction='s|Enable CTA card color extraction for new ads NPV",default:\K!.(?=})|false|s'
+hideUpgradeCTA='s|Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})|true|s'
 
 disableYLXSidebar='s|Enable Your Library X view of the left sidebar",default:\K!.(?=})|false|s'
 disableRightSidebar='s|Enable the view on the right sidebar",default:\K!.(?=})|false|s'
@@ -493,6 +494,7 @@ if [[ -z "${paidPremium+x}" ]]; then
   $perlVar "${enableNewAdsNpvNewVideoTakeoverSlot}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpvVideoTakeover}" "${xpuiJs}"
   $perlVar "${enableNewAdsNpvColorExtraction}" "${xpuiJs}"
+  $perlVar "${hideUpgradeCTA}" "${xpuiJs}"
   $perlVar "${hideDLQual}" "${xpuiJs}"
   $perlVar "${hptoEnabled}" "${xpuiJs}"
   (($(ver "${clientVer}") > $(ver "1.1.84.716") && $(ver "${clientVer}") < $(ver "1.2.21.1104"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
@@ -507,8 +509,8 @@ else
 fi
 
 if [[ "${devMode}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.84.716"))); then
-  [[ "${platformType}" == "Linux" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65\p{AHex}{5}\x48\p{AHex}{36,40}\K\xE8\p{AHex}{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
-  [[ "${platformType}" == "macOS" && "${archVar}" == "x86_64" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65\p{AHex}{5}\x48\p{AHex}{36,40}\K\xE8\p{AHex}{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
+  [[ "${platformType}" == "Linux" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65.{5}\x48.{36,40}\K\xE8.{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
+  [[ "${platformType}" == "macOS" && "${archVar}" == "x86_64" ]] && $perlVar 's|\xFF\xFF\x48\xB8\x65\x76\x65.{5}\x48.{36,40}\K\xE8.{2}(?=\x00\x00)|\xB8\x03\x00|' "${appBinary}"
   [[ "${platformType}" == "macOS" && "${archVar}" == "arm64" ]] && $perlVar 's|\xF8\xFF[\x37\x77\xF7][\x06\x07\x08]\x39\xFF.[\x00\x04]\xB9\xE1[\x03\x43\xC3][\x06\x07\x08]\x91\xE2.[\x02\x03\x13]\x91\K..\x00\x94(?=[\xF7\xF8]\x03)|\x60\x00\x80\xD2|' "${appBinary}"
   (($(ver "${clientVer}") > $(ver "1.1.91.824"))) && $perlVar 's/(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)/$1true$2$4$6/' "${xpuiJs}"
   printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x64\x65\x76\x65\x6C\x6F\x70\x65\x72\x20\x6D\x6F\x64\x65\n"
@@ -532,6 +534,7 @@ else
   $perlVar 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' "${xpuiJs}" #enableBrowseViaPathfinder
   $perlVar 's|Use carousels on Home",default:\K!1|true|s' "${xpuiJs}" #enableCarouselsOnHome
   $perlVar 's|Enable option in settings to clear all downloads",default:\K!1|true|s' "${xpuiJs}" #enableClearAllDownloads
+  $perlVar 's|Enable Concerts Carousel on This is Playlist",default:\K!1|true|s' "${xpuiJs}" #enableConcertsCarouselForThisIsPlaylist
   $perlVar 's|Use pathfinder for the concert entity page on DWP",default:\K!1|true|s' "${xpuiJs}" #enableConcertEntityPathfinderDWP
   $perlVar 's|Enable Tour Card on This is Playlist",default:\K!1|true|s' "${xpuiJs}" #enableConcertsForThisIsPlaylist
   $perlVar 's|Enable Save & Retrieve feature for concerts",default:\K!1|true|s' "${xpuiJs}" #enableConcertsInterested
@@ -543,6 +546,7 @@ else
   $perlVar 's|Enable splitting the device list based on local network",default:\K!1|true|s' "${xpuiJs}" #enableDeviceListSplit
   $perlVar 's|Enable a condensed disography shelf on artist pages",default:\K!1|true|s' "${xpuiJs}" #enableDiscographyShelf
   $perlVar 's|Enable the dynamic normalizer.compressor",default:\K!1|true|s' "${xpuiJs}" #enableDynamicNormalizer
+  $perlVar 's|Increase max number of shortcuts on home to 8",default:\K!1|true|s' "${xpuiJs}" #enableEightShortcuts
   $perlVar 's|Enables all cards throughout app to be Encore Cards",default:\K!1|true|s' "${xpuiJs}" #enableEncoreCards
   $perlVar 's|Use Encore components in playback control components",default:\K!1|true|s' "${xpuiJs}" #enableEncorePlaybackButtons
   (($(ver "${clientVer}") < $(ver "1.2.22.982"))) && $perlVar 's|Enable Enhance Playlist UI and functionality for end-users",default:\K!1|true|s' "${xpuiJs}" #enableEnhancePlaylistProd
@@ -570,6 +574,7 @@ else
   $perlVar 's|Enable showing podcast transcripts on desktop and web player",default:\K!1|true|s' "${xpuiJs}" #enableNewPodcastTranscripts
   $perlVar 's|Enable the next best episode block on the show page",default:\K!1|true|s' "${xpuiJs}" #enableNextBestEpisode
   $perlVar 's|Enable showing video in Now Playing Bar when all other video elements are closed",default:\K!1|true|s' "${xpuiJs}" #enableNowPlayingBarVideo
+  $perlVar 's|Show credits in the right sidebar",default:\K!1|true|s' "${xpuiJs}" #enableNPVCredits
   $perlVar 's|Enable pick and shuffle",default:\K!.(?=})|false|s' "${xpuiJs}" #enablePickAndShuffle
   $perlVar 's|Enable the PiP Mini Player",default:\K!1|true|s' "${xpuiJs}" #enablePiPMiniPlayer
   $perlVar 's|Enable playback of video inside the PiP Mini Player",default:\K!1|true|s' "${xpuiJs}" #enablePiPMiniPlayerVideo
