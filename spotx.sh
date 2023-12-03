@@ -269,7 +269,7 @@ hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
 
 hidePodcasts='s|withQueryParameters\(.\)\{return this.queryParameters=.,this}|withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}|'
-hidePodcasts2='s#(!?Array.isArray\(.\)[\|&]{2}.===(.).length\)return null;)#$1 if (!Array.isArray($2)) { $2 = e; } for (let q=0; q<($2.children?$2.children.length:$2.length); q++) {const key=($2.children?.[q]||$2[q])?.key; if(!key||key.match(/(episode|show)/)||($2.title)?.match(/podcasts/i)) return null;};#'
+hidePodcasts2='s#(!?Array.isArray\(.\)[|&]{2}.===(.).length\)return null;)#$1 if (!Array.isArray($2)) { $2 = e; } for (let q=0; q<($2.children?$2.children.length:$2.length); q++) {const key=($2.children?.[q]||$2[q])?.key; if(!key||key.match(/(episode|show)/)||($2.title)?.match(/podcasts/i)) return null;};#'
 lyricsBackground='s|--lyrics-color-inactive":\K(.).inactive|$1.background|; s|--lyrics-color-background":\K(.).background|$1.inactive|; s|--lyrics-color-inactive":\K(.\.colors).text|$1.background|; s|--lyrics-color-background":\K(.\.colors).background|$1.text|'
 
 logV3='s|sp://logging/v3/\w+||g'
