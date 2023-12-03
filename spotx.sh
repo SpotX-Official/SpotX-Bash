@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.25.1011.g0348b2ea"
+buildVer="1.2.26.1180.g6af55bfb"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -549,8 +549,8 @@ else
   $perlVar 's|Increase max number of shortcuts on home to 8",default:\K!1|true|s' "${xpuiJs}" #enableEightShortcuts
   $perlVar 's|Enables all cards throughout app to be Encore Cards",default:\K!1|true|s' "${xpuiJs}" #enableEncoreCards
   $perlVar 's|Use Encore components in playback control components",default:\K!1|true|s' "${xpuiJs}" #enableEncorePlaybackButtons
-  (($(ver "${clientVer}") < $(ver "1.2.22.982"))) && $perlVar 's|Enable Enhance Playlist UI and functionality for end-users",default:\K!1|true|s' "${xpuiJs}" #enableEnhancePlaylistProd
-  (($(ver "${clientVer}") < $(ver "1.2.22.982"))) && $perlVar 's|Enable Enhance Liked Songs UI and functionality",default:\K!1|true|s' "${xpuiJs}" #enableEnhanceLikedSongs
+  $perlVar 's|Enable Enhance Playlist UI and functionality for end-users",default:\K!1|true|s' "${xpuiJs}" #enableEnhancePlaylistProd
+  $perlVar 's|Enable Enhance Liked Songs UI and functionality",default:\K!1|true|s' "${xpuiJs}" #enableEnhanceLikedSongs
   $perlVar 's|Enable audio equalizer for Desktop and Web Player",default:\K!1|true|s' "${xpuiJs}" #enableEqualizer
   $perlVar 's|Enable EA FC 24 easter egg",default:\K!1|true|s' "${xpuiJs}" #enableFC24EasterEgg
   $perlVar 's|Enable the option to Forget Devices",default:\K!1|true|s' "${xpuiJs}" #enableForgetDevice
@@ -597,7 +597,7 @@ else
   $perlVar 's|Enables SingAlong in the Lyrics feature",default:\K!1|true|s' "${xpuiJs}" #enableSingAlong
   $perlVar 's|Enable line height 1.5 on the .body ..",default:\K!1|true|s' "${xpuiJs}" #enableSmallerLineHeight
   $perlVar 's|playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1|true|s' "${xpuiJs}" #enableSmallPlaybackSpeedIncrements
-  (($(ver "${clientVer}") > $(ver "1.2.22.980"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
+  (($(ver "${clientVer}") > $(ver "1.2.25.1011"))) && $perlVar 's|Enable Smart Shuffle",default:\K!1|true|s' "${xpuiJs}" #enableSmartShuffle
   $perlVar 's|Display sold by spotify shelf on All Events tab",default:\K!1|true|s' "${xpuiJs}" #enableSoldBySpotifyShelf
   [[ "${paidPremium}" ]] && $perlVar 's|group listening sessions for Desktop",default:\K!.(?=})|true|s' "${xpuiJs}" #enableSocialConnectOnDesktop
   $perlVar 's|Enable static image2 optimizer to optimize image urls",default:\K!.(?=})|true|s' "${xpuiJs}" #enableStaticImage2Optimizer
