@@ -21,7 +21,7 @@
 - Block all audio, banner & video ads
 - Block logging (Sentry, etc)
 - Enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode)
-- Enable [experimental features](https://github.com/SpotX-Official/SpotX/discussions/50)
+- Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
 - Remove [lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019)
 - Block automatic updates (macOS)
