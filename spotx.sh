@@ -555,7 +555,7 @@ else
   $perlVar 's|Enable EA FC 24 easter egg",default:\K!1|true|s' "${xpuiJs}" #enableFC24EasterEgg
   $perlVar 's|Enable the option to Forget Devices",default:\K!1|true|s' "${xpuiJs}" #enableForgetDevice
   [[ "${paidPremium}" ]] && $perlVar 's|Enable Hifi indicator and flyout",default:\K!1|true|s' "${xpuiJs}" #enableHifi
-  $perlVar 's|Enable Subfeed filter chips on home",default:\K!1|true|s' "${xpuiJs}" #enableHomeSubfeeds
+  [[ -z "${hideNonMusic}" ]] && $perlVar 's|Enable Subfeed filter chips on home",default:\K!1|true|s' "${xpuiJs}" #enableHomeSubfeeds
   $perlVar 's|Enable Ignore In Recommendations for desktop and web",default:\K!1|true|s' "${xpuiJs}" #enableIgnoreInRecommendations
   $perlVar 's|Enables the new inline playlist curation tools",default:\K!1|true|s' "${xpuiJs}" #enableInlineCuration
   $perlVar 's|Enables the "Just Press Play" feature.,default:\K!1|true|s' "${xpuiJs}" #enableJustPressPlay
