@@ -7,51 +7,30 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
         *) platformType='Linux' ;;
 esac
 
-if [[ "${platformType}" == "macOS" ]]; then
-  show_help () {
-    echo -e \
+show_help () {
+  echo -e \
 "Options:
--B           : block Spotify auto-updates (--blockupdates)
--c           : clear Spotify app cache (--clearcache)
--d           : enable developer mode (--devmode)
--e           : exclude all experimental features (--noexp)
--f           : force SpotX-Bash to run (--force)
--h           : hide non-music on home screen (--hide)
---help       : print this help message
--i           : enable interactive mode (--interactive)
---installmac : install latest supported client version
--l           : no lyrics background color (--lyricsnocolor)
--o           : use old home screen UI (--oldui)
--p           : paid premium-tier subscriber (--premium)
--P [path]    : set path to Spotify
--S           : skip codesigning (--skipcodesign)
---uninstall  : uninstall SpotX-Bash
--v           : print SpotX-Bash version (--version)
--V [version] : install specific client version
+-B, --blockupdates     : block Spotify auto-updates [macOS]
+-c, --clearcache       : clear Spotify app cache
+-d, --devmode          : enable developer mode
+-e, --noexp            : exclude all experimental features
+-f, --force            : force SpotX-Bash to run
+-h, --hide             : hide non-music on home screen
+--help                 : print this help message
+-i, --interactive      : enable interactive mode
+--installdeb           : install latest client deb pkg on APT-based distros [Linux]
+--installmac           : install latest supported client version [macOS]
+-l, --lyricsnocolor    : no lyrics background color
+-o, --oldui            : use old home screen UI
+-p, --premium          : paid premium-tier subscriber
+-P <path>              : set path to Spotify
+-S, --skipcodesign     : skip codesigning [macOS]
+--stable               : use with '--installdeb' for stable branch [Linux]
+--uninstall            : uninstall SpotX-Bash
+-v, --version          : print SpotX-Bash version
+-V <version>           : install specific client version [macOS]
 "
 }
-else
-  show_help () {
-    echo -e \
-"Options:
--c           : clear Spotify app cache (--clearcache)
--d           : enable developer mode (--devmode)
--e           : exclude all experimental features (--noexp)
--f           : force SpotX-Bash to run (--force)
--h           : hide non-music on home screen (--hide)
---help       : print this help message
--i           : enable interactive mode (--interactive)
---installdeb : install latest client deb pkg on APT-based distros
--l           : no lyrics background color (--lyricsnocolor)
--o           : use old home screen UI (--oldui)
--p           : paid premium-tier subscriber (--premium)
--P [path]    : set path to Spotify
---stable     : use with '--installdeb' for stable branch
---uninstall  : uninstall SpotX-Bash
--v           : print SpotX-Bash version (--version)
-"
-}
-fi
 
 clear='\033[0m'
 green='\033[0;32m'

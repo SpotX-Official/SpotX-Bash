@@ -52,17 +52,17 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 | `-h` | hide non-music on home screen |  
 | `--help` | print options |  
 | `-i` | enable interactive mode | 
-| `--installdeb` | install latest client deb pkg on APT-based distros (linux) |   
+| `--installdeb` | install latest client deb pkg on APT-based distros (Linux) |   
 | `--installmac` | install latest supported client (macOS) |  
 | `-l` | [no lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019) |  
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  
-| `-P [path]` | set path to Spotify |  
+| `-P <path>` | set path to Spotify |  
 | `-S` | skip [codesigning](https://github.com/SpotX-Official/SpotX-Bash/discussions/3) (macOS) | 
-| `--stable` | use with '--installdeb' for stable branch (linux) |   
+| `--stable` | use with '--installdeb' for stable branch (Linux) |   
 | `--uninstall` | uninstall SpotX-Bash |  
 | `-v` | print SpotX-Bash version |  
-| `-V [version]` | install client version (macOS) |  
+| `-V <version>` | install client version (macOS) |  
 
 **Examples:**
 
