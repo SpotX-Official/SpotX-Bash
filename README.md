@@ -19,14 +19,14 @@
 ### Features:
 
 - Block all audio, banner & video ads
-- Block logging (Sentry, etc)
+- Block logging
 - Enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode)
 - Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
 - Remove [lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019)
 - Block automatic updates (macOS)
 - Install supported desktop client versions (macOS)
-- Install latest stable/testing desktop client on APT-based distros (Linux)
+- Install latest desktop client on APT-based distros (Linux)
 
 
 ### Usage:
@@ -44,7 +44,7 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 
 | Option | Description |  
 | --- | --- |  
-| `-B` | block Spotify auto-updates (macOS) |  
+| `-B` | block Spotify auto-updates [macOS] |  
 | `-c` | clear Spotify app cache |  
 | `-d` | enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode) |  
 | `-e` | exclude all experimental features |  
@@ -52,17 +52,17 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 | `-h` | hide non-music on home screen |  
 | `--help` | print options |  
 | `-i` | enable interactive mode | 
-| `--installdeb` | install latest client deb pkg on APT-based distros (Linux) |   
+| `--installdeb` | install latest client deb pkg on APT-based distros [Linux] |   
 | `--installmac` | install latest supported client (macOS) |  
 | `-l` | [no lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019) |  
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  
 | `-P <path>` | set path to Spotify |  
-| `-S` | skip [codesigning](https://github.com/SpotX-Official/SpotX-Bash/discussions/3) (macOS) | 
-| `--stable` | use with '--installdeb' for stable branch (Linux) |   
+| `-S` | skip [codesigning](https://github.com/SpotX-Official/SpotX-Bash/discussions/3) [macOS] | 
+| `--stable` | use with '--installdeb' for stable branch [Linux] |   
 | `--uninstall` | uninstall SpotX-Bash |  
 | `-v` | print SpotX-Bash version |  
-| `-V <version>` | install client version (macOS) |  
+| `-V <version>` | install client version [macOS] |  
 
 **Examples:**
 
