@@ -587,9 +587,11 @@ enableSmartShuffle='s|Enable Smart Shuffle",default:\K!1|true|s'
 
 defaultExperimentals=(
 's|support for adding a playlist to another playlist",default:\K!1|true|s' #enableAddPlaylistToPlaylist
+'s|showing AI dubbed episodes in NPV",default:\K!1|true|s' #enableAiDubbedEpisodesInNpv
 's|cover art modal on the Album page",default:\K!1|true|s' #enableAlbumCoverArtModal
 's|album prerelease pages",default:\K!1|true|s' #enableAlbumPrerelease
 # 's|Enable Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
+'s|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
 's|different heart button for Bad Bunny",default:\K!1|true|s' #enableBadBunnyEasterEgg
@@ -620,10 +622,10 @@ defaultExperimentals=(
 's|audio equalizer for Desktop and Web Player",default:\K!1|true|s' #enableEqualizer
 's|EA FC 24 easter egg",default:\K!1|true|s' #enableFC24EasterEgg
 's|option to Forget Devices",default:\K!1|true|s' #enableForgetDevice
+'s|Show global top bar with home button, search input and user avatar",default:\K!1|true|s' #enableGlobalTopBar
 's|Ignore In Recommendations for desktop and web",default:\K!1|true|s' #enableIgnoreInRecommendations
 's|new inline playlist curation tools",default:\K!1|true|s' #enableInlineCuration
 's|Just Press Play. feature.,default:\K!1|true|s' #enableJustPressPlay
-'s|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|list view for Live Events feed",default:\K!1|true|s' #enableLiveEventsListView
 's|clients will check whether tracks have lyrics available",default:\K!1|true|s' #enableLyricsCheck
 's|Lyrics match labels in search results",default:\K!1|true|s' #ENABLE_LYRICS_MATCH
@@ -638,7 +640,7 @@ defaultExperimentals=(
 's|showing podcast transcripts on desktop and web player",default:\K!1|true|s' #enableNewPodcastTranscripts
 's|next best episode block on the show page",default:\K!1|true|s' #enableNextBestEpisode
 's|showing video in Now Playing Bar when all other video elements are closed",default:\K!1|true|s' #enableNowPlayingBarVideo
-'s|credits in the right sidebar",default:\K!1|true|s' #enableNPVCredits
+'s|credits in the right sidebar",default:\K!1|true|gs' #enableNPVCredits #enableNPVCreditsWithLinkability
 's|pick and shuffle",default:\K!.(?=})|false|s' #enablePickAndShuffle
 's|the PiP Mini Player",default:\K!1|true|s' #enablePiPMiniPlayer
 's|playback of video inside the PiP Mini Player",default:\K!1|true|s' #enablePiPMiniPlayerVideo
@@ -650,6 +652,7 @@ defaultExperimentals=(
 's|read along transcripts in the NPV",default:\K!1|true|s' #enableReadAlongTranscripts
 's|Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1|true|s' #enableRecentlyPlayedShortcut
 's|Related Video section in NPV",default:\K!1|true|s' #enableRelatedVideos
+'s|resizable tracklist columns",default:\K!1|true|s' #enableResizableTracklistColumns
 's|slide-in.out transition on the sidebars in the RootGrid",default:\K!1|true|s' #enableRootGridAnimations
 's|filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1|true|s' #enableSearchBox
 's|new Search experience",default:\K!1|true|s' #enableSearchV3
