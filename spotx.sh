@@ -421,8 +421,8 @@ run_patches () {
     (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar "${hptoShown3}" "${xpuiJs}"
     printf '%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideVeryHigh}"  >> "${xpuiCss}"
     (($(ver "${clientVer}") < $(ver "1.1.91.824"))) && { $perlVar "${connectOld1}" "${xpuiJs}"; $perlVar "${connectOld2}" "${xpuiJs}"; $perlVar "${connectOld3}" "${xpuiJs}"; }
-    (($(ver "${clientVer}") >= $(ver "1.1.91.824") && $(ver "${clientVer}") < $(ver "1.1.96.783"))) && { $perlVar "${enableImprovedDevicePickerUI1}" "${xpuiJs}"; $perlVar "${connectNew}" "${xpuiJs}"; }
-    (($(ver "${clientVer}") > $(ver "1.1.96.783"))) && $perlVar "${connectNew}" "${xpuiJs}"
+    (($(ver "${clientVer}") >= $(ver "1.1.91.824") && $(ver "${clientVer}") < $(ver "1.1.93.896"))) && { $perlVar "${enableImprovedDevicePickerUI1}" "${xpuiJs}"; $perlVar "${connectNew}" "${xpuiJs}"; }
+    #(($(ver "${clientVer}") > $(ver "1.1.96.783"))) && $perlVar "${connectNew}" "${xpuiJs}"
     printf "\xE2\x9C\x94\x20\x41\x70\x70\x6C\x69\x65\x64\x20\x66\x72\x65\x65\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\x20\x70\x61\x74\x63\x68\x65\x73\n"
   else
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n"
@@ -508,7 +508,7 @@ adEsper='s|(this\._product_state(?:_service)?=(.))|$1,$2.putOverridesValues({pai
 adUpgradeButton='s/(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===/$1"premium"===$2$3"free"===/g'
 connectOld1='s| connect-device-list-item--disabled||' # 1.1.70.610+
 connectOld2='s|connect-picker.unavailable-to-control|spotify-connect|' # 1.1.70.610+
-connectOld3='s|(className:.,disabled:)(..)|$1false|' # 1.1.70.610+
+connectOld3='s|("button",\{className:.,disabled:)(..)|$1false|' # 1.1.70.610+
 connectNew='s/return (..isDisabled)(\?(..createElement|\(.{1,10}\))\(..,)/return false$2/' # 1.1.91.824+
 enableImprovedDevicePickerUI1='s|Enable showing a new and improved device picker UI",default:\K!.(?=})|true|' # 1.1.90.855 - 1.1.95.893
 #enableImprovedDevicePickerUI2='s|Enable showing a new and improved device picker UI",default:\K!0|false|' # 1.1.96.783 - 1.1.97.962
