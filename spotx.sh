@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.26.1187.g36b715a1"
+buildVer="1.2.28.581.gd0e8a92c"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -563,6 +563,7 @@ defaultXpui=(
 's|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s' #enableHptoLocationRefactor
 's|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s' #enableInAppMessaging=
 's|Enable showing new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpv
+'s|Enable Canvas ads for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvCanvasAds
 's|Enable new modal slot to position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})|false|s' #enableNewAdsNpvNewVideoTakeoverSlot
 's|Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvVideoTakeover
 's|Enable CTA card color extraction for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvColorExtraction
@@ -596,6 +597,7 @@ defaultExperimentals=(
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
 's|different heart button for Bad Bunny",default:\K!1|true|s' #enableBadBunnyEasterEgg
 's|balloons on album release date anniversaries",default:\K!1|true|s' #enableAlbumReleaseAnniversaries
+'s|context menu action to ban/unban artists",default:\K!1|true|s' #enableBanArtistAction
 's|rendering subtitles on the betamax SDK on DesktopX",default:\K!1|true|s' #enableBetamaxSdkSubtitlesDesktopX
 's|Panther Easter egg turning progress bar purple when playing official soundtrack",default:\K!1|true|s' #enableBlackPantherEasterEgg
 's|block users feature in clientX",default:\K!1|true|s' #enableBlockUsers
@@ -640,6 +642,7 @@ defaultExperimentals=(
 's|showing podcast transcripts on desktop and web player",default:\K!1|true|s' #enableNewPodcastTranscripts
 's|next best episode block on the show page",default:\K!1|true|s' #enableNextBestEpisode
 's|showing video in Now Playing Bar when all other video elements are closed",default:\K!1|true|s' #enableNowPlayingBarVideo
+'s|a switch to toggle video in the Now Playing Bar",default:\K!1|true|s' #enableNowPlayingBarVideoSwitch
 's|credits in the right sidebar",default:\K!1|true|gs' #enableNPVCredits #enableNPVCreditsWithLinkability
 's|pick and shuffle",default:\K!.(?=})|false|s' #enablePickAndShuffle
 's|the PiP Mini Player",default:\K!1|true|s' #enablePiPMiniPlayer
