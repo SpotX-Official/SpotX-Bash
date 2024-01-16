@@ -592,6 +592,7 @@ defaultExperimentals=(
 's|cover art modal on the Album page",default:\K!1|true|s' #enableAlbumCoverArtModal
 's|album prerelease pages",default:\K!1|true|s' #enableAlbumPrerelease
 # 's|Enable Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
+'s|anonymous users to play video podcasts",default:\K!1|true|s' #enableAnonymousVideoPlayback
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
@@ -628,6 +629,7 @@ defaultExperimentals=(
 's|Ignore In Recommendations for desktop and web",default:\K!1|true|s' #enableIgnoreInRecommendations
 's|new inline playlist curation tools",default:\K!1|true|s' #enableInlineCuration
 's|Just Press Play. feature.,default:\K!1|true|s' #enableJustPressPlay
+'s|Show filter tags on the Liked Songs entity view",default:\K!1|true|s' #enableLikedSongsFilterTags
 's|list view for Live Events feed",default:\K!1|true|s' #enableLiveEventsListView
 's|clients will check whether tracks have lyrics available",default:\K!1|true|s' #enableLyricsCheck
 's|Lyrics match labels in search results",default:\K!1|true|s' #ENABLE_LYRICS_MATCH
