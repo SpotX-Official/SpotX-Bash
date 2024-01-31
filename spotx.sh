@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.29.605.g66a43ceb"
+buildVer="1.2.30.1135.g02fef27a"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -415,7 +415,7 @@ run_patches () {
     $perlVar "${adEmptyBlock}" "${xpuiJs}"
     (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${adEsper}" "${xpuiJs}"
     (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${adUpgradeButton}" "${xpuiJs}"
-    $perlVar "${hideDLQual}" "${xpuiJs}"
+    (($(ver "${clientVer}") < $(ver "1.2.30.1135"))) &&$perlVar "${hideDLQual}" "${xpuiJs}"
     $perlVar "${hptoEnabled}" "${xpuiJs}"
     (($(ver "${clientVer}") > $(ver "1.1.84.716") && $(ver "${clientVer}") < $(ver "1.2.21.1104"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
     (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar "${hptoShown3}" "${xpuiJs}"
