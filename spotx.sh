@@ -416,7 +416,7 @@ run_patches () {
     (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${adEsper}" "${xpuiJs}"
     (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${adUpgradeButton}" "${xpuiJs}"
     (($(ver "${clientVer}") < $(ver "1.2.30.1135"))) && $perlVar "${hideDLQual}" "${xpuiJs}"
-    (($(ver "${clientVer}") >= $(ver "1.2.30.1135"))) && $perlVar "${hideDLQual2}" "${xpuiJs}"
+    (($(ver "${clientVer}") >= $(ver "1.2.30.1135"))) && $perlVar "${hideDlQual}" "${xpuiJs}"
     $perlVar "${hptoEnabled}" "${xpuiJs}"
     (($(ver "${clientVer}") > $(ver "1.1.84.716") && $(ver "${clientVer}") < $(ver "1.2.21.1104"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
     (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar "${hptoShown3}" "${xpuiJs}"
