@@ -514,7 +514,7 @@ connectNew='s/return (..isDisabled)(\?(..createElement|\(.{1,10}\))\(..,)/return
 enableImprovedDevicePickerUI1='s|Enable showing a new and improved device picker UI",default:\K!.(?=})|true|' # 1.1.90.855 - 1.1.95.893
 #enableImprovedDevicePickerUI2='s|Enable showing a new and improved device picker UI",default:\K!0|false|' # 1.1.96.783 - 1.1.97.962
 hideDLQual='s/(\(.,..jsxs\)\(.{1,3}|(.\(\).|..)createElement\(.{1,4}),\{(filterMatchQuery|filter:.,title|(variant:"viola",semanticColor:"textSubdued"|..:"span",variant:.{3,6}mesto,color:.{3,6}),htmlFor:"desktop.settings.downloadQuality.+?).{1,6}get\("desktop.settings.downloadQuality.title.+?(children:.{1,2}\(.,.\).+?,|\(.,.\){3,4},|,.\)}},.\(.,.\)\),)//'
-hideDlQual2='s|return \K([^;]+?)(?=\?null[^}]+?desktop\.settings\.downloadQuality\.title)|true|'
+hideDlQual='s|return \K([^;]+?)(?=\?null[^}]+?desktop\.settings\.downloadQuality\.title)|true|'
 hideDLIcon=' .BKsbV2Xl786X9a09XROH {display:none}'
 hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
