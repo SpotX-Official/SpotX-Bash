@@ -415,7 +415,8 @@ run_patches () {
     $perlVar "${adEmptyBlock}" "${xpuiJs}"
     (($(ver "${clientVer}") >= $(ver "1.1.93.896"))) && $perlVar "${adEsper}" "${xpuiJs}"
     (($(ver "${clientVer}") < $(ver "1.1.93.896"))) && $perlVar "${adUpgradeButton}" "${xpuiJs}"
-    (($(ver "${clientVer}") < $(ver "1.2.30.1135"))) &&$perlVar "${hideDLQual}" "${xpuiJs}"
+    (($(ver "${clientVer}") < $(ver "1.2.30.1135"))) && $perlVar "${hideDLQual}" "${xpuiJs}"
+    (($(ver "${clientVer}") >= $(ver "1.2.30.1135"))) && $perlVar "${hideDLQual2}" "${xpuiJs}"
     $perlVar "${hptoEnabled}" "${xpuiJs}"
     (($(ver "${clientVer}") > $(ver "1.1.84.716") && $(ver "${clientVer}") < $(ver "1.2.21.1104"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
     (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar "${hptoShown3}" "${xpuiJs}"
@@ -513,6 +514,7 @@ connectNew='s/return (..isDisabled)(\?(..createElement|\(.{1,10}\))\(..,)/return
 enableImprovedDevicePickerUI1='s|Enable showing a new and improved device picker UI",default:\K!.(?=})|true|' # 1.1.90.855 - 1.1.95.893
 #enableImprovedDevicePickerUI2='s|Enable showing a new and improved device picker UI",default:\K!0|false|' # 1.1.96.783 - 1.1.97.962
 hideDLQual='s/(\(.,..jsxs\)\(.{1,3}|(.\(\).|..)createElement\(.{1,4}),\{(filterMatchQuery|filter:.,title|(variant:"viola",semanticColor:"textSubdued"|..:"span",variant:.{3,6}mesto,color:.{3,6}),htmlFor:"desktop.settings.downloadQuality.+?).{1,6}get\("desktop.settings.downloadQuality.title.+?(children:.{1,2}\(.,.\).+?,|\(.,.\){3,4},|,.\)}},.\(.,.\)\),)//'
+hideDLQual2='s|\(\p{L}\.quality\.maxSupportedQuality\),\p{L}=\p{L}{2}\(\);return \K(.+?)(?=\?null)|true|'
 hideDLIcon=' .BKsbV2Xl786X9a09XROH {display:none}'
 hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
