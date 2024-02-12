@@ -563,6 +563,7 @@ defaultXpui=(
 's|Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})|false|s' #enableDsaAds
 's|Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})|false|s' #enableDSASetting
 's|Enable esperanto Migration for Ad Formats",default:\K!.(?=})|false|s' #enableEsperantoMigration
+'s|Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})|false|s' #enableHomeAds
 's|Enables temporary home banner, static version",default:\K!.(?=})|false|s' #enableHomeAdStaticBanner
 's|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s' #enableHptoLocationRefactor
 's|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s' #enableInAppMessaging
@@ -602,6 +603,7 @@ defaultExperimentals=(
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
+'s|avoid initial seek if the initial position is not buffered",default:\K!1|true|s' #enableAutoSeekToVideoBufferedStartPosition
 's|different heart button for Bad Bunny",default:\K!1|true|s' #enableBadBunnyEasterEgg
 's|balloons on album release date anniversaries",default:\K!1|true|s' #enableAlbumReleaseAnniversaries
 's|context menu action to ban/unban artists",default:\K!1|true|s' #enableBanArtistAction
@@ -635,6 +637,7 @@ defaultExperimentals=(
 's|Ignore In Recommendations for desktop and web",default:\K!1|true|s' #enableIgnoreInRecommendations
 's|new inline playlist curation tools",default:\K!1|true|s' #enableInlineCuration
 's|Just Press Play. feature.,default:\K!1|true|s' #enableJustPressPlay
+'s|Learning Home Card",default:\K!1|true|s' #enableLearningHomeCard
 's|Show filter tags on the Liked Songs entity view",default:\K!1|true|s' #enableLikedSongsFilterTags
 's|list view for Live Events feed",default:\K!1|true|s' #enableLiveEventsListView
 's|clients will check whether tracks have lyrics available",default:\K!1|true|s' #enableLyricsCheck
@@ -653,6 +656,7 @@ defaultExperimentals=(
 's|showing video in Now Playing Bar when all other video elements are closed",default:\K!1|true|s' #enableNowPlayingBarVideo
 's|a switch to toggle video in the Now Playing Bar",default:\K!1|true|s' #enableNowPlayingBarVideoSwitch
 's|credits in the right sidebar",default:\K!1|true|gs' #enableNPVCredits #enableNPVCreditsWithLinkability
+'s|On-The-Fly-Normalization",default:\K!1|true|s' #enableOtfn
 's|pick and shuffle",default:\K!.(?=})|false|s' #enablePickAndShuffle
 's|the PiP Mini Player",default:\K!1|true|s' #enablePiPMiniPlayer
 's|playback of video inside the PiP Mini Player",default:\K!1|true|s' #enablePiPMiniPlayerVideo
@@ -688,6 +692,7 @@ defaultExperimentals=(
 's|what.s new feed panel",default:\K!1|true|s' #enableWhatsNewFeed
 's|Whats new feed in the main view",default:\K!1|true|s' #enableWhatsNewFeedMainView
 's|Your Library X Enhancements",default:\K!1|true|s' #enableYLXEnhancements
+'s|album pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleases
 's|jump to the first matching item",default:\K!1|true|s' #enableYLXTypeaheadSearch
 's|Display save button always in whats new feed",default:\K!1|true|s' #saveButtonAlwaysVisible
 's|Show Wrapped banner on wrapped genre page",default:\K!1|true|s' #showWrappedBanner
