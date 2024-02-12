@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.30.1135.g02fef27a
+        <strong>Latest supported version:</strong> 1.2.31.1205.g4d59ad7c
     </p> 
 </center>
 
@@ -53,7 +53,7 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 | `--help` | print options |  
 | `-i` | enable interactive mode | 
 | `--installdeb` | install latest client deb pkg on APT-based distros [Linux] |   
-| `--installmac` | install latest supported client (macOS) |  
+| `--installmac` | install latest supported client [macOS] |  
 | `-l` | [no lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019) |  
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  

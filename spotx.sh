@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.30.1135.g02fef27a"
+buildVer="1.2.31.1205.g4d59ad7c"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -633,6 +633,7 @@ defaultExperimentals=(
 's|audio equalizer for Desktop and Web Player",default:\K!1|true|s' #enableEqualizer
 's|EA FC 24 easter egg",default:\K!1|true|s' #enableFC24EasterEgg
 's|option to Forget Devices",default:\K!1|true|s' #enableForgetDevice
+'s|Enable fullscreen mode",default:\K!1|true|s' #enableFullscreenMode
 's|Show global top bar with home button, search input and user avatar",default:\K!1|true|s' #enableGlobalTopBar
 's|Ignore In Recommendations for desktop and web",default:\K!1|true|s' #enableIgnoreInRecommendations
 's|new inline playlist curation tools",default:\K!1|true|s' #enableInlineCuration
