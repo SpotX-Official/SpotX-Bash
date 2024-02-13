@@ -567,6 +567,7 @@ defaultXpui=(
 's|Enables temporary home banner, static version",default:\K!.(?=})|false|s' #enableHomeAdStaticBanner
 's|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s' #enableHptoLocationRefactor
 's|Enables quicksilver in-app messaging modal",default:\K!.(?=})|false|s' #enableInAppMessaging
+'s|Enable Learning Home Card",default:\K!.(?=})|false|s' #enableLearningHomeCard
 's|Use the mock endpoint to fetch Leavebehinds from AP4P",default:\K!.(?=})|false|s' #enableLeavebehindsMockData
 's|Enable showing new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpv
 's|Enable Canvas ads for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvCanvasAds
@@ -638,7 +639,6 @@ defaultExperimentals=(
 's|Ignore In Recommendations for desktop and web",default:\K!1|true|s' #enableIgnoreInRecommendations
 's|new inline playlist curation tools",default:\K!1|true|s' #enableInlineCuration
 's|Just Press Play. feature.,default:\K!1|true|s' #enableJustPressPlay
-'s|Learning Home Card",default:\K!1|true|s' #enableLearningHomeCard
 's|Show filter tags on the Liked Songs entity view",default:\K!1|true|s' #enableLikedSongsFilterTags
 's|list view for Live Events feed",default:\K!1|true|s' #enableLiveEventsListView
 's|clients will check whether tracks have lyrics available",default:\K!1|true|s' #enableLyricsCheck
