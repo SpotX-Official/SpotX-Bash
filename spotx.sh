@@ -105,6 +105,10 @@ echo
 [[ "${logoVar}" ]] && exit 0
 
 macos_requirements_check () {
+  if [[ "$TERM" != "xterm-256color" ]] ; then
+    echo "Please use Terminal.app in macOS";
+    exit 1;
+  fi;
   (("${OSTYPE:6:2}" < 15)) && { echo -e "\n${red}Error:${clear} OS X 10.11+ required\n" >&2; exit 1; }
   [[ -z "${skipCodesign+x}" ]] && { command -v codesign >/dev/null || { echo -e "\n${red}Error:${clear} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clear}\n" >&2; exit 1; } }
 }
