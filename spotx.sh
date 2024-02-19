@@ -248,9 +248,9 @@ check_write_permission () {
     local path="${path}"
     if [[ ! -w "${path}" ]]; then
       if ! sudo -n true 2>/dev/null; then
-        echo -e "${yellow}Warning:${clear} SpotX does not have write permission in Spotify directory.\nRequesting sudo permission..." >&2
+        echo -e "${yellow}Warning:${clear} SpotX-Bash does not have write permission in Spotify directory.\nRequesting sudo permission..." >&2
         sudo -v
-        (( $? != 0 )) && { echo -e "\n${red}Error:${clear} SpotX was not given sudo permission. Exiting...\n" >&2; exit 1; }
+        (( $? != 0 )) && { echo -e "\n${red}Error:${clear} SpotX-Bash was not given sudo permission. Exiting...\n" >&2; exit 1; }
       fi
       sudo chmod -R a+wr "${appPath}"
     fi
@@ -330,7 +330,7 @@ linux_deb_install () {
 }
 
 macos_client_install () {
-  [[ ! -w "${installPath}" ]] && { echo -e "${red}Error:${clear} SpotX does not have write permission in ${installPath}.\nConfirm permissions or set custom install path to writable directory.\n" >&2; exit 1; }
+  [[ ! -w "${installPath}" ]] && { echo -e "${red}Error:${clear} SpotX-Bash does not have write permission in ${installPath}.\nConfirm permissions or set custom install path to writable directory.\n" >&2; exit 1; }
   mc01=$(echo "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ1Z1VhNnTFlUOKhVWshnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJlWTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   mc02=$(echo "5IUePhXQDRGcohlWnNnaN1GNElUa0cEWrZ1RiBnRtp1ZRdVW2hXbiNTOHp1ZR5mYsx2RiRkQTZWeGdlWz5kMlt2bqNmdK52YGFDSaxmSzU2a0cEWpF0UaRXQ5J2bOdlWnNHSJhDeIlUaJpWWop0MatWSDlUaw42YoplVaNHbtp1NSlHT6J1VZZHetJ2M5ckU2VVVUBFaFpUaBlnY0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
@@ -377,8 +377,8 @@ xpui_detect () {
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
   elif [[ -f "${appBak}" || -f "${xpuiBak}" ]] && [[ -z "${forceSpotx+x}" ]]; then
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    echo -e "${yellow}Warning:${clear} SpotX has already been installed." >&2
-    echo -e "Use the '-f' flag to force SpotX to run.\n" >&2
+    echo -e "${yellow}Warning:${clear} SpotX-Bash has already been installed." >&2
+    echo -e "Use the '-f' flag to force SpotX-Bash to run.\n" >&2
     xpuiSkip='true'
   else
     cp "${xpuiSpa}" "${xpuiBak}"
@@ -392,7 +392,7 @@ xpui_open () {
   [[ "${versionFailed}" && -z "${forceVer+x}" ]] && clientVer=$(perl -ne '/[Vv]ersion[:=,\x22]{1,3}(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"' "${xpuiJs}")
   (($(ver "${clientVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clear} ${clientVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   if grep -Fq "SpotX" "${xpuiJs}"; then
-    echo -e "\n${red}Warning:${clear} Detected SpotX but no backup file! Reinstall Spotify. Exiting...\n" >&2
+    echo -e "\n${red}Warning:${clear} Detected SpotX-Bash but no backup file! Reinstall Spotify. Exiting...\n" >&2
     rm -rf "${xpuiBak}" "${xpuiDir}" 2>/dev/null
     exit 1
   fi
