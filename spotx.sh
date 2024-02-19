@@ -599,7 +599,7 @@ defaultExperimentals=(
 's|showing AI dubbed episodes in NPV",default:\K!1|true|s' #enableAiDubbedEpisodesInNpv
 's|cover art modal on the Album page",default:\K!1|true|s' #enableAlbumCoverArtModal
 's|album prerelease pages",default:\K!1|true|s' #enableAlbumPrerelease
-# 's|Enable Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
+# 's|Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
 's|anonymous users to play video podcasts",default:\K!1|true|s' #enableAnonymousVideoPlayback
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
@@ -666,7 +666,7 @@ defaultExperimentals=(
 's|Playlist Permissions flows for Prod",default:\K!1|true|s' #enablePlaylistPermissionsProd
 's|showing podcast chapters in NPV",default:\K!1|true|s' #enablePodcastChaptersInNpv
 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' #enablePodcastDescriptionAutomaticLinkification
-'s|Enable React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
+'s|React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
 's|read along transcripts in the NPV",default:\K!1|true|s' #enableReadAlongTranscripts
 's|Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1|true|s' #enableRecentlyPlayedShortcut
 's|Related Video section in NPV",default:\K!1|true|s' #enableRelatedVideos
