@@ -420,7 +420,7 @@ run_patches () {
     $perlVar "${hptoEnabled}" "${xpuiJs}"
     (($(ver "${clientVer}") > $(ver "1.1.84.716") && $(ver "${clientVer}") < $(ver "1.2.21.1104"))) && $perlVar "${hptoShown}" "${homeHptoJs}"
     (($(ver "${clientVer}") >= $(ver "1.2.21.1104"))) && $perlVar "${hptoShown3}" "${xpuiJs}"
-    printf '%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideVeryHigh}"  >> "${xpuiCss}"
+    printf '%s\n%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideDLMenu2}" "${hideVeryHigh}"  >> "${xpuiCss}"
     (($(ver "${clientVer}") < $(ver "1.1.91.824"))) && { $perlVar "${connectOld1}" "${xpuiJs}"; $perlVar "${connectOld2}" "${xpuiJs}"; $perlVar "${connectOld3}" "${xpuiJs}"; }
     (($(ver "${clientVer}") >= $(ver "1.1.91.824") && $(ver "${clientVer}") < $(ver "1.1.93.896"))) && { $perlVar "${enableImprovedDevicePickerUI1}" "${xpuiJs}"; $perlVar "${connectNew}" "${xpuiJs}"; }
     #(($(ver "${clientVer}") > $(ver "1.1.96.783"))) && $perlVar "${connectNew}" "${xpuiJs}"
@@ -517,6 +517,7 @@ hideDLQual='s/(\(.,..jsxs\)\(.{1,3}|(.\(\).|..)createElement\(.{1,4}),\{(filterM
 hideDlQual='s|return \K([^;]+?)(?=\?null[^}]+?desktop\.settings\.downloadQuality\.title)|true|'
 hideDLIcon=' .BKsbV2Xl786X9a09XROH {display:none}'
 hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
+hideDLMenu2=' .pzkhLqffqF_4hucrVVQA, .egE6UQjF_UUoCzvMxREj {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
 hptoEnabled='s|hptoEnabled:!\K0|1|s'
 hptoShown='s|isHptoShown:!\K0|1|gs'
