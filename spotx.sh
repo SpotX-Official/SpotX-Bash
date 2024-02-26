@@ -564,6 +564,8 @@ defaultXpui=(
 's|Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})|false|s' #enableDsaAds
 's|Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})|false|s' #enableDSASetting
 's|Enable esperanto Migration for Ad Formats",default:\K!.(?=})|false|s' #enableEsperantoMigration
+'s|Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})|false|s' #enableEsperantoMigrationLeaderboard
+'s|Enables sending of the GPC signal to the backend",default:\K!.(?=})|true|s' #enableGPCSignal
 's|Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})|false|s' #enableHomeAds
 's|Enables temporary home banner, static version",default:\K!.(?=})|false|s' #enableHomeAdStaticBanner
 's|Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})|false|s' #enableHptoLocationRefactor
@@ -575,12 +577,14 @@ defaultXpui=(
 's|Enable new modal slot to position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})|false|s' #enableNewAdsNpvNewVideoTakeoverSlot
 's|Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvVideoTakeover
 's|Enable CTA card color extraction for new ads NPV",default:\K!.(?=})|false|s' #enableNewAdsNpvColorExtraction
+'s|Enables impression logging for PiP",default:\K!.(?=})|false|s' #enablePipImpressionLogging
 's|Enable sponsored content information for podcasts",default:\K!.(?=})|false|s' #enablePodcastSponsoredContent
 's|Enable user fraud Canvas Fingerprinting",default:\K!.(?=})|false|s' #enableUserFraudCanvas
 's|Enable CSP violation detection",default:\K!.(?=})|false|s' #enableUserFraudCspViolation
 's|Enable user fraud signals emitted on page load",default:\K!.(?=})|false|s' #enableFraudLoadSignals
 's|Enables programmatically triggered popovers",default:\K!.(?=})|false|s' #enableNonUserTriggeredPopovers
 's|Enable show leavebehinds consolidated experience",default:\K!.(?=})|false|s' #enableShowLeavebehindConsolidation
+'s|Enable esperanto Migration for Sponsored Playlist Ad Formats",default:\K!.(?=})|false|s' #enableSponsoredPlaylistEsperantoMigration
 's|Enable user fraud signals",default:\K!.(?=})|false|s' #enableUserFraudSignals
 's|Enable user fraud verification",default:\K!.(?=})|false|s' #enableUserFraudVerification
 's|Enable the IAV component make api requests",default:\K!.(?=})|false|s' #enableUserFraudVerificationRequest
@@ -600,6 +604,7 @@ defaultExperimentals=(
 's|showing AI dubbed episodes in NPV",default:\K!1|true|s' #enableAiDubbedEpisodesInNpv
 's|cover art modal on the Album page",default:\K!1|true|s' #enableAlbumCoverArtModal
 's|album prerelease pages",default:\K!1|true|s' #enableAlbumPrerelease
+'s|balloons on album release date anniversaries",default:\K!1|true|s' #enableAlbumReleaseAnniversaries
 # 's|Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
 's|anonymous users to play video podcasts",default:\K!1|true|s' #enableAnonymousVideoPlayback
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
@@ -607,14 +612,15 @@ defaultExperimentals=(
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
 's|avoid initial seek if the initial position is not buffered",default:\K!1|true|s' #enableAutoSeekToVideoBufferedStartPosition
 's|different heart button for Bad Bunny",default:\K!1|true|s' #enableBadBunnyEasterEgg
-'s|balloons on album release date anniversaries",default:\K!1|true|s' #enableAlbumReleaseAnniversaries
 's|context menu action to ban/unban artists",default:\K!1|true|s' #enableBanArtistAction
 's|rendering subtitles on the betamax SDK on DesktopX",default:\K!1|true|s' #enableBetamaxSdkSubtitlesDesktopX
+'s|esperanto migration for Billboard Ad Format",default:\K!1|true|s' #enableBillboardEsperantoMigration
 's|Panther Easter egg turning progress bar purple when playing official soundtrack",default:\K!1|true|s' #enableBlackPantherEasterEgg
 's|block users feature in clientX",default:\K!1|true|s' #enableBlockUsers
 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' #enableBrowseViaPathfinder
 's|Use carousels on Home",default:\K!1|true|s' #enableCarouselsOnHome
 's|option in settings to clear all downloads",default:\K!1|true|s' #enableClearAllDownloads
+'s|Links on concert page to artist concerts",default:\K!1|true|s' #enableConcertLinkToArtistConcertsDWP
 's|Concerts Carousel on This is Playlist",default:\K!1|true|s' #enableConcertsCarouselForThisIsPlaylist
 's|Use pathfinder for the concert entity page on DWP",default:\K!1|true|s' #enableConcertEntityPathfinderDWP
 's|Tour Card on This is Playlist",default:\K!1|true|s' #enableConcertsForThisIsPlaylist
@@ -647,6 +653,7 @@ defaultExperimentals=(
 's|new fullscreen lyrics page",default:\K!1|true|s' #enableLyricsNew
 's|Show "Made For You" entry point in the left sidebar.,default:\K!1|true|s' #enableMadeForYou
 's|Route merchhub url to the new genre page for the wrapped takeover",default:\K!1|true|s' #enableMerchHubWrappedTakeover
+'s|More Like This playlist for playlists the user cannot edit",default:\K!1|true|s' #enableMoreLikeThisPlaylist
 's|Mermaid playlist easter egg",default:\K!1|true|s' #enableMyLittleMermaidEasterEgg
 's|Mermaid playlist easter egg video background",default:\K!1|true|s' #enableMyLittleMermaidEasterEggVideo
 's|Display the new Artist events page",default:\K!1|true|s' #enableNewArtistEventsPage
@@ -668,6 +675,9 @@ defaultExperimentals=(
 's|showing podcast chapters in NPV",default:\K!1|true|s' #enablePodcastChaptersInNpv
 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' #enablePodcastDescriptionAutomaticLinkification
 's|React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
+'s|album pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAlbums
+'s|audiobook pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAudiobooks"
+'s|animations for Queue on the right panel.",default:\K!1|true|s' #enableQueueOnRightPanelAnimations
 's|read along transcripts in the NPV",default:\K!1|true|s' #enableReadAlongTranscripts
 's|Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1|true|s' #enableRecentlyPlayedShortcut
 's|Related Video section in NPV",default:\K!1|true|s' #enableRelatedVideos
@@ -677,6 +687,7 @@ defaultExperimentals=(
 's|new Search experience",default:\K!1|true|s' #enableSearchV3
 's|Display share icon for sharing an event",default:\K!1|true|s' #enableShareEvent
 's|control if followers and following lists are shown on profile",default:\K!1|true|s' #enableShowFollowsSetting
+'s|new UI for rating books and podcasts",default:\K!1|true|s' #enableShowRating
 's|silence trimming in podcasts",default:\K!1|true|s' #enableSilenceTrimmer
 's|SingAlong in the Lyrics feature",default:\K!1|true|s' #enableSingAlong
 's|line height 1.5 on the .body ..",default:\K!1|true|s' #enableSmallerLineHeight
@@ -691,6 +702,7 @@ defaultExperimentals=(
 's|video label for search results",default:\K!1|true|s' #enableVideoLabelForSearchResults
 's|desktop picture-in-picture surface using betamax SDK.",default:\K!1|true|s' #enableVideoPip
 's|list . compact mode in entity pages",default:\K!1|true|s' #enableViewMode
+'s|Watch Feed feature",default:\K!1|true|s' enableWatchFeed
 's|what.s new feed panel",default:\K!1|true|s' #enableWhatsNewFeed
 's|Whats new feed in the main view",default:\K!1|true|s' #enableWhatsNewFeedMainView
 's|Your Library X Enhancements",default:\K!1|true|s' #enableYLXEnhancements
@@ -702,6 +714,7 @@ defaultExperimentals=(
 
 premiumExperimentals=(
 's|Add Your DJ to library on playback",default:\K!1|true|s' #addYourDJToLibraryOnPlayback
+'s|Enable Group Session entrypoint in the queue.",default:\K!1|true|s' #enableGroupSessionEntrypointInQueue
 's|Hifi indicator and flyout",default:\K!1|true|s' #enableHifi
 's|group listening sessions for Desktop",default:\K!.(?=})|true|s' #enableSocialConnectOnDesktop
 's|the .Your DJ. feature.,default:\K!1|true|s' #enableYourDJ
