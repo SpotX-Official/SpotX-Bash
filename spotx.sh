@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.31.1205.g4d59ad7c"
+buildVer="1.2.32.985.g3be2709c"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -702,7 +702,7 @@ defaultExperimentals=(
 's|video label for search results",default:\K!1|true|s' #enableVideoLabelForSearchResults
 's|desktop picture-in-picture surface using betamax SDK.",default:\K!1|true|s' #enableVideoPip
 's|list . compact mode in entity pages",default:\K!1|true|s' #enableViewMode
-'s|Watch Feed feature",default:\K!1|true|s' enableWatchFeed
+'s|Watch Feed feature",default:\K!1|true|s' #enableWatchFeed
 's|what.s new feed panel",default:\K!1|true|s' #enableWhatsNewFeed
 's|Whats new feed in the main view",default:\K!1|true|s' #enableWhatsNewFeedMainView
 's|Your Library X Enhancements",default:\K!1|true|s' #enableYLXEnhancements
