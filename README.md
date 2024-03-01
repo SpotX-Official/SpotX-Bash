@@ -39,8 +39,9 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 - View additional arguments and examples in the `Options` section below
 - See the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ) for more information
 
+### Options:
 <details>
-<summary><h3>Options:</h3></summary>
+  <summary>Click to expand!</summary>
 
 | Option | Description |  
 | --- | --- |  
