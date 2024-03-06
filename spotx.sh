@@ -179,14 +179,19 @@ linux_search_path () {
   return 1
 }
 
+linux_snap_check () {
+  command -v snap >/dev/null && snap list spotify &>/dev/null &&
+  { echo -e "${red}Error:${clear} Snap client not supported. See FAQ for more info.\nIf another Spotify package is installed, set directory path with '-P' flag.\n" >&2; exit 1; } ||
+  { echo -e "${red}Error:${clear} Spotify directory not found.\nSet directory path with '-P' flag.\n" >&2; exit 1; }
+}
+
 linux_set_path () {
   if [[ "${installDeb}" ]]; then
     linux_deb_prepare
   elif [[ -z "${installPath+x}" ]]; then
     echo -e "Searching for Spotify directory...\n"
     linux_search_path
-    [[ -d "${installPath}" ]] && echo -e "Found Spotify Directory: ${installPath}\n" ||
-    { echo -e "${red}Error:${clear} Spotify directory not found.\nSet directory path with '-P' flag.\n" >&2; exit 1; }
+    [[ -d "${installPath}" ]] && echo -e "Found Spotify Directory: ${installPath}\n" || linux_snap_check
   else
     { [[ "${installPath}" == *"snapd/snap"* ]] || [[ "${installPath}" == *"snap/spotify"* ]] || [[ "${installPath}" == *"snap/bin"* ]]; } && { echo -e "${red}Error:${clear} Snap client not supported. See FAQ for more info.\n" >&2; exit 1; }
     [[ -f "${installPath}/Apps/xpui.spa" ]] && echo -e "Using Spotify Directory: ${installPath}\n" ||
