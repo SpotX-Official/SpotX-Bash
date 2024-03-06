@@ -188,7 +188,7 @@ linux_set_path () {
     [[ -d "${installPath}" ]] && echo -e "Found Spotify Directory: ${installPath}\n" ||
     { echo -e "${red}Error:${clear} Spotify directory not found.\nSet directory path with '-P' flag.\n" >&2; exit 1; }
   else
-    [[ "${installPath}" == *"/snap/"* ]] && { echo -e "${red}Error:${clear} Snap client is not supported by SpotX-Bash.\nReview the FAQ for more info.\n" >&2; exit 1; }
+    { [[ "${installPath}" == *"snapd/snap"* ]] || [[ "${installPath}" == *"snap/spotify"* ]] || [[ "${installPath}" == *"snap/bin"* ]]; } && { echo -e "${red}Error:${clear} Snap client is not supported by SpotX-Bash.\nReview the FAQ for more info.\n" >&2; exit 1; }
     [[ -f "${installPath}/Apps/xpui.spa" ]] && echo -e "Using Spotify Directory: ${installPath}\n" ||
     { echo -e "${red}Error:${clear} Spotify not found in path set by '-P'.\nConfirm directory and try again.\n" >&2; exit 1; }
   fi
