@@ -611,7 +611,7 @@ defaultExperimentals=(
 's|cover art modal on the Album page",default:\K!1|true|s' #enableAlbumCoverArtModal
 's|album prerelease pages",default:\K!1|true|s' #enableAlbumPrerelease
 's|balloons on album release date anniversaries",default:\K!1|true|s' #enableAlbumReleaseAnniversaries
-# 's|Aligned Curation",default:\K!1|true|s' #enableAlignedCuration
+'s|Aligned Curation",default:\K!.(?=})|false|s' #enableAlignedCuration
 's|anonymous users to play video podcasts",default:\K!1|true|s' #enableAnonymousVideoPlayback
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
@@ -680,10 +680,8 @@ defaultExperimentals=(
 's|Playlist Permissions flows for Prod",default:\K!1|true|s' #enablePlaylistPermissionsProd
 's|showing podcast chapters in NPV",default:\K!1|true|s' #enablePodcastChaptersInNpv
 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' #enablePodcastDescriptionAutomaticLinkification
-'s|React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
-'s|album pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAlbums
-'s|audiobook pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAudiobooks"
 's|animations for Queue on the right panel.",default:\K!1|true|s' #enableQueueOnRightPanelAnimations
+'s|React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
 's|read along transcripts in the NPV",default:\K!1|true|s' #enableReadAlongTranscripts
 's|Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1|true|s' #enableRecentlyPlayedShortcut
 's|Related Video section in NPV",default:\K!1|true|s' #enableRelatedVideos
@@ -708,10 +706,12 @@ defaultExperimentals=(
 's|video label for search results",default:\K!1|true|s' #enableVideoLabelForSearchResults
 's|desktop picture-in-picture surface using betamax SDK.",default:\K!1|true|s' #enableVideoPip
 's|list . compact mode in entity pages",default:\K!1|true|s' #enableViewMode
-'s|Watch Feed feature",default:\K!1|true|s' #enableWatchFeed
+# 's|Watch Feed feature",default:\K!1|true|s' #enableWatchFeed
 's|what.s new feed panel",default:\K!1|true|s' #enableWhatsNewFeed
 's|Whats new feed in the main view",default:\K!1|true|s' #enableWhatsNewFeedMainView
 's|Your Library X Enhancements",default:\K!1|true|s' #enableYLXEnhancements
+'s|album pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAlbums
+'s|audiobook pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleaseAudiobooks"
 's|album pre-releases in YLX",default:\K!1|true|s' #enableYLXPrereleases
 's|jump to the first matching item",default:\K!1|true|s' #enableYLXTypeaheadSearch
 's|Display save button always in whats new feed",default:\K!1|true|s' #saveButtonAlwaysVisible
