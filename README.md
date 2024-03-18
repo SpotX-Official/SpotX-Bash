@@ -37,8 +37,8 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 ```
 - By default...
   - all supported experimental features are enabled
-  - free-tier user patches are applied -- paid-premium users should use  `-p` / `--premium` flag
-  - macOS client auto-updates are NOT disabled -- block auto-updates with `-b` / `--blockupdates` flag
+  - free-tier user patches are applied, paid-premium users should use  `-p` / `--premium` flag
+  - macOS client auto-updates are NOT disabled, block auto-updates with `-B` / `--blockupdates` flag
 - View additional flags/options and examples in the `Options` section below
 - For more information, see the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ)
 
