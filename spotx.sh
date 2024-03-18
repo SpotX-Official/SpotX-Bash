@@ -360,6 +360,8 @@ run_cache_check () {
   if [[ "${clearCache}" ]]; then
     rm -rf "${cachePath}/Browser" 2>/dev/null
     rm -rf "${cachePath}/Data" 2>/dev/null
+    rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
+    rm -rf "${cachePath}/public.ldb" 2>/dev/null
     rm "${cachePath}/LocalPrefs.json" 2>/dev/null
     printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
   fi
@@ -615,6 +617,7 @@ defaultExperimentals=(
 's|anonymous users to play video podcasts",default:\K!1|true|s' #enableAnonymousVideoPlayback
 's|Liked Songs section on Artist page",default:\K!1|true|s' #enableArtistLikedSongs
 's|Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1|true|s' #enableAttackOnTitanEasterEgg
+'s|audiobook prerelease pages",default:\K!1|true|s' #enableAudiobookPrerelease
 's|Audiobooks feature on ClientX",default:\K!1|true|s' #enableAudiobooks
 's|avoid initial seek if the initial position is not buffered",default:\K!1|true|s' #enableAutoSeekToVideoBufferedStartPosition
 's|different heart button for Bad Bunny",default:\K!1|true|s' #enableBadBunnyEasterEgg
@@ -624,12 +627,15 @@ defaultExperimentals=(
 's|Panther Easter egg turning progress bar purple when playing official soundtrack",default:\K!1|true|s' #enableBlackPantherEasterEgg
 's|block users feature in clientX",default:\K!1|true|s' #enableBlockUsers
 's|Fetch Browse data from Pathfinder",default:\K!1|true|s' #enableBrowseViaPathfinder
+'s|short, looping visuals on tracks.",default:..\.\KCONTROL|CANVAS_PLAY_LOOP|s' #enableCanvasNpv
 's|Use carousels on Home",default:\K!1|true|s' #enableCarouselsOnHome
 's|option in settings to clear all downloads",default:\K!1|true|s' #enableClearAllDownloads
 's|Links on concert page to artist concerts",default:\K!1|true|s' #enableConcertLinkToArtistConcertsDWP
-'s|Concerts Carousel on This is Playlist",default:\K!1|true|s' #enableConcertsCarouselForThisIsPlaylist
+'s|On concert page, link to metro area page",default:\K!1|true|s' #enableConcertLinkToMetroArea
 's|Use pathfinder for the concert entity page on DWP",default:\K!1|true|s' #enableConcertEntityPathfinderDWP
+'s|Concerts Carousel on This is Playlist",default:\K!1|true|s' #enableConcertsCarouselForThisIsPlaylist
 's|Tour Card on This is Playlist",default:\K!1|true|s' #enableConcertsForThisIsPlaylist
+'s|concerts in search",default:\K!1|true|s' #enableConcertsInSearch
 's|Save & Retrieve feature for concerts",default:\K!1|true|s' #enableConcertsInterested
 's|Concerts Near You Playlist",default:\K!1|true|s' #enableConcertsNearYou
 's|Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1|true|s' #enableConcertsNearYouFeedPromoDWP
@@ -680,6 +686,7 @@ defaultExperimentals=(
 's|Playlist Permissions flows for Prod",default:\K!1|true|s' #enablePlaylistPermissionsProd
 's|showing podcast chapters in NPV",default:\K!1|true|s' #enablePodcastChaptersInNpv
 's|Linkifies anything looking like a url in a podcast description.",default:\K!1|true|s' #enablePodcastDescriptionAutomaticLinkification
+'s|premium user flag for mini player",default:\K!1|true|s' #enablePremiumUserForMiniPlayer
 's|animations for Queue on the right panel.",default:\K!1|true|s' #enableQueueOnRightPanelAnimations
 's|React Query persistence",default:\K!1|true|s' #enableReactQueryPersistence
 's|read along transcripts in the NPV",default:\K!1|true|s' #enableReadAlongTranscripts
