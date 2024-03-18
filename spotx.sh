@@ -488,6 +488,7 @@ run_patches () {
   fi
 
   for cmd in "${defaultBinary[@]}"; do $perlVar "$cmd" "${appBinary}"; done
+  [[ "${platformType}" == "macOS" ]] && for cmd in "${macBinary[@]}"; do $perlVar "$cmd" "${appBinary}"; done
   for cmd in "${defaultVendor[@]}"; do $perlVar "$cmd" "${vendorXpuiJs}"; done
   for cmd in "${defaultXpui[@]}"; do $perlVar "$cmd" "${xpuiJs}"; done
 
@@ -553,9 +554,13 @@ lyricsBackground='s|--lyrics-color-inactive":\K(.).inactive|$1.background|; s|--
 defaultBinary=(
 's|\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)|\x00|' #adLogic
 's|\x00\K\x73(?=\x6C\x6F\x74\x73\x00)|\x00|' #adSlot
-'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70|\x20\x70|g' #prePostSlot
-'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69|\x20\x6D\x69|g' #midSlot
+'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x72|\x20\x70\x72|g' #preSlot
 's|\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65)|\x00|g' #gaboRequest
+)
+
+macBinary=(
+'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F|\x20\x70\x6F|g' #postSlot
+'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69|\x20\x6D\x69|g' #midSlot
 )
 
 defaultVendor=(
