@@ -245,7 +245,7 @@ run_prepare () {
   spotify_version_output
   ver_check
   command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
-  [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x63\x61\x73\x74\x2D\x6D\x69/; END { print "true" if $found1 && $found2 }' "${appBinary}")
+  [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x63\x61\x73\x74\x2D\x70\x72/; END { print "true" if $found1 && $found2 }' "${appBinary}")
 }
 
 check_write_permission () {
