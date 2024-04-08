@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.34.783.g923721d9"
+buildVer="1.2.35.663.gb699649e"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -554,7 +554,7 @@ lyricsBackground='s|--lyrics-color-inactive":\K(.).inactive|$1.background|; s|--
 defaultBinary=(
 's|\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)|\x00|' #adLogic
 's|\x00\K\x73(?=\x6C\x6F\x74\x73\x00)|\x00|' #adSlot
-'s|\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x72|\x20\x70\x72|g' #preSlot
+'s|\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)|\x20|g' #preSlot
 's|\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65)|\x00|g' #gaboRequest
 )
 
