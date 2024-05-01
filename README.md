@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.36.959.g04bf500c
+        <strong>Latest supported version:</strong> 1.2.36.955.gd8cc9372
     </p> 
 </center>
 
@@ -27,7 +27,7 @@
 - Block automatic updates (macOS)
 - Install supported desktop client versions (macOS)
 - Install latest desktop client on APT-based distros (Linux)
-- Supports all Linux distos and OS X/macOS 10.11+
+- Supports all Linux distros and OS X/macOS 10.11+
 
 ### Usage:
 
