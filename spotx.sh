@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.36.959.g04bf500c"
+buildVer="1.2.37.701.ge66eb7bc"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -206,13 +206,11 @@ linux_client_variant() {
       flatpakVer=$(flatpak info com.spotify.Client | grep Version: | perl -ne '/Version: (1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"')
       [[ -z "${flatpakVer+x}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
       cachePath=$(timeout 10 find /var/lib/flatpak/ $HOME/.var/app -type d -path "*com.spotify.Client/cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
-      :
     }
     return
   }
   [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* ]] && {
-    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
-    :
+    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null); :
   }
   :
 }
@@ -837,6 +835,7 @@ expEx=(
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableNewArtistEventsPage&Display the new Artist events page",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.32.997'
+'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701'
 'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableNewEntityHeaders&New Entity Headers",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.28.0'
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
@@ -884,7 +883,7 @@ expEx=(
 'enableTogglePlaylistColumns&ability to toggle playlist column visibility",default:\K!1&true&s&xpuiJs&1.2.17.832'
 'enableUserCreatedArtwork&user created artworks for playlists",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableUserProfileEdit&editing of user.s own profile in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.25.1011'
-'enableVenuePages&Enables venus pages",default::\K!1&true&s&xpuiJs&1.2.37.701'
+'enableVenuePages&Enables venus pages",default:\K!1&true&s&xpuiJs&1.2.37.701'
 'enableVideoLabelForSearchResults&video label for search results",default:\K!1&true&s&xpuiJs&1.2.23.1114&1.2.29.605'
 'enableVideoPip&desktop picture-in-picture surface using betamax SDK.",default:\K!1&true&s&xpuiJs&1.2.13.656'
 'enableViewMode&list . compact mode in entity pages",default:\K!1&true&s&xpuiJs&1.2.24.754'
