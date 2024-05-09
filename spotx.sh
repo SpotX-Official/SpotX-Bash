@@ -99,7 +99,7 @@ done
 gVer=$(echo "9E1ViVXVVRVRGVlUTlzQhpnRtFFdnZEZ2J0MVZHOXFWdJdFZvJFWh5WNDJGasJTWwpVbaZXMDVGM5c0Y6lTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
 sxbLive=$(curl -q -sL "${gVer}" | perl -ne '/(\d+\.\d+\.\d+\.\d+\.g[0-9a-f]+)/ && print $1' 2>/dev/null)
 sxbVer=$(echo ${buildVer} | perl -ne '/(.*)\./ && print "$1"')
-verCk=$(echo "uxFXoNXYihHdvB3cvQ2ZuMXagAEIlxmYhxWahZXYgMXag0nchVGbjtHJi0XZ2lGTih3c7RiI95WZlJ3Z7RCIu9WazJXZW5GXc5CZlRXYkRXdvBycpBCazFmQtgFdvB3UgY2bg42bpNnclZHIzlGaUBSfyFWZsN2ekozZulmbyF2V9d3bsxWZ5tHJ" | rev | base64 --decode)
+verCk=$(echo "9QzRYNGayMGaKdUZwkzRjpXODplb1k3YwJ0QRdWVHJWaGdkYwZUbkhmQ5NGcCNlZ5hnMZdjUplUOW1GZwh3aZRjTzU2aJNlZ1Z1ValHZyU2aBlmY2xmMjlnVtZVd4ZEW1F1VaBjRHpFMWNjYn1EWhd2ZyMGaKVFTZJ1MidnTGlUb5cUS1lzVhpnSYplMCl3Ywh2RWdGMuN2cOJTZr9meaVHbtJWeGJjV5Q2MiNHeXpVN0hkS" | rev | base64 --decode | base64 --decode)
 verCk2=$(eval echo "${verCk}")
 ver() { echo "$@" | perl -lane 'printf "%d%03d%04d%05d\n", split(/\./, $_), (0)x4'; }
 ver_check() { (($(ver "${sxbVer}") > $(ver "1.1.0.0") && $(ver "${sxbVer}") < $(ver "${sxbLive}"))) && echo -e "${verCk2}"; }

@@ -23,7 +23,6 @@
 - Enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode)
 - Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
-- Remove [lyrics background color](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019)
 - Block automatic updates (macOS)
 - Install supported desktop client versions (macOS)
 - Install latest desktop client on APT-based distros (Linux)
