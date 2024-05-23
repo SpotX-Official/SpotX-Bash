@@ -189,6 +189,14 @@ macos_set_path() {
   }
 }
 
+macos_autoupdate_check() {
+  autoupdatePath="${HOME}/Library/Application Support/Spotify/PersistentCache/Update"
+  [[ -d "${autoupdatePath}" && "$(ls -A "${autoupdatePath}")" ]] && {
+    rm -rf "${autoupdatePath}"/* 2>/dev/null
+    [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Removed stock update waiting to be installed"
+  }
+}
+
 macos_prepare() {
   macos_requirements_check
   macos_set_version
@@ -200,9 +208,11 @@ macos_prepare() {
   [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   macos_set_path
+  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Install directory: ${installOutput}\n"
+  macos_autoupdate_check
   appPath="${installPath}/Spotify.app"
   appBinary="${appPath}/Contents/MacOS/Spotify"
-  appBak="${appPath}/Contents/MacOS/Spotify.bak"
+  appBak="${appBinary}.bak"
   cachePath="${HOME}/Library/Caches/com.spotify.client"
   xpuiPath="${appPath}/Contents/Resources/Apps"
   [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clr} Codesigning has been skipped.\n" >&2 || true
@@ -302,7 +312,7 @@ linux_prepare() {
   linux_set_path
   appPath="${installPath}"
   appBinary="${appPath}/spotify"
-  appBak="${appPath}/spotify.bak"
+  appBak="${appBinary}.bak"
   xpuiPath="${appPath}/Apps"
   [[ -z "${cachePath}" ]] && cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(cat /etc/*release | grep PRETTY_NAME | cut -d '"' -f2)"
