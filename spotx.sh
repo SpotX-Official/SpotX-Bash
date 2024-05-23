@@ -192,9 +192,15 @@ macos_set_path() {
 macos_autoupdate_check() {
   autoupdatePath="${HOME}/Library/Application Support/Spotify/PersistentCache/Update"
   [[ -d "${autoupdatePath}" && "$(ls -A "${autoupdatePath}")" ]] && {
-    rm -rf "${autoupdatePath}"/* 2>/dev/null
-    [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Removed stock update waiting to be installed"
+    rm -rf "${autoupdatePath}" 2>/dev/null
+    echo -e "${green}Notice:${clr} Deleted stock auto-update file waiting to be installed"
   }
+  altAutoupdatePath=$(find /Users/*/Library/Application\ Support/Spotify/PersistentCache/Update -type d 2>/dev/null)
+  local dir; for dir in $altAutoupdatePath; do
+    [[ -d "${dir}" && "$(ls -A "${dir}")" ]] && {
+      echo -e "\n${yellow}Warning:${clr} Potential auto-update file found...\nManual deletion recommended: ${dir}\n"
+    }
+  done
 }
 
 macos_prepare() {
