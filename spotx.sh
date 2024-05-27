@@ -195,13 +195,6 @@ macos_autoupdate_check() {
     rm -rf "${autoupdatePath}" 2>/dev/null
     echo -e "${green}Notice:${clr} Deleted stock auto-update file waiting to be installed"
   }
-  local altAutoupdatePath=$(find /Users/*/Library/Application\ Support/Spotify/PersistentCache/Update -type d 2>/dev/null)
-  local dir
-  for dir in $altAutoupdatePath; do
-    [[ -d "${dir}" && "$(ls -A "${dir}")" ]] && {
-      echo -e "\n${yellow}Warning:${clr} Potential auto-update file found...\nManual deletion required: ${dir}\n" >&2
-    }
-  done
 }
 
 macos_prepare() {
