@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.38.720.ga4a70a0e"
+buildVer="1.2.39.578.g0ea3f38b"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -751,6 +751,7 @@ aoEx=(
 'bGabo&\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65)&\x00&g&appBinary&1.1.84.716'
 'bLogic&\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)&\x00&&appBinary&1.1.70.610&1.2.28.581'
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&&appBinary&1.1.70.610'
+'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578'
 'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264'
 'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
 'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
@@ -819,6 +820,7 @@ expEx=(
 'enableBrowseViaPathfinder&Fetch Browse data from Pathfinder",default:\K!1&true&s&xpuiJs&1.1.88.595&1.2.24.756'
 'enableCanvasNpv&short, looping visuals on tracks.",default:..\.\KCONTROL&CANVAS_PLAY_LOOP&s&xpuiJs&1.2.33.1039'
 'enableCarouselsOnHome&Use carousels on Home",default:\K!1&true&s&xpuiJs&1.1.93.896&1.2.25.1011'
+'enableCenteredLayout&Enable centered layout",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableClearAllDownloads&option in settings to clear all downloads",default:\K!1&true&s&xpuiJs&1.1.92.644&1.1.98.691'
 'enableConcertLinkToArtistConcertsDWP&Links on concert page to artist concerts",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableConcertLinkToMetroArea&On concert page, link to metro area page",default:\K!1&true&s&xpuiJs&1.2.33.1039'
@@ -860,6 +862,7 @@ expEx=(
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
+'enableNotificationCenter&notification center for desktop & web",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableNowPlayingBarVideo&showing video in Now Playing Bar when all other video elements are closed",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enableNowPlayingBarVideoSwitch&a switch to toggle video in the Now Playing Bar",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.29.605'
 'enableNPVCredits enableNPVCreditsWithLinkability&credits in the right sidebar",default:\K!1&true&gs&xpuiJs&1.2.26.1180'
@@ -873,6 +876,7 @@ expEx=(
 'enablePodcastChaptersInNpv&showing podcast chapters in NPV",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enablePodcastDescriptionAutomaticLinkification&Linkifies anything looking like a url in a podcast description.",default:\K!1&true&s&xpuiJs&1.2.19.937'
 'enablePremiumUserForMiniPlayer&premium user flag for mini player",default:\K!1&true&s&xpuiJs&1.2.32.985'
+'enablePrereleaseRadar&Show a curated list of upcoming albums to a user",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableQueueOnRightPanel&Enable Queue on the right panel.",default:\K!1&true&s&xpuiJs&1.2.26.1180'
 'enableQueueOnRightPanelAnimations&animations for Queue on the right panel.",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableReactQueryPersistence&React Query persistence",default:\K!1&true&s&xpuiJs&1.2.30.1135'
@@ -888,6 +892,8 @@ expEx=(
 'enableRightSidebarTransitionAnimations&Enable the slide-in.out transition on the right sidebar",default:\K!1&true&s&xpuiJs&1.2.7.1264&1.2.33.1042'
 'enableSearchBox&filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1&true&s&xpuiJs&1.1.86.857&1.1.93.896'
 'enableSearchV3&new Search experience",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.34.783'
+'enableScrollDrivenAnimations&croll driven animations for cards and shelved",default:\K!1&true&s&xpuiJs&1.2.39.578'
+'enableSharingButtonOnMiniPlayer&sharing button on MiniPlayer .this also moves the ... icon close to the title.",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableShortLinks&short links for sharing",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableShowFollowsSetting&control if followers and following lists are shown on profile",default:\K!1&true&s&xpuiJs&1.2.1.958'
 'enableShowRating&new UI for rating books and podcasts",default:\K!1&true&s&xpuiJs&1.2.32.985'
@@ -915,6 +921,7 @@ expEx=(
 'enableYLXPrereleases&album pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.31.1205&1.2.31.1205'
 'enableYLXTypeaheadSearch&jump to the first matching item",default:\K!1&true&s&xpuiJs&1.2.13.656'
 'saveButtonAlwaysVisible&Display save button always in whats new feed",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.28.0'
+'shareButtonPositioning&Share button positioning in NPV",values:.{1,3},default:.{1,4}NPV_\KHIDDEN&ALWAYS_VISIBLE&s&xpuiJs&1.2.39.578'
 'showWrappedBanner&Show Wrapped banner on wrapped genre page",default:\K!1&true&s&xpuiJs&1.1.87.612'
 )
 premiumExpEx=(
