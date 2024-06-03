@@ -862,7 +862,7 @@ expEx=(
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
-'enableNotificationCenter&notification center for desktop & web",default:\K!1&true&s&xpuiJs&1.2.39.578'
+'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableNowPlayingBarVideo&showing video in Now Playing Bar when all other video elements are closed",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enableNowPlayingBarVideoSwitch&a switch to toggle video in the Now Playing Bar",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.29.605'
 'enableNPVCredits enableNPVCreditsWithLinkability&credits in the right sidebar",default:\K!1&true&gs&xpuiJs&1.2.26.1180'
