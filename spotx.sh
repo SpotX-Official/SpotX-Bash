@@ -263,6 +263,7 @@ linux_no_client() {
     return
   }
   echo -e "${red}Error:${clr} Spotify installation not found.\nInstall Spotify or set Spotify directory path with '-P' flag.\n" >&2
+  command -v spicetify >/dev/null && echo -e "If Spotify is installed but Spicetify has been applied,\nrun ${yellow}'spicetify restore'${clr} then try again.\n" >&2
   exit 1
 }
 
