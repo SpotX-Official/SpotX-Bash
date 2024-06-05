@@ -225,12 +225,13 @@ linux_client_variant() {
       [[ -z "${flatpakVer+x}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
       cachePath=$(timeout 10 find /var/lib/flatpak/ $HOME/.var/app -type d -path "*com.spotify.Client/cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
     }
-    return
+    return 0
   }
   [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* ]] && {
-    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null); :
+    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
+    return 0
   }
-  :
+  return 0
 }
 
 linux_deb_prepare() {
