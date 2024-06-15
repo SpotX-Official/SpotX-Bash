@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.39.578.g0ea3f38b"
+buildVer="1.2.40.592.gb83da72d"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -712,7 +712,7 @@ freeEx=(
 'connectOld3&("button",\{className:.,disabled:)(..)&$1false&&xpuiJs&1.1.70.610&1.1.90.859'
 'connectNew&return (..isDisabled)(\?(..createElement|\(.{1,10}\))\(..,)&return false$2&&xpuiJs&1.1.91.824&1.1.92.647'
 'enableImprovedDevicePickerUI1&Enable showing a new and improved device picker UI",default:\K!.(?=})&true&&xpuiJs&1.1.91.824&1.1.92.647'
-'esperantoProductState&(this\.(?:productStateApi|_product_state)(?:|_service)=(.))(?=}|,this\.productStateApi|,this\._events)&$1,$2.putOverridesValues({pairs:{ads:'\''0'\'',catalogue:'\''premium'\'',type:'\''premium'\'',name:'\''Spotify'\''}})&&xpuiJs'
+'esperantoProductState&(this\.(?:productStateApi|_product_state)(?:|_service)=(.))(?=}|(?:,.{1,30})?,this\.productStateApi|,this\._events)&$1,$2.putOverridesValues({pairs:{ads:'\''0'\'',catalogue:'\''premium'\'',type:'\''premium'\'',name:'\''Spotify'\''}})&&xpuiJs'
 'hideDlQual&(\(.,..jsxs\)\(.{1,3}|(.\(\).|..)createElement\(.{1,4}),\{(filterMatchQuery|filter:.,title|(variant:"viola",semanticColor:"textSubdued"|..:"span",variant:.{3,6}mesto,color:.{3,6}),htmlFor:"desktop.settings.downloadQuality.+?).{1,6}get\("desktop.settings.downloadQuality.title.+?(children:.{1,2}\(.,.\).+?,|\(.,.\){3,4},|,.\)}},.\(.,.\)\),)&&&xpuiJs&1.1.59.710&1.2.29.605'
 'hideUpgradeButton&(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===&$1"premium"===$2$3"free"===&g&xpuiJs&1.1.59.710&1.1.92.647'
 'hptoEnabled&hptoEnabled:!\K0&1&s&xpuiJs'
