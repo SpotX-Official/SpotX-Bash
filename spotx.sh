@@ -839,8 +839,6 @@ expEx=(
 'enableEightShortcuts&Increase max number of shortcuts on home to 8",default:\K!1&true&s&xpuiJs&1.2.26.1180'
 'enableEncoreCards&all cards throughout app to be Encore Cards",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.33.1042'
 'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210'
-'enableEnhancePlaylistProd&Enhance Playlist UI and functionality for end-users",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
-'enableEnhanceLikedSongs&Enhance Liked Songs UI and functionality",default:\K!1&true&s&xpuiJs&1.1.86.857&1.2.25.1011'
 'enableEqualizer&audio equalizer for Desktop and Web Player",default:\K!1&true&s&xpuiJs&1.1.88.595'
 'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210'
 'enableForgetDevice&option to Forget Devices",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.5.1006'
