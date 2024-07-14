@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.41.434.g39a25e2c"
+buildVer="1.2.42.290.g242057a2"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
