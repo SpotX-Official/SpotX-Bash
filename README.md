@@ -47,8 +47,8 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 
 | Option | Description |  
 | --- | --- |  
-| `-B` | block Spotify auto-updates [macOS] |  
-| `-c` | clear Spotify app cache |  
+| `-B` | block client auto-updates [macOS] |  
+| `-c` | clear client app cache |  
 | `-d` | enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode) |  
 | `-e` | exclude all experimental features |  
 | `-f` | force SpotX-Bash to run |  
@@ -61,7 +61,7 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 | `--nocolor` | remove colors from SpotX-Bash output |  
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  
-| `-P <path>` | set path to Spotify |  
+| `-P <path>` | set path to client |  
 | `-S` | skip [codesigning](https://github.com/SpotX-Official/SpotX-Bash/discussions/3) [macOS] | 
 | `--stable` | use with '--installdeb' for stable branch [Linux] |   
 | `--uninstall` | uninstall SpotX-Bash |  
@@ -74,7 +74,7 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh)
 ```
 bash <(curl -sSL https://spotx-official.github.io/run.sh) -cdh
 ```
-**Run SpotX-Bash, enable interactive mode, set custom path to Spotify** 
+**Run SpotX-Bash, enable interactive mode, set custom path to client** 
 ```
 bash <(curl -sSL https://spotx-official.github.io/run.sh) -i -P $HOME/Downloads/
 ```

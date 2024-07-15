@@ -15,8 +15,8 @@ yellow='\033[0;33m'
 show_help() {
   echo -e \
 "Options:
--B, --blockupdates     : block Spotify auto-updates [macOS]
--c, --clearcache       : clear Spotify app cache
+-B, --blockupdates     : block client auto-updates [macOS]
+-c, --clearcache       : clear client app cache
 -d, --devmode          : enable developer mode
 -e, --noexp            : exclude all experimental features
 -f, --force            : force SpotX-Bash to run
@@ -29,7 +29,7 @@ show_help() {
 --nocolor              : remove colors from SpotX-Bash output
 -o, --oldui            : use old home screen UI
 -p, --premium          : paid premium-tier subscriber
--P <path>              : set path to Spotify
+-P <path>              : set path to client
 -S, --skipcodesign     : skip codesigning [macOS]
 --stable               : use with '--installdeb' for stable branch [Linux]
 --uninstall            : uninstall SpotX-Bash
@@ -151,15 +151,15 @@ macos_set_version() {
     versionVar="${buildVer}"
   }
   [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && (($(ver "${versionVar}") > $(ver "1.1.89.862"))) && {
-    echo -e "${red}Error:${clr} Spotify version ${versionVar} is not supported on macOS 10.11 or 10.12.\nPlease install version 1.1.89.862 or lower.\n" >&2
+    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.11 or 10.12.\nPlease install version 1.1.89.862 or lower.\n" >&2
     exit 1
   }
   [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && (($(ver "${versionVar}") > $(ver "1.2.20.1218"))) && {
-    echo -e "${red}Error:${clr} Spotify version ${versionVar} is not supported on macOS 10.13 or 10.14.\nPlease install version 1.2.20.1218 or lower.\n" >&2
+    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.13 or 10.14.\nPlease install version 1.2.20.1218 or lower.\n" >&2
     exit 1
   }
   [[ "${macOSVer}" == "10.15" ]] && (($(ver "${versionVar}") > $(ver "1.2.37.701"))) && {
-    echo -e "${red}Error:${clr} Spotify version ${versionVar} is not supported on macOS 10.15.\nPlease install version 1.2.37.701 or lower.\n" >&2
+    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.15.\nPlease install version 1.2.37.701 or lower.\n" >&2
     exit 1
   }
 }
@@ -180,7 +180,7 @@ macos_set_path() {
     interactiveMode='true'
     notInstalled='true'
     installPath="/Applications"
-    echo -e "\n${yellow}Warning:${clr} Spotify not found. Starting interactive mode...\n" >&2
+    echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
   } || {
     [[ -d "${installPath}/Spotify.app" ]] || {
       echo -e "${red}Error:${clr} Spotify.app not found in the path set by '-P'.\nConfirm the directory and try again.\n" >&2
@@ -260,11 +260,11 @@ linux_no_client() {
   command -v apt >/dev/null && { 
     interactiveMode='true'
     linux_deb_prepare
-    echo -e "\n${yellow}Warning:${clr} Spotify not found. Starting interactive mode...\n" >&2
+    echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
     return
   }
-  echo -e "${red}Error:${clr} Spotify installation not found.\nInstall Spotify or set Spotify directory path with '-P' flag.\n" >&2
-  command -v spicetify >/dev/null && echo -e "If Spotify is installed but Spicetify has been applied,\nrun ${yellow}'spicetify restore'${clr} then try again.\n" >&2
+  echo -e "${red}Error:${clr} Client installation not found.\nInstall client or set directory path with '-P' flag.\n" >&2
+  command -v spicetify >/dev/null && echo -e "If client is installed but Spicetify has been applied,\nrun ${yellow}'spicetify restore'${clr} then try again.\n" >&2
   exit 1
 }
 
@@ -287,11 +287,11 @@ linux_search_path() {
 linux_set_path() {
   [[ "${installDeb}" ]] && { linux_deb_prepare; return; }
   [[ -z "${installPath+x}" ]] && {
-    echo -e "Searching for Spotify directory...\n"
+    echo -e "Searching for client directory...\n"
     linux_search_path
     [[ -d "${installPath}" ]] && {
       installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|')
-      echo -e "Found Spotify Directory: ${installOutput}\n"
+      echo -e "Found client Directory: ${installOutput}\n"
       linux_client_variant
     } || linux_no_client
     return
@@ -301,10 +301,10 @@ linux_set_path() {
     exit 1
   }
   [[ -f "${installPath}/Apps/xpui.spa" ]] && {
-    echo -e "Using Spotify Directory: ${installOutput}\n"
+    echo -e "Using client Directory: ${installOutput}\n"
     linux_client_variant
   } || {
-    echo -e "${red}Error:${clr} Spotify not found in path set by '-P'.\nConfirm directory and try again.\n" >&2
+    echo -e "${red}Error:${clr} Client not found in path set by '-P'.\nConfirm directory and try again.\n" >&2
     exit 1
   }
 }
@@ -343,25 +343,25 @@ existing_client_ver() {
   }
 }
 
-spotify_version_output() {
+client_version_output() {
   echo -e "Latest supported version: ${sxbVer}"
   [[ "${forceVer}" ]] && {
-    echo -e "Forced Spotify version: ${forceVer}\n"; return
+    echo -e "Forced client version: ${forceVer}\n"; return
   }
   [[ "${notInstalled}" || "${versionFailed}" ]] && [[ -z "${installClient+x}" ]] && {
-    echo -e "Detected Spotify version: ${red}N/A${clr}\n"; return
+    echo -e "Detected client version: ${red}N/A${clr}\n"; return
   }
   [[ "${installClient}" ]] && (($(ver "${downloadVer}") <= $(ver "${sxbVer}") && $(ver "${downloadVer}") > $(ver "0"))) && {
-    echo -e "Requested Spotify version: ${green}${downloadVer}${clr}\n"; return
+    echo -e "Requested client version: ${green}${downloadVer}${clr}\n"; return
   }
   [[ "${installClient}" ]] && (($(ver "${downloadVer}") > $(ver "${sxbVer}"))) && {
-    echo -e "Requested Spotify version: ${red}${downloadVer}${clr}\n"; return
+    echo -e "Requested client version: ${red}${downloadVer}${clr}\n"; return
   }
   (($(ver "${clientVer}") <= $(ver "${sxbVer}") && $(ver "${clientVer}") > $(ver "0"))) && {
-    echo -e "Detected Spotify version: ${green}${clientVer}${clr}\n"; return
+    echo -e "Detected client version: ${green}${clientVer}${clr}\n"; return
   }
   (($(ver "${clientVer}") > $(ver "${sxbVer}"))) && {
-    echo -e "Detected Spotify version: ${red}${clientVer}${clr}\n"; return
+    echo -e "Detected client version: ${red}${clientVer}${clr}\n"; return
   }
 }
 
@@ -376,7 +376,7 @@ run_prepare() {
   vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
   xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
   existing_client_ver
-  spotify_version_output
+  client_version_output
   ver_check
   command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
   [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
@@ -388,7 +388,7 @@ check_write_permission() {
     local path="${path}"
     [[ ! -w "${path}" ]] && {
       sudo -n true 2>/dev/null || {
-        echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in Spotify directory.\nRequesting sudo permission..." >&2
+        echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in client directory.\nRequesting sudo permission..." >&2
         sudo -v || {
           echo -e "\n${red}Error:${clr} SpotX-Bash was not given sudo permission. Exiting...\n" >&2
           exit 1
@@ -415,7 +415,7 @@ run_uninstall_check() {
     }
     check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
     [[ "${cleanAB}" ]] && {
-      echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nReinstallation of Spotify may be required...\n" >&2
+      echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
       rm "${appBak}" 2>/dev/null
       rm "${xpuiBak}" 2>/dev/null
     } || {
@@ -454,10 +454,10 @@ run_interactive_check() {
   [[ "${interactiveMode}" ]] && {
     printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n\n"
     [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
-    [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install Spotify ${versionVar}? " && { installClient='true'; installMac='true'; }; }
-    [[ "${platformType}" == "macOS" ]] && { read_yn "Block Spotify auto-updates? " && blockUpdates='true'; }
-    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install Spotify ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
-    [[ -d "${cachePath}" ]] && read_yn "Clear Spotify app cache? " && clearCache='true'
+    [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
+    [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
+    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
+    [[ -d "${cachePath}" ]] && read_yn "Clear client app cache? " && clearCache='true'
     (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
     (($(ver "${clientVer}") > $(ver "1.1.99.878"))) && { read_yn "Enable developer mode? " && devMode='true'; }
     (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && { read_yn "Hide non-music categories on home screen? " && hideNonMusic='true'; }
@@ -549,8 +549,8 @@ run_cache_check() {
 }
 
 final_setup_check() {
-  [[ "${notInstalled}" ]] && { echo -e "${red}Error:${clr} Spotify not found\n" >&2; exit 1; }
-  [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified Spotify installation!\nReinstall Spotify then try again.\n" >&2; exit 1; }
+  [[ "${notInstalled}" ]] && { echo -e "${red}Error:${clr} Client not found\n" >&2; exit 1; }
+  [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified client installation!\nReinstall client then try again.\n" >&2; exit 1; }
   [[ "${clientVer}" ]] && (($(ver "${clientVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${clientVer} not supported by SpotX-Bash\n" >&2; exit 1; }
 }
 
@@ -622,7 +622,7 @@ xpui_open() {
   }
   grep -Fq "SpotX" "${xpuiJs}" && {
     rm -rf "${xpuiBak}" "${xpuiDir}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Detected SpotX-Bash but no backup file! Reinstall Spotify. Exiting...\n" >&2
+    echo -e "\n${red}Error:${clr} Detected SpotX-Bash but no backup file! Reinstall client. Exiting...\n" >&2
     exit 1
   }
 }
@@ -792,9 +792,9 @@ aoEx=(
 're1&\xE8...\xFF\x4D\x8B.{1,2}\x4D\x85.\x75[\xA0-\xAF]\x48\x8D.{9,10}\K\xE8...\xFF(?=[\x40-\x4F][\x80-\x8F])&\x0F\x1F\x44\x00\x00&sg&appBinary&1.2.29.605&&Linux&x86_64&2'
 're2&\x24\x24\x4D\x85\xE4\x75\xA9\x48\x8D\x35...\x01\x48\x8D\xBD.[\xFE\xFF]\xFF\xFF\K\xE8....&\x0F\x1F\x44\x00\x00&g&appBinary&1.2.29.605&&macOS&x86_64&2'
 're3&[\x10-\x1F]\x01\x00\x39\xE0\x03[\x10-\x1F]\xAA...[\x90-\x9F].\x02\x40\xF9[\x70-\x7F]\xFD\xFF\xB5..\x00.\x21..\x91\xE0.[\x00-\x0F]\x91\K....(?=[\xF0-\xFF][\x00-\x0F]....\x00)&\x1F\x20\x03\xD5&g&appBinary&1.2.29.605&&macOS&&2'
-'slotMid&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69&\x20\x6D\x69&g&appBinary&1.2.29.605&&macOS'
-'slotPost&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F&\x20\x70\x6F&g&appBinary&1.2.29.605&&macOS'
-'slotPre&\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)&\x20&g&appBinary&1.2.29.605&&macOS'
+'slotMid&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69&\x20\x6D\x69&g&appBinary&1.0.29.605&1.0.29.605&macOS'
+'slotPost&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F&\x20\x70\x6F&g&appBinary&1.0.29.605&1.0.29.605&macOS'
+'slotPre&\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)&\x20&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'sponsors1&ht.{14}\...\..{7}\....\/.{8}ap4p\/&&g&xpuiJs&1.1.70.610'
 'sponsors2&ht.{14}\...\..{7}\....\/s.{15}t\/v.\/&&g&xpuiJs&1.1.70.610'
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
