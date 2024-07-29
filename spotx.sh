@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.42.290.g242057a2"
+buildVer="1.2.43.420.gc7b23f70"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -773,7 +773,7 @@ aoEx=(
 'enableNewAdsNpvNewVideoTakeoverSlot&position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})&false&s&xpuiJs&1.2.22.975'
 'enableNewAdsNpvVideoTakeover&Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.18.997'
 'enableNonUserTriggeredPopovers&Enables programmatically triggered popovers",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114'
-'enablePickAndShuffle&pick and shuffle",default:\K!.(?=})&false&s&xpuiJs&1.1.85.884'
+'enablePickAndShuffle&pick and shuffle",default:\K!.(?=})&false&s&xpuiJs&1.1.85.884&1.2.42.290'
 'enablePipImpressionLogging&Enables impression logging for PiP",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985'
 'enablePodcastSponsoredContent&Enable sponsored content information for podcasts",default:\K!.(?=})&false&s&xpuiJs&1.2.30.1135'
 'enablePromotions&Enables promotions on home",default:\K!.(?=})&false&s&xpuiJs&1.2.38.720'
@@ -810,12 +810,13 @@ expEx=(
 'enableAlbumReleaseAnniversaries&balloons on album release date anniversaries",default:\K!1&true&s&xpuiJs&1.1.89.854'
 'enableAlignedCuration&Aligned Curation",default:\K!.(?=})&false&s&xpuiJs&1.2.21.1104'
 'enableAnonymousVideoPlayback&anonymous users to play video podcasts",default:\K!1&true&s&xpuiJs&1.2.29.605'
+'enableArtistBans&feature to ban/unban artists and have the UI reflect it",default:\K!1&true&s&xpuiJs&1.2.43.420'
 'enableArtistLikedSongs&Liked Songs section on Artist page",default:\K!1&true&s&xpuiJs&1.1.59.710&1.2.17.834'
 'enableAttackOnTitanEasterEgg&Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1&true&s&xpuiJs&1.2.6.861'
 'enableAudiobookPrerelease&audiobook prerelease pages",default:\K!1&true&s&xpuiJs&1.2.33.1039'
 'enableAudiobooks&Audiobooks feature on ClientX",default:\K!1&true&s&xpuiJs&1.1.74.631'
 'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205'
-'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581'
+'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
 'enableBillboardEsperantoMigration&esperanto migration for Billboard Ad Format",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableBlockUsers&block users feature in clientX",default:\K!1&true&s&xpuiJs&1.1.70.610'
@@ -838,6 +839,7 @@ expEx=(
 'enableEncoreCards&all cards throughout app to be Encore Cards",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.33.1042'
 'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210'
 'enableEqualizer&audio equalizer for Desktop and Web Player",default:\K!1&true&s&xpuiJs&1.1.88.595'
+'enableExtraTracklistColumns&ability to toggle additional playlist columns",default:\K!1&true&s&xpuiJs&1.2.43.420'
 'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210'
 'enableForgetDevice&option to Forget Devices",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.5.1006'
 'enableFullscreenMode&Enable fullscreen mode",default:\K!1&true&s&xpuiJs&1.2.31.1205'
@@ -855,7 +857,7 @@ expEx=(
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableNewArtistEventsPage&Display the new Artist events page",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.32.997'
-'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701'
+'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.42.290'
 'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableNewEntityHeaders&New Entity Headers",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.28.0'
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
