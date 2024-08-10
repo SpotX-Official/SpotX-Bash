@@ -180,6 +180,7 @@ macos_set_path() {
     interactiveMode='true'
     notInstalled='true'
     installPath="/Applications"
+    installOutput="${installPath}"
     echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
   } || {
     [[ -d "${installPath}/Spotify.app" ]] || {
