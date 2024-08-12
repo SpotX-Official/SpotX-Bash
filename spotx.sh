@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.43.420.gc7b23f70"
+buildVer="1.2.44.405.g81fd6352"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -721,8 +721,8 @@ freeEx=(
 'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104'
 )
 devEx=(
-'dev1&\xFF\xFF\x48\xB8\x65\x76\x65.{5}\x48.{36,40}\K\xE8.{2}(?=\x00\x00)&\xB8\x03\x00&&appBinary&1.1.84.716&&macOS|Linux&x86_64'
-'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x09]\x39\xFF.[\x00\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x09]\x91\xE2.[\x02\x03\x13]\x91\K..\x00\x94(?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&&appBinary&1.1.84.716&&macOS'
+'dev1&\xFF\xFF\x48\xB8\x65\x76\x65.{5}\x48.{36,40}\K\xE8.{2}(?=\x00\x00)&\xB8\x03\x00&s&appBinary&1.1.84.716&&macOS|Linux&x86_64'
+'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x09]\x39\xFF.[\x00\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x09]\x91\xE2.[\x02\x03\x13]\x91\K..\x00\x94(?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
 'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644'
 )
 oldUiEx=(
@@ -791,9 +791,9 @@ aoEx=(
 'logSentry&(this\.getStackTop\(\)\.client=.)&return;$1&&vendorXpuiJs&1.1.70.610&1.2.29.605'
 'logSentry2&sentry\.io&localhost.io&&xpuiJs&1.1.70.610'
 'logV3&sp://logging/v3/\w+&&g&xpuiJs&1.1.70.610'
-'re1&\xE8...\xFF\x4D\x8B.{1,2}\x4D\x85.\x75[\xA0-\xAF]\x48\x8D.{9,10}\K\xE8...\xFF(?=[\x40-\x4F][\x80-\x8F])&\x0F\x1F\x44\x00\x00&sg&appBinary&1.2.29.605&&Linux&x86_64&2'
-'re2&\x24\x24\x4D\x85\xE4\x75\xA9\x48\x8D\x35...\x01\x48\x8D\xBD.[\xFE\xFF]\xFF\xFF\K\xE8....&\x0F\x1F\x44\x00\x00&g&appBinary&1.2.29.605&&macOS&x86_64&2'
-'re3&[\x10-\x1F]\x01\x00\x39\xE0\x03[\x10-\x1F]\xAA...[\x90-\x9F].\x02\x40\xF9[\x70-\x7F]\xFD\xFF\xB5..\x00.\x21..\x91\xE0.[\x00-\x0F]\x91\K....(?=[\xF0-\xFF][\x00-\x0F]....\x00)&\x1F\x20\x03\xD5&g&appBinary&1.2.29.605&&macOS&&2'
+'re1&\xE8...\xFF\x4D\x8B.{1,2}\x4D\x85.\x75[\xA0-\xAF]\x48\x8D.{9,10}\K\xE8...\xFF(?=[\x40-\x4F][\x80-\x8F])&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&Linux&x86_64&2'
+'re2&\x24\x24\x4D\x85\xE4\x75\xA9\x48\x8D\x35...\x01\x48\x8D\xBD.[\xFE\xFF]\xFF\xFF\K\xE8....&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&macOS&x86_64&2'
+'re3&[\x10-\x1F]\x01\x00\x39\xE0\x03[\x10-\x1F]\xAA...[\x90-\x9F].\x02\x40\xF9[\x70-\x7F]\xFD\xFF\xB5..\x00.\x21..\x91\xE0.[\x00-\x0F]\x91\K....(?=[\xF0-\xFF][\x00-\x0F]....\x00)&\x1F\x20\x03\xD5&gs&appBinary&1.2.29.605&&macOS&&2'
 'slotMid&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69&\x20\x6D\x69&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'slotPost&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F&\x20\x70\x6F&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'slotPre&\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)&\x20&g&appBinary&1.0.29.605&1.0.29.605&macOS'
@@ -838,13 +838,14 @@ expEx=(
 'enableDynamicNormalizer&dynamic normalizer.compressor",default:\K!1&true&s&xpuiJs&1.2.14.1141'
 'enableEightShortcuts&Increase max number of shortcuts on home to 8",default:\K!1&true&s&xpuiJs&1.2.26.1180'
 'enableEncoreCards&all cards throughout app to be Encore Cards",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.33.1042'
-'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210'
+'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.43.420'
 'enableEqualizer&audio equalizer for Desktop and Web Player",default:\K!1&true&s&xpuiJs&1.1.88.595'
-'enableExtraTracklistColumns&ability to toggle additional playlist columns",default:\K!1&true&s&xpuiJs&1.2.43.420'
+'enableExtraTracklistColumns&extra tracklist columns",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210'
 'enableForgetDevice&option to Forget Devices",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.5.1006'
 'enableFullscreenMode&Enable fullscreen mode",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableGlobalNavBar&Show global nav bar with home button, search input and user avatar",default:..\.\KCONTROL&HOME_NEXT_TO_SEARCH&s&xpuiJs&1.2.30.1135'
+'enableHomeCarousels&carousels on home",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableIgnoreInRecommendations&Ignore In Recommendations for desktop and web",default:\K!1&true&s&xpuiJs&1.1.87.612'
 'enableInlineCuration&new inline playlist curation tools",default:\K!1&true&s&xpuiJs&1.1.70.610&1.2.25.1011'
 'enableLikedSongsFilterTags&Show filter tags on the Liked Songs entity view",default:\K!1&true&s&xpuiJs&1.2.32.985'
@@ -855,11 +856,12 @@ expEx=(
 'enableLyricsMatch&Lyrics match labels in search results",default:\K!1&true&s&xpuiJs&1.1.87.612'
 'enableLyricsNew&new fullscreen lyrics page",default:\K!1&true&s&xpuiJs&1.1.84.716&1.1.86.857'
 'enableMadeForYouEntryPoint&Show "Made For You" entry point in the left sidebar.,default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.95.893'
+'enableMarkBookAsFinished&ability to mark a book as finished",default::\K!1&true&s&xpuiJs&1.2.44.405'
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableNewArtistEventsPage&Display the new Artist events page",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.32.997'
 'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.42.290'
-'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783'
+'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.42.290'
 'enableNewEntityHeaders&New Entity Headers",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.28.0'
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
@@ -895,7 +897,7 @@ expEx=(
 'enableSearchBox&filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1&true&s&xpuiJs&1.1.86.857&1.1.93.896'
 'enableSearchV3&new Search experience",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.34.783'
 'enableScrollDrivenAnimations&croll driven animations for cards and shelved",default:\K!1&true&s&xpuiJs&1.2.39.578'
-'enableSharingButtonOnMiniPlayer&sharing button on MiniPlayer .this also moves the ... icon close to the title.",default:\K!1&true&s&xpuiJs&1.2.39.578'
+'enableSharingButtonOnMiniPlayer&sharing button on MiniPlayer .this also moves the ... icon close to the title.",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.43.420'
 'enableShortLinks&short links for sharing",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableShowFollowsSetting&control if followers and following lists are shown on profile",default:\K!1&true&s&xpuiJs&1.2.1.958'
 'enableShowRating&new UI for rating books and podcasts",default:\K!1&true&s&xpuiJs&1.2.32.985'
