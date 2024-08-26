@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.45.451.gac8a666f"
+buildVer="1.2.45.454.gc16ec9f6"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -744,7 +744,7 @@ newUiEx=(
 podEx=(
 'hidePodcasts&withQueryParameters\(.\)\{return this.queryParameters=.,this}&withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}&&xpuiJs&1.1.70.610&1.1.92.647'
 'hidePodcasts2&(!?Array.isArray\(.\)[|\x26]{2}.===(.).length\)return null;)&$1let sx=$2;if(!Array.isArray(sx)){sx=e;}for(let q=0;q<(sx.children?sx.children.length:sx.length);q++){const item=sx.children?sx.children\[q\]:sx\[q\];const key=item?.key;const props=item?.props;const uri=props?.uri;if(!key||props?.value==="search-history")continue;if(key.match(/(episode|show)/)||(props?.name||'\'''\'').match(/podcasts/i)||(uri||'\'''\'').match(/(episode|show)/))return null;};&&xpuiJs&1.1.93.896&1.2.43.420'
-'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.45.451'
+'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.44.405'
 )
 lyricsBgEx=(
 'lyricsBackground1&--lyrics-color-inactive":\K(.).inactive&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
@@ -799,7 +799,7 @@ aoEx=(
 'hideUpgradeCTA&Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180'
 'logSentry&(this\.getStackTop\(\)\.client=.)&return;$1&&vendorXpuiJs&1.1.70.610&1.2.29.605'
 'logSentry2&sentry\.io&localhost.io&&xpuiJs&1.1.70.610'
-'lUnsupported&((?:\(?await )?.\.build.{20,60}encodeURIComponent.{20,140}"\/track\/\{trackId\}.+?)(.send)&$1.withHeaders([{key:"spotify-app-version",value:"1.2.45.451"}])$2&s&xpuiJs&1.1.70.610'
+'lUnsupported&((?:\(?await )?.\.build.{20,60}encodeURIComponent.{20,140}"\/track\/\{trackId\}.+?)(.send)&$1.withHeaders([{key:"spotify-app-version",value:"1.2.45.454"}])$2&s&xpuiJs&1.1.70.610'
 'logV3&sp://logging/v3/\w+&&g&xpuiJs&1.1.70.610'
 're1&\xE8...\xFF\x4D\x8B.{1,2}\x4D\x85.\x75[\xA0-\xAF]\x48\x8D.{9,10}\K\xE8...\xFF(?=[\x40-\x4F][\x80-\x8F])&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&Linux&x86_64&2'
 're2&\x24\x24\x4D\x85\xE4\x75\xA9\x48\x8D\x35...\x01\x48\x8D\xBD.[\xFE\xFF]\xFF\xFF\K\xE8....&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&macOS&x86_64&2'
