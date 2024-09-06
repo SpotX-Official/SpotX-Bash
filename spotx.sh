@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.45.454.gc16ec9f6"
+buildVer="1.2.46.462.gf57913e0"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -329,8 +329,8 @@ linux_prepare() {
 existing_client_ver() {
   [[ "${platformType}" == "macOS" ]] && {
     [[ -z "${installMac+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" ]] && {
-      [[ -f "${appPath}/Contents/Info.plist" ]] && {
-        clientVer=$(perl -ne 'if($v=/ShortVersion/..undef){print if($v>1 && $v<=2)}' "${appPath}/Contents/Info.plist" 2>/dev/null | perl -ne '/\>(.*)\./ && print "$1"')
+      "${appBinary}" --version >/dev/null 2>/dev/null && {
+        clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev)
       } || versionFailed='true'
     }
     return
@@ -837,6 +837,7 @@ expEx=(
 'enableCenteredLayout&Enable centered layout",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableClearAllDownloads&option in settings to clear all downloads",default:\K!1&true&s&xpuiJs&1.1.92.644&1.1.98.691'
 'enableConcertEntityPathfinderDWP&Use pathfinder for the concert entity page on DWP",default:\K!1&true&s&xpuiJs&1.2.25.1009&1.2.33.1039'
+'enableConcertGenres&concert genres on the live events feed",default:\K!1&true&s&xpuiJs&1.2.46.462'
 'enableConcertsCarouselForThisIsPlaylist&Concerts Carousel on This is Playlist",default:\K!1&true&s&xpuiJs&1.2.26.1180'
 'enableConcertsForThisIsPlaylist&Tour Card on This is Playlist",default:\K!1&true&s&xpuiJs&1.2.11.911'
 'enableConcertsInSearch&concerts in search",default:\K!1&true&s&xpuiJs&1.2.33.1039'
