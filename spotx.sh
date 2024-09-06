@@ -751,8 +751,8 @@ lyricsBgEx=(
 'lyricsBackground2&--lyrics-color-background":\K(.).background&$1.inactive&&xpuiJs&1.2.0.1165&1.2.44.405'
 'lyricsBackground3&--lyrics-color-inactive":\K(.\.colors).text&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
 'lyricsBackground4&--lyrics-color-background":\K(.\.colors).background&$1.text&&xpuiJs&1.2.0.1165&1.2.44.405'
-'lyricsBackgroundFull1&--lyrics-color-inactive":\K(.).inactive&$1.background&&seven182Js&1.2.45.451&1.2.45.454'
-'lyricsBackgroundFull2&--lyrics-color-background":\K(.).background&$1.inactive&&seven182Js&1.2.45.451&1.2.45.454'
+#'lyricsBackgroundFull1&--lyrics-color-inactive":\K(.).inactive&$1.background&&seven182Js&1.2.45.451&1.2.45.454'
+#'lyricsBackgroundFull2&--lyrics-color-background":\K(.).background&$1.inactive&&seven182Js&1.2.45.451&1.2.45.454'
 'lyricsBackgroundSide1&--lyrics-color-inactive":\K(.\.colors).text&$1.background&&dwpPanelSectionJs&1.2.45.451'
 'lyricsBackgroundSide2&--lyrics-color-background":\K(.\.colors).background&$1.text&&dwpPanelSectionJs&1.2.45.451'
 )
