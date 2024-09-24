@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.46.462.gf57913e0"
+buildVer="1.2.47.364.gf06e5cee"
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -825,7 +825,7 @@ expEx=(
 'enableArtistLikedSongs&Liked Songs section on Artist page",default:\K!1&true&s&xpuiJs&1.1.59.710&1.2.17.834'
 'enableAttackOnTitanEasterEgg&Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!1&true&s&xpuiJs&1.2.6.861'
 'enableAudiobookPrerelease&audiobook prerelease pages",default:\K!1&true&s&xpuiJs&1.2.33.1039'
-'enableAudiobooks&Audiobooks feature on ClientX",default:\K!1&true&s&xpuiJs&1.1.74.631'
+'enableAudiobooks&Audiobooks feature on ClientX",default:\K!1&true&s&xpuiJs&1.1.74.631&1.2.46.462'
 'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
