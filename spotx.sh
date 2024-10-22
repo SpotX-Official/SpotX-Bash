@@ -464,7 +464,7 @@ run_interactive_check() {
     (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
     (($(ver "${clientVer}") > $(ver "1.1.99.878"))) && { read_yn "Enable developer mode? " && devMode='true'; }
     (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && { read_yn "Hide non-music categories on home screen? " && hideNonMusic='true'; }
-    (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && { read_yn "Set lyrics background color to black? " && lyricsNoColor='true'; }
+    (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && { read_yn "Set lyrics background color to black? " && lyricsBg='true'; }
     echo
   }
 }
@@ -642,7 +642,7 @@ run_patches() {
   perlVar "${aoEx[@]}"
   [[ "${paidPremium}" ]] && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n" || {
     perlVar "${freeEx[@]}"
-    printf '%s\n%s\n%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideDLMenu2}" "${hideDLQual}" "${hideVeryHigh}"  >> "${xpuiCss}"
+    printf '\n%s\n%s\n%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideDLMenu2}" "${hideDLQual}" "${hideVeryHigh}"  >> "${xpuiCss}"
     printf "\xE2\x9C\x94\x20\x41\x70\x70\x6C\x69\x65\x64\x20\x66\x72\x65\x65\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\x20\x70\x61\x74\x63\x68\x65\x73\n"
   }
   [[ "${devMode}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.84.716"))) && {
@@ -669,12 +669,13 @@ run_patches() {
   }
   [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && {
     perlVar "${podEx[@]}"
-    (($(ver "${clientVer}") >= $(ver "1.2.45.451"))) && printf '%s' "${hideSubfeed}" >> "${xpuiCss}"
+    (($(ver "${clientVer}") >= $(ver "1.2.45.451"))) && printf '\n%s' "${hideSubfeed}" >> "${xpuiCss}"
     printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"
   }
   [[ "${lyricsBg}" ]] && {
-    (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && (($(ver "${clientVer}") <= $(ver "1.2.48.405"))) && {
+    (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && {
       perlVar "${lyricsBgEx[@]}"
+      (($(ver "${clientVer}") >= $(ver "1.2.45.454"))) && printf '\n%b' "${lyricsBackgroundNew}" >> "${xpuiCss}"
       printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x62\x6C\x61\x63\x6B\x20\x62\x61\x63\x6B\x67\x72\x6F\x75\x6E\x64\x20\x66\x6F\x72\x20\x6C\x79\x72\x69\x63\x73\n"
     } || {
       echo -e "\n${yellow}Warning:${clr} Black lyrics background is not supported in this version...\n" >&2
@@ -707,6 +708,7 @@ hideDLMenu2=' .pzkhLqffqF_4hucrVVQA, .egE6UQjF_UUoCzvMxREj {display:none}'
 hideDLQual=' :is(.weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0):has([for="desktop.settings.downloadQuality"]) {display: none}'
 hideSubfeed=' .cj6vRk3nFAi80HSVqX91 {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
+lyricsBackgroundNew=' .FUYNhisXTCmbzt9IDxnT,\n .I2WIloMMjsBeMaIS8H3v {\n \t--lyrics-color-active: #C8C8C8 !important;\n \t--lyrics-color-inactive: #575757 !important;\n \t--lyrics-color-passed: #575757 !important;\n \t--lyrics-color-background: #121212 !important;\n }'
 updatesEx=(
 'blockUpdates&\x64(?=\x65\x73\x6B\x74\x6F\x70\x2D\x75\x70)&\x00&g&appBinary&1.1.70.610&9.9.9.9&macOS'
 )
@@ -755,10 +757,6 @@ lyricsBgEx=(
 'lyricsBackground2&--lyrics-color-background":\K(.).background&$1.inactive&&xpuiJs&1.2.0.1165&1.2.44.405'
 'lyricsBackground3&--lyrics-color-inactive":\K(.\.colors).text&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
 'lyricsBackground4&--lyrics-color-background":\K(.\.colors).background&$1.text&&xpuiJs&1.2.0.1165&1.2.44.405'
-#'lyricsBackgroundFull1&--lyrics-color-inactive":\K(.).inactive&$1.background&&seven182Js&1.2.45.451&1.2.45.454'
-#'lyricsBackgroundFull2&--lyrics-color-background":\K(.).background&$1.inactive&&seven182Js&1.2.45.451&1.2.45.454'
-'lyricsBackgroundSide1&--lyrics-color-inactive":\K(.\.colors).text&$1.background&&dwpPanelSectionJs&1.2.45.451&1.2.48.405'
-'lyricsBackgroundSide2&--lyrics-color-background":\K(.\.colors).background&$1.text&&dwpPanelSectionJs&1.2.45.451&1.2.48.405'
 )
 aoEx=(
 'aboutSpotX&((..createElement|children:\(.{1,7}\))\(.{1,7},\{source:).{1,7}get\("about.copyright",.\),paragraphClassName:.(?=\}\))&$1"<h3>About SpotX / SpotX-Bash</h3><br><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'\'' fill='\''#fff'\''/></svg> Github</summary><a href='\''https://github.com/SpotX-Official/SpotX'\''>SpotX \(Windows\)</a><br><a href='\''https://github.com/SpotX-Official/SpotX-Bash'\''>SpotX-Bash \(Linux/macOS\)</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path id='\''telegram-1'\'' d='\''M18.384,22.779c0.322,0.228 0.737,0.285 1.107,0.145c0.37,-0.141 0.642,-0.457 0.724,-0.84c0.869,-4.084 2.977,-14.421 3.768,-18.136c0.06,-0.28 -0.04,-0.571 -0.26,-0.758c-0.22,-0.187 -0.525,-0.241 -0.797,-0.14c-4.193,1.552 -17.106,6.397 -22.384,8.35c-0.335,0.124 -0.553,0.446 -0.542,0.799c0.012,0.354 0.25,0.661 0.593,0.764c2.367,0.708 5.474,1.693 5.474,1.693c0,0 1.452,4.385 2.209,6.615c0.095,0.28 0.314,0.5 0.603,0.576c0.288,0.075 0.596,-0.004 0.811,-0.207c1.216,-1.148 3.096,-2.923 3.096,-2.923c0,0 3.572,2.619 5.598,4.062Zm-11.01,-8.677l1.679,5.538l0.373,-3.507c0,0 6.487,-5.851 10.185,-9.186c0.108,-0.098 0.123,-0.262 0.033,-0.377c-0.089,-0.115 -0.253,-0.142 -0.376,-0.064c-4.286,2.737 -11.894,7.596 -11.894,7.596Z'\'' fill='\''#fff'\''/></svg> Telegram</summary><a href='\''https://t.me/spotify_windows_mod'\''>SpotX Channel</a><br><a href='\''https://t.me/SpotxCommunity'\''>SpotX Community</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1.25 17c0 .69-.559 1.25-1.25 1.25-.689 0-1.25-.56-1.25-1.25s.561-1.25 1.25-1.25c.691 0 1.25.56 1.25 1.25zm1.393-9.998c-.608-.616-1.515-.955-2.551-.955-2.18 0-3.59 1.55-3.59 3.95h2.011c0-1.486.829-2.013 1.538-2.013.634 0 1.307.421 1.364 1.226.062.847-.39 1.277-.962 1.821-1.412 1.343-1.438 1.993-1.432 3.468h2.005c-.013-.664.03-1.203.935-2.178.677-.73 1.519-1.638 1.536-3.022.011-.924-.284-1.719-.854-2.297z'\'' fill='\''#fff'\''/></svg> FAQ</summary><a href='\''https://te.legra.ph/SpotX-FAQ-09-19'\''>Windows</a><br><a href='\''https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ'\''>Linux/macOS</a></details><br><h4>DISCLAIMER</h4>SpotX is a modified version of the official Spotify\x26reg; client, provided \x26quot;as is\x26quot; for the purpose of evaluation at user'\''s own risk. Source code for SpotX is available separately and free of charge under open source software license agreements. SpotX is not affiliated with Spotify\x26reg;, Spotify AB or Spotify Group.<br><br>Spotify\x26reg; is a registered trademark of Spotify Group."&&xpuiDesktopModalsJs&1.1.79.763'
