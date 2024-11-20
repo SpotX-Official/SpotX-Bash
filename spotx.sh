@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.50.335.g5e2860a8"
+buildVer="1.2.51.345.gcc39d911"
+
+command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
@@ -96,18 +98,15 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   esac
 done
 
-gVer=$(echo "9E1ViVXVVRVRGVlUTlzQhpnRtFFdnZEZ2J0MVZHOXFWdJdFZvJFWh5WNDJGasJTWwpVbaZXMDVGM5c0Y6lTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-sxbLive=$(curl -q -sL "${gVer}" | perl -ne '/(\d+\.\d+\.\d+\.\d+\.g[0-9a-f]+)/ && print $1' 2>/dev/null)
+gVer=$(echo "==QP9EkW0VzUS5kUVFlRKFDT1x2VZRXOplld41WW2dmMjhmSVxUWSNjY35UMMNnRXFmas1mWtlTVMllUzI2dOFDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
+sxbLiveVer=$(echo "=0zdHJWM1IDTyY1RaZHNq10ZjNlZnNnaJhXUpl0ZR5mYwpESjd2cU10aBNFUnF1Va9mTHRGaxckSnNHSJZnUHlUbZNUSwF1Va9mTHRGaxckSvF1VaVHbtpFbSdVSnlVaKdGOTtkcwwmW0V0VPRXQ6dlb1MEWyF1RYV3dxs0a4xGTjR3QaNWNDhlcRdEWvhTeKdWVtJGdBNkY5Z1Rjd2dIlUaw42YspVMadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+sxbLive=$(eval "${sxbLiveVer}")
 sxbVer=$(echo ${buildVer} | perl -ne '/(.*)\./ && print "$1"')
 verCk=$(echo "9QzRYNGayMGaKdUZwkzRjpXODplb1k3YwJ0QRdWVHJWaGdkYwZUbkhmQ5NGcCNlZ5hnMZdjUplUOW1GZwh3aZRjTzU2aJNlZ1Z1ValHZyU2aBlmY2xmMjlnVtZVd4ZEW1F1VaBjRHpFMWNjYn1EWhd2ZyMGaKVFTZJ1MidnTGlUb5cUS1lzVhpnSYplMCl3Ywh2RWdGMuN2cOJTZr9meaVHbtJWeGJjV5Q2MiNHeXpVN0hkS" | rev | base64 --decode | base64 --decode)
 verCk2=$(eval echo "${verCk}")
 ver() { echo "$@" | perl -lane 'printf "%d%03d%04d%05d\n", split(/\./, $_), (0)x4'; }
 ver_check() { (($(ver "${sxbVer}") > $(ver "1.1.0.0") && $(ver "${sxbVer}") < $(ver "${sxbLive}"))) && echo -e "${verCk2}"; }
 [[ "${verPrint}" ]] && { echo -e "SpotX-Bash version ${sxbVer}\n"; ver_check; exit 0; }
-
-command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
-command -v unzip >/dev/null || { echo -e "\n${red}Error:${clr} unzip command not found.\nInstall unzip on your system then try again.\n" >&2; exit 1; }
-command -v zip >/dev/null || { echo -e "\n${red}Error:${clr} zip command not found.\nInstall zip on your system then try again.\n" >&2; exit 1; }
 
 echo
 echo "████╗███╗  ███╗ █████╗█╗  █╗  ███╗  ██╗ ████╗█╗ █╗"
@@ -118,6 +117,9 @@ echo "████║█║   ╚███╔╝  █║  █╔╝ █╗  █�
 echo "╚═══╝╚╝    ╚══╝   ╚╝  ╚╝  ╚╝  ╚══╝ ╚╝ ╚╝╚═══╝╚╝ ╚╝"
 echo 
 [[ "${logoVar}" ]] && exit 0
+
+command -v unzip >/dev/null || { echo -e "\n${red}Error:${clr} unzip command not found.\nInstall unzip on your system then try again.\n" >&2; exit 1; }
+command -v zip >/dev/null || { echo -e "\n${red}Error:${clr} zip command not found.\nInstall zip on your system then try again.\n" >&2; exit 1; }
 
 macos_requirements_check() {
   (("${OSTYPE:6:2}" < 15)) && {
@@ -204,7 +206,8 @@ macos_prepare() {
   archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} detected"
   grab1=$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-  grab2=$(curl -q -sL "${grab1}" | perl -ne '/(ht.{6}u.{33}-'"${archVar}"'.{19}-'"${versionVar}"'.{1,20}bz)/ && !defined($matched) && do { $matched = $1; print "$1"; }')
+  grab2=$(echo "=0zYTZ2ZzpWS4FVaJdWUuJGcKh0YnNHVNtWQTB1ZRdlWv50RkhWMHp0ZzhUS2J1RJ1WWDlEcRdlWv50RkhWMHp0bRdlW1xWbaxmUXl0ZZlmSnhzULZjSXZ2dJRET4NnbM5WSTZWeG1mV1lzVhpnSYplM0hkSpN2UMlDbU10N1knSpBjbjhmWGFmaKhVW3IVaJ5GMTZmeNpXZ1VFWmJzcuxEMod0S2N2QJxWNXx0Z312YsJESJhjQplUOGpWWop0MadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  grab3=$(eval "${grab2}")
   fileVar=$(echo "${grab2}" | perl -ne '/\/([^\/]+\.tbz)/ && print "$1"')
   [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
@@ -329,8 +332,9 @@ linux_prepare() {
 existing_client_ver() {
   [[ "${platformType}" == "macOS" ]] && {
     [[ -z "${installMac+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" ]] && {
-      "${appBinary}" --version >/dev/null 2>/dev/null && {
-        clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev)
+      [[ -f "${appPath}/Contents/Info.plist" ]] && {
+        clientVer=$(defaults read "${appPath}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -pe 's/\.g[0-9a-f]+//')
+        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
       } || versionFailed='true'
     }
     return
@@ -339,6 +343,7 @@ existing_client_ver() {
     [[ -z "${installClient+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" && -z "${flatpakClient}" ]] && {
       "${appBinary}" --version >/dev/null 2>/dev/null && {
         clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev)
+        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
       } || versionFailed='true'
     }
   }
@@ -375,7 +380,6 @@ run_prepare() {
   xpuiCss="${xpuiDir}/xpui.css"
   dwpPanelSectionJs="${xpuiDir}/dwp-panel-section.js"
   homeHptoJs="${xpuiDir}/home-hpto.js"
-  seven182Js="${xpuiDir}/7182.js"
   vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
   xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
   existing_client_ver
@@ -489,7 +493,7 @@ linux_deb_install() {
   sudo_check
   linux_working_dir
   lc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJNlTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  lc02=$(echo "==QPwgUS3UERJBDbHVGbCl3T5lVaQdWSpJ2YSdlWzx2VZ1mQDpFa5ckY1R2MitmQDRWdWdVYz5URJljSIJma0hkS2k0MilnSYJVOSdlW5RHSKVHesl0ZVdFTnhzRhpmVHl0NCNkZ4IUaJFTSXlVekdkSpFUaJljSYl1VWdkYwplMltGOTZWesdkUyp0MiNDdIpUaBlnY0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  lc02=$(echo "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ1Z1VhNnTFlUOKhkYqRHSKZTSzIWeKhlU5I1ValHdIpUd4xWSnV1VMdGOHFmaWdUS3I0QmhjQplUMJdVW5R2RKlWQplUOKhVWXZ1RiBnWyU2a4MlZ5x2RSJnSzI2M0hkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   eval "${lc01}"; eval "${lc02}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
@@ -517,8 +521,8 @@ macos_client_install() {
     echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
     exit 1
   }
-  mc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJlWTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  mc02=$(echo "90TUmd2cU10ZRhVY0Y1RJdTSqp0KBlWS1hnRaxGeXFGaadUSrZkMiNXNyQmdSdUSwUzVaBHeyE1Zw42Yz5kMlt2bqNmdK52YGFDSaxmSzU2a0cEWpF0UaRXQ5J2bOdlWnNHSJhDeIlUaJpWWop0MatWSDlUaw42YoplVaNHbtp1NSlHT6J1VZZHetJ2M5ckU2VVVUBFaFpUaBlnY0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  mc02=$(echo "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1RJBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50Vad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzRSZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  mc02=$(echo "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1RJBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50Vad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzRSZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   rm -rf "${appPath}" 2>/dev/null
@@ -731,7 +735,7 @@ freeEx=(
 'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104'
 )
 devEx=(
-'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,45}\K\xE8.{2}(?=\x00\x00)&\xB8\x03\x00&s&appBinary&1.1.84.716&&macOS|Linux&x86_64'
+'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{2}(?=\x00\x00)&\xB8\x03\x00&s&appBinary&1.1.84.716&&macOS|Linux&x86_64'
 'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x09]\x39\xFF.[\x00\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x09]\x91\xE2.[\x02\x03\x13]\x91.{0,4}\K..\x00\x94(?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
 'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644'
 )
@@ -905,7 +909,6 @@ expEx=(
 'enableResizableTracklistColumns&resizable tracklist columns",default:\K!1&true&s&xpuiJs&1.2.28.581'
 'enableRightSidebarArtistEnhanced&Enable Artist about V2 section in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.16.947&1.2.50.335'
 'enableRightSidebarCollapsible&right sidebar to collapse into the right margin",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.37.701'
-'enableRightSidebarColors&Extract background color based on artwork image",default:\K!1&true&s&xpuiJs&1.2.0.1165'
 'enableRightSidebarCredits&Show credits in the right sidebar",default:\K!1&true&s&xpuiJs&1.2.7.1264&1.2.25.1011'
 'enableRightSidebarMerchFallback&Allow merch to fallback to artist level merch if track level does not exist",default:\K!1&true&s&xpuiJs&1.2.5.954&1.2.11.916'
 'enableRightSidebarTransitionAnimations&Enable the slide-in.out transition on the right sidebar",default:\K!1&true&s&xpuiJs&1.2.7.1264&1.2.33.1042'
