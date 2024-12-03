@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.51.345.gcc39d911"
+buildVer="1.2.52.442.g01893f92"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -770,6 +770,7 @@ aoEx=(
 'bLogic&\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)&\x00&&appBinary&1.1.70.610&1.2.28.581'
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&&appBinary&1.1.70.610'
 'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578'
+'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442'
 'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
 'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
 'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
@@ -784,7 +785,7 @@ aoEx=(
 'enableInteractionLogger&Enables the old interaction logger",default:\K!.(?=})&false&s&xpuiJs&1.2.41.434'
 'enableLeavebehindsMockData&Use the mock endpoint to fetch Leavebehinds from AP4P",default:\K!.(?=})&false&s&xpuiJs&1.2.30.1135'
 'enableNewAdsNpv&Enable showing new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.18.997&1.2.50.335'
-'enableNewAdsNpvCanvasAds&Enable Canvas ads for new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.28.581'
+'enableNewAdsNpvCanvasAds&Enable Canvas ads for new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.28.581&1.2.51.345'
 'enableNewAdsNpvColorExtraction&Enable CTA card color extraction for new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.18.997&1.2.50.335'
 'enableNewAdsNpvNewVideoTakeoverSlot&position redesigned new ads NPV VideoTakeover above all areas except RightSidebar and NPB ",default:\K!.(?=})&false&s&xpuiJs&1.2.22.975&1.2.50.335'
 'enableNewAdsNpvVideoTakeover&Enable redesigned VideoTakeover for new ads NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.18.997&1.2.50.335'
@@ -851,6 +852,7 @@ expEx=(
 'enableConcertsNearYou&Concerts Near You Playlist",default:\K!1&true&s&xpuiJs&1.2.11.911'
 'enableConcertsNearYouFeedPromoDWP&Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1&true&s&xpuiJs&1.2.23.1114'
 'enableConcertsTicketPrice&Display ticket price on Event page",default:\K!1&true&s&xpuiJs&1.2.15.826'
+'enableContextualTrackBans",description:"Enable ability to ban/hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442'
 'enableDiscographyShelf&condensed disography shelf on artist pages",default:\K!.(?=})&true&s&xpuiJs&1.1.79.763&1.2.50.335'
 'enableDynamicNormalizer&dynamic normalizer.compressor",default:\K!1&true&s&xpuiJs&1.2.14.1141'
 'enableEightShortcuts&Increase max number of shortcuts on home to 8",default:\K!1&true&s&xpuiJs&1.2.26.1180&1.2.45.454'
@@ -877,6 +879,7 @@ expEx=(
 'enableMarkBookAsFinished&ability to mark a book as finished",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985'
+'enableNearbyJams&support for Nearby Jams feature in the Device Picker",default::\K!1&true&s&xpuiJs&1.2.52.442'
 'enableNewArtistEventsPage&Display the new Artist events page",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.32.997'
 'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.42.290&1.2.50.335'
 'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.42.290'
