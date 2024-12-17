@@ -897,6 +897,7 @@ expEx=(
 'enableNPVCredits enableNPVCreditsWithLinkability&credits in the right sidebar",default:\K!.(?=})&true&gs&xpuiJs&1.2.26.1180&1.2.50.335'
 'enableOtfn&On-The-Fly-Normalization",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableOverlaySidebarAnimations&Enable entry and exit animations for the overlay panels .queue, device picker, buddy feed.... in the side bar",default:\K!1&true&s&xpuiJs&1.2.38.720&1.2.45.454'
+'enablePeekNpv&the Peek NPV feature",default:\K!1&true&s&xpuiJs&1.2.53.437'
 'enablePiPMiniPlayer&the PiP Mini Player",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enablePiPMiniPlayerVideo&playback of video inside the PiP Mini Player",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enablePlaybackBarAnimation&animation of the playback bar",default:\K!1&true&s&xpuiJs&1.2.34.783'
