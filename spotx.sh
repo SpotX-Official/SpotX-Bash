@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.52.442.g01893f92"
+buildVer="1.2.53.437.gd3a938d4"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -671,7 +671,7 @@ run_patches() {
     perlVar "${newUiEx[@]}"
     (($(ver "${clientVer}") <= $(ver "1.2.13.661"))) && printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"
   }
-  [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && {
+  [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && $(ver "${clientVer}") <= $(ver "1.2.52.442"))) && {
     perlVar "${podEx[@]}"
     (($(ver "${clientVer}") >= $(ver "1.2.45.451"))) && printf '\n%s' "${hideSubfeed}" >> "${xpuiCss}"
     printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"
@@ -754,7 +754,7 @@ newUiEx=(
 podEx=(
 'hidePodcasts&withQueryParameters\(.\)\{return this.queryParameters=.,this}&withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}&&xpuiJs&1.1.70.610&1.1.92.647'
 'hidePodcasts2&(!?Array.isArray\(.\)[|\x26]{2}.===(.).length\)return null;)&$1let sx=$2;if(!Array.isArray(sx)){sx=e;}for(let q=0;q<(sx.children?sx.children.length:sx.length);q++){const item=sx.children?sx.children\[q\]:sx\[q\];const key=item?.key;const props=item?.props;const uri=props?.uri;if(!key||props?.value==="search-history")continue;if(key.match(/(episode|show)/)||(props?.name||'\'''\'').match(/podcasts/i)||(uri||'\'''\'').match(/(episode|show)/))return null;};&&xpuiJs&1.1.93.896&1.2.43.420'
-'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.44.405'
+'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.44.405&1.2.52.442'
 )
 lyricsBgEx=(
 'lyricsBackground1&--lyrics-color-inactive":\K(.).inactive&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
@@ -771,9 +771,10 @@ aoEx=(
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&&appBinary&1.1.70.610'
 'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578'
 'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442'
+'enableConnectedStateObserver&observer that logs errors related to connected state and ad info",default:\K!.(?=})&false&s&xpuiJs&1.2.53.437'
 'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
 'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
-'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
+'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210&1.2.52.442'
 'enableDSASetting&Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
 'enableEsperantoMigration&Enable esperanto Migration for (HPTO\s)?Ad Formats?",default:\K!.(?=})&false&s&xpuiJs&1.2.6.861&1.2.50.335'
 'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985'
@@ -814,9 +815,10 @@ aoEx=(
 'slotMid&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69&\x20\x6D\x69&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'slotPost&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F&\x20\x70\x6F&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'slotPre&\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)&\x20&g&appBinary&1.0.29.605&1.0.29.605&macOS'
-'sponsors1&ht.{14}\...\..{7}\....\/.{8}ap4p\/&&g&xpuiJs&1.1.70.610'
+'sponsors1&ht.{14}\...\..{7}\....\/.{8}ap4p\/&&g&xpuiJs&1.1.70.610&1.2.52.442'
 'sponsors2&ht.{14}\...\..{7}\....\/s.{15}t\/v.\/&&g&xpuiJs&1.1.70.610'
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
+'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
 'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 )
@@ -836,7 +838,7 @@ expEx=(
 'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
-'enableBillboardEsperantoMigration&esperanto migration for Billboard Ad Format",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985'
+'enableBillboardEsperantoMigration&esperanto migration for Billboard Ad Format",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985&1.2.52.442'
 'enableBlockUsers&block users feature in clientX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableBrowseViaPathfinder&Fetch Browse data from Pathfinder",default:\K!1&true&s&xpuiJs&1.1.88.595&1.2.24.756'
 'enableCanvasNpv&short, looping visuals on tracks.",default:..\.\KCONTROL&CANVAS_PLAY_LOOP&s&xpuiJs&1.2.33.1039'
@@ -851,6 +853,7 @@ expEx=(
 'enableConcertsInterested&Save . Retrieve feature for concerts",default:\K!1&true&s&xpuiJs&1.2.7.1264'
 'enableConcertsNearYou&Concerts Near You Playlist",default:\K!1&true&s&xpuiJs&1.2.11.911'
 'enableConcertsNearYouFeedPromoDWP&Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1&true&s&xpuiJs&1.2.23.1114'
+'enableConcertsNotInterested&ser to set not interested on concerts",default:\K!1&true&s&xpuiJs&1.2.53.437'
 'enableConcertsTicketPrice&Display ticket price on Event page",default:\K!1&true&s&xpuiJs&1.2.15.826'
 'enableContextualTrackBans&ability to ban.hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442'
 'enableDiscographyShelf&condensed disography shelf on artist pages",default:\K!.(?=})&true&s&xpuiJs&1.1.79.763&1.2.50.335'
@@ -863,6 +866,7 @@ expEx=(
 'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210'
 'enableForgetDevice&option to Forget Devices",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.5.1006'
 'enableFullscreenMode&Enable fullscreen mode",default:\K!1&true&s&xpuiJs&1.2.31.1205'
+'enableGlobalCreateButton&plus button for creating different types of playlists from global nav bar",default:\K!1&true&s&xpuiJs&1.2.53.437'
 'enableGlobalNavBar&Show global nav bar with home button, search input and user avatar",default:..\.\KCONTROL&HOME_NEXT_TO_SEARCH&s&xpuiJs&1.2.30.1135&1.2.45.454'
 'enableHomeCarousels&carousels on home",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableHomePin&pinning of home shelves",default:\K!1&true&s&xpuiJs&1.2.45.451'
@@ -907,7 +911,7 @@ expEx=(
 'enableReactQueryPersistence&React Query persistence",default:\K!.(?=})&true&s&xpuiJs&1.2.30.1135'
 'enableReadAlongTranscripts&read along transcripts in the NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.17.832'
 'enableRecentlyPlayedShortcut&Show Recently Played shortcut in home view. Also increase max number of shortcuts to 8",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.25.1011'
-'enableRecentSearchesDropdown&recent searches dropdown in GlobalNavBar",default:\K!1&true&s&xpuiJs&1.2.45.451'
+'enableRecentSearchesDropdown&recent searches dropdown in GlobalNavBar",default:\K!1&true&s&xpuiJs&1.2.45.451&1.2.52.442'
 'enableRelatedVideos&Related Video section in NPV",default:\K!1&true&s&xpuiJs&1.2.21.1104'
 'enableResizableTracklistColumns&resizable tracklist columns",default:\K!1&true&s&xpuiJs&1.2.28.581'
 'enableRightSidebarArtistEnhanced&Enable Artist about V2 section in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.16.947&1.2.50.335'
@@ -946,6 +950,7 @@ expEx=(
 'enableYLXPrereleaseAudiobooks&audiobook pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.32.985&1.2.47.366'
 'enableYLXPrereleases&album pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.31.1205&1.2.31.1205'
 'enableYLXTypeaheadSearch&jump to the first matching item",default:\K!1&true&s&xpuiJs&1.2.13.656'
+'enableZoomSettingsUIDesktop&zoom settings from the settings page on Desktop",default:\K!1&true&s&xpuiJs&1.2.17.832&1.2.53.437'
 'saveButtonAlwaysVisible&Display save button always in whats new feed",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.28.0'
 'shareButtonPositioning&Share button positioning in NPV",values:.{1,3},default:.{1,4}NPV_\K(HIDDEN|VISIBLE_ON_HOVER)&ALWAYS_VISIBLE&s&xpuiJs&1.2.39.578&1.2.50.335'
 'showWrappedBanner&Show Wrapped banner on wrapped genre page",default:\K!1&true&s&xpuiJs&1.1.87.612'

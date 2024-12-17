@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.52.442.g01893f92
+        <strong>Latest supported version:</strong> 1.2.53.437.gd3a938d4
     </p> 
 </center>
 
@@ -20,7 +20,7 @@
 
 - Block all audio, banner & video ads
 - Block logging
-- Enable [developer mode](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-developer-mode)
+- Enable developer mode
 - Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
 - Block automatic updates (macOS)
