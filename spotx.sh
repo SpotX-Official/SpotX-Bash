@@ -786,7 +786,7 @@ aoEx=(
 'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985'
 'enableFraudLoadSignals&Enable user fraud signals emitted on page load",default:\K!.(?=})&false&s&xpuiJs&1.2.22.975'
 'enableHomeAds&Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})&false&s&xpuiJs&1.2.31.1205'
-'enableHomeAdStaticBanner&Enables temporary home banner, static version",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.55.235'
+'enableHomeAdStaticBanner&Enables temporary home banner, static version",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.53.440'
 'enableHptoLocationRefactor&Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})&false&s&xpuiJs&1.2.1.958&1.2.20.1218'
 'enableInAppMessaging&Enables quicksilver in-app messaging modal",default:\K!.(?=})&false&s&xpuiJs&1.1.70.610'
 'enableInteractionLogger&Enables the old interaction logger",default:\K!.(?=})&false&s&xpuiJs&1.2.41.434'
@@ -869,7 +869,7 @@ expEx=(
 'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.43.420'
 'enableEqualizer&audio equalizer for Desktop and Web Player",default:\K!1&true&s&xpuiJs&1.1.88.595'
 'enableExtraTracklistColumns&extra tracklist columns",default:\K!1&true&s&xpuiJs&1.2.44.405'
-'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.55.235'
+'enableFC24EasterEgg&EA FC 24 easter egg",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.53.440'
 'enableForgetDevice&option to Forget Devices",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.5.1006'
 'enableFullscreenMode&Enable fullscreen mode",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableGlobalCreateButton&plus button for creating different types of playlists from global nav bar",default:\K!1&true&s&xpuiJs&1.2.53.437'
@@ -960,7 +960,7 @@ expEx=(
 'enableZoomSettingsUIDesktop&zoom settings from the settings page on Desktop",default:\K!1&true&s&xpuiJs&1.2.17.832&1.2.53.437'
 'saveButtonAlwaysVisible&Display save button always in whats new feed",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.28.0'
 'shareButtonPositioning&Share button positioning in NPV",values:.{1,3},default:.{1,4}NPV_\K(HIDDEN|VISIBLE_ON_HOVER)&ALWAYS_VISIBLE&s&xpuiJs&1.2.39.578&1.2.50.335'
-'showWrappedBanner&Show Wrapped banner on wrapped genre page",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.55.235'
+'showWrappedBanner&Show Wrapped banner on wrapped genre page",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.53.440'
 )
 premiumExpEx=(
 'addYourDJToLibraryOnPlayback&Add Your DJ to library on playback",default:\K!1&true&s&xpuiJs&1.2.6.861&1.2.50.335'
