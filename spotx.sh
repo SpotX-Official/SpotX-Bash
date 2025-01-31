@@ -736,8 +736,8 @@ freeEx=(
 'hptoEnabled&hptoEnabled:!\K0&1&s&xpuiJs'
 'hptoShown&isHptoShown:!\K0&1&gs&homeHptoJs&1.1.85.884&1.2.20.1218'
 'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104'
-'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235'
-'stateS1&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235&1.2.55.235&macOS|Linux&x86_64'
+'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&gs&appBinary&1.2.53.437'
+'stateS1&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.53.437&1.2.55.235'
 'stateS2&[\x00\x0A]\K\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x73\x74\x61\x74\x65\x00)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235'
 )
 devEx=(
@@ -825,6 +825,7 @@ aoEx=(
 'sponsors2&ht.{14}\...\..{7}\....\/s.{15}t\/v.\/&&g&xpuiJs&1.1.70.610'
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
+'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
 'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 )
