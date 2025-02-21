@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.57.463.g4f748c64"
+buildVer="1.2.58.492.g5e7cd836"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -671,7 +671,7 @@ run_patches() {
     perlVar "${newUiEx[@]}"
     (($(ver "${clientVer}") <= $(ver "1.2.13.661"))) && printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6E\x65\x77\x20\x55\x49\n"
   }
-  [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610") && $(ver "${clientVer}") <= $(ver "1.2.52.442"))) && {
+  [[ "${hideNonMusic}" ]] && (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && {
     perlVar "${podEx[@]}"
     (($(ver "${clientVer}") >= $(ver "1.2.45.451"))) && printf '\n%s' "${hideSubfeed}" >> "${xpuiCss}"
     printf "\xE2\x9C\x94\x20\x52\x65\x6D\x6F\x76\x65\x64\x20\x6E\x6F\x6E\x2D\x6D\x75\x73\x69\x63\x20\x63\x61\x74\x65\x67\x6F\x72\x69\x65\x73\x20\x6F\x6E\x20\x68\x6F\x6D\x65\x20\x73\x63\x72\x65\x65\x6E\n"
@@ -761,6 +761,7 @@ podEx=(
 'hidePodcasts&withQueryParameters\(.\)\{return this.queryParameters=.,this}&withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}&&xpuiJs&1.1.70.610&1.1.92.647'
 'hidePodcasts2&(!?Array.isArray\(.\)[|\x26]{2}.===(.).length\)return null;)&$1let sx=$2;if(!Array.isArray(sx)){sx=e;}for(let q=0;q<(sx.children?sx.children.length:sx.length);q++){const item=sx.children?sx.children\[q\]:sx\[q\];const key=item?.key;const props=item?.props;const uri=props?.uri;if(!key||props?.value==="search-history")continue;if(key.match(/(episode|show)/)||(props?.name||'\'''\'').match(/podcasts/i)||(uri||'\'''\'').match(/(episode|show)/))return null;};&&xpuiJs&1.1.93.896&1.2.43.420'
 'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.44.405&1.2.52.442'
+'hidePodcasts4&(case 6:|const .=await .\([^\)]*\);)((return .\.abrupt\(\"|return[ \"],?)(null!=n\x26\x26|return\",)?(.)(\);case 9|\??.errors\?Promise.reject.+?errors\):.))&$1$5?.data?.home?.sectionContainer?.sections?.items?.forEach(x => x?.sectionItems?.items \x26\x26 (x.sectionItems.items = x.sectionItems.items.filter(i => !['\''Podcast'\'','\''Audiobook'\'','\''Episode'\''].includes(i?.content?.data?.__typename))));$2&&xpuiJs&1.2.53.437'
 )
 lyricsBgEx=(
 'lyricsBackground1&--lyrics-color-inactive":\K(.).inactive&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
@@ -864,7 +865,7 @@ expEx=(
 'enableConcertsInSearch&concerts in search",default:\K!1&true&s&xpuiJs&1.2.33.1039'
 'enableConcertsInterested&Save . Retrieve feature for concerts",default:\K!1&true&s&xpuiJs&1.2.7.1264'
 'enableConcertsNearYou&Concerts Near You Playlist",default:\K!1&true&s&xpuiJs&1.2.11.911'
-'enableConcertsNearYouFeedPromoDWP&Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1&true&s&xpuiJs&1.2.23.1114'
+'enableConcertsNearYouFeedPromoDWP&Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1&true&s&xpuiJs&1.2.23.1114&1.2.57.463'
 'enableConcertsNotInterested&ser to set not interested on concerts",default:\K!1&true&s&xpuiJs&1.2.53.437'
 'enableConcertsTicketPrice&Display ticket price on Event page",default:\K!1&true&s&xpuiJs&1.2.15.826'
 'enableContextualTrackBans&ability to ban.hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442'
@@ -902,6 +903,7 @@ expEx=(
 'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.42.290'
 'enableNewEntityHeaders&New Entity Headers",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.28.0'
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716'
+'enableNewOverlayScrollbars&new overlay scrollbars",default:\K!1&true&s&xpuiJs&1.2.58.492'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
 'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.39.578'
