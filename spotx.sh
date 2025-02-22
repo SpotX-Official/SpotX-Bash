@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.58.492.g5e7cd836"
+buildVer="1.2.58.496.g82a757a5"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -741,7 +741,7 @@ freeEx=(
 'stateS2&[\x00\x0A\x1A]\K\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x73\x74\x61\x74\x65\x00)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235'
 )
 devEx=(
-'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{4}&\xB8\x03\x00\x00\x00&s&appBinary&1.1.84.716&&macOS|Linux&x86_64'
+'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{4}&\xB8\x03\x00\x00\x00&s&appBinary&1.1.84.716'
 'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F]\x91\xE2.[\x02\x03\x06\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
 'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644'
 )
@@ -758,10 +758,8 @@ newUiEx=(
 'enableYLXSidebar&Enable Your Library X view of the left sidebar",default:\K!1&true&s&xpuiJs&1.1.97.962&1.2.13.661'
 )
 podEx=(
-'hidePodcasts&withQueryParameters\(.\)\{return this.queryParameters=.,this}&withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}&&xpuiJs&1.1.70.610&1.1.92.647'
-'hidePodcasts2&(!?Array.isArray\(.\)[|\x26]{2}.===(.).length\)return null;)&$1let sx=$2;if(!Array.isArray(sx)){sx=e;}for(let q=0;q<(sx.children?sx.children.length:sx.length);q++){const item=sx.children?sx.children\[q\]:sx\[q\];const key=item?.key;const props=item?.props;const uri=props?.uri;if(!key||props?.value==="search-history")continue;if(key.match(/(episode|show)/)||(props?.name||'\'''\'').match(/podcasts/i)||(uri||'\'''\'').match(/(episode|show)/))return null;};&&xpuiJs&1.1.93.896&1.2.43.420'
-'hidePodcasts3&case"EpisodeOrChapterResponseWrapper":case"PlaylistResponseWrapper":case"PodcastOrAudiobookResponseWrapper":&case"PlaylistResponseWrapper":&s&xpuiJs&1.2.44.405&1.2.52.442'
-'hidePodcasts4&(case 6:|const .=await .\([^\)]*\);)((return .\.abrupt\(\"|return[ \"],?)(null!=n\x26\x26|return\",)?(.)(\);case 9|\??.errors\?Promise.reject.+?errors\):.))&$1$5?.data?.home?.sectionContainer?.sections?.items?.forEach(x => x?.sectionItems?.items \x26\x26 (x.sectionItems.items = x.sectionItems.items.filter(i => !['\''Podcast'\'','\''Audiobook'\'','\''Episode'\''].includes(i?.content?.data?.__typename))));$2&&xpuiJs&1.2.53.437'
+'hidePodcasts&withQueryParameters\(.\)\{return this.queryParameters=.,this}&withQueryParameters(e){return this.queryParameters=(e.types?{...e, types: e.types.split(",").filter(_ => !["episode","show"].includes(_)).join(",")}:e),this}&&xpuiJs&1.1.70.610&1.1.85.895'
+'hidePodcasts2&(case 6:|const .=await .\([^\)]*\);)((return .\.abrupt\(\"|return[ \"],?)(null!=n\x26\x26|return\",)?(.)(\);case 9|\??.errors\?Promise.reject.+?errors\):.))&$1$5?.data?.home?.sectionContainer?.sections?.items?.forEach(x => x?.sectionItems?.items \x26\x26 (x.sectionItems.items = x.sectionItems.items.filter(i => !['\''Podcast'\'','\''Audiobook'\'','\''Episode'\''].includes(i?.content?.data?.__typename))));$2&&xpuiJs&1.1.86.857'
 )
 lyricsBgEx=(
 'lyricsBackground1&--lyrics-color-inactive":\K(.).inactive&$1.background&&xpuiJs&1.2.0.1165&1.2.44.405'
