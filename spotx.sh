@@ -605,7 +605,31 @@ xpui_detect() {
 }
 
 xpui_open() {
-  unzip -qq "${xpuiSpa}" -d "${xpuiDir}"
+  # Clean up and create target directory
+  rm -rf "${xpuiDir}"
+  mkdir -p "${xpuiDir}" || {
+    echo -e "${red}Error:${clr} Cannot create xpui directory" >&2
+    exit 1
+  }
+  
+  # Check source file
+  if [[ ! -f "${xpuiSpa}" ]]; then
+    echo -e "${red}Error:${clr} xpui.spa file not found: ${xpuiSpa}" >&2
+    exit 1
+  fi
+  
+  # Extract files
+  if ! unzip -q -o "${xpuiSpa}" -d "${xpuiDir}"; then
+    echo -e "${red}Error:${clr} Failed to extract xpui.spa" >&2
+    exit 1
+  fi
+
+  # Verify extraction
+  if [[ ! -f "${xpuiJs}" ]]; then
+    echo -e "${red}Error:${clr} xpui.js not found after extraction: ${xpuiJs}" >&2
+    exit 1
+  fi
+
   [[ "${versionFailed}" && -z "${forceVer+x}" || -z "${forceVer+x}" && "${debug}" && "${devMode}" && "${t}" ]] && {
     clientVer=$(perl -ne '/[Vv]ersion[:=,\x22]{1,3}(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"' "${xpuiJs}")
     [[ -z "${clientVer}" && "${debug}" && "${devMode}" && "${t}" ]] && {
@@ -644,7 +668,7 @@ run_core_start() {
 
 run_patches() {
   perlVar "${aoEx[@]}"
-  [[ "${paidPremium}" ]] && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n" || {
+  [[ "${paidPremium}" ]] && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x64\x20\x70\x72\x65\x6D\x69\x75\x6D\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\n" || {
     perlVar "${freeEx[@]}"
     printf '\n%s\n%s\n%s\n%s\n%s' "${hideDLIcon}" "${hideDLMenu}" "${hideDLMenu2}" "${hideDLQual}" "${hideVeryHigh}"  >> "${xpuiCss}"
     printf "\xE2\x9C\x94\x20\x41\x70\x70\x6C\x69\x65\x64\x20\x66\x72\x65\x65\x2D\x74\x69\x65\x72\x20\x70\x6C\x61\x6E\x20\x70\x61\x74\x63\x68\x65\x73\n"
