@@ -244,7 +244,7 @@ linux_deb_prepare() {
   installOutput="${installPath}"
   linux_client_variant
   installClient='true'
-  grab1=$(echo "==gdwIjYqVzUl1GbHRmdCNzY1tmbjZnUYFme5c0Ysp0MMZ3bENGMShUY" | rev | base64 --decode | base64 --decode)
+  grab1=$(echo "=0TP3xEd5ITW1tmbaBnUzI2dO5GT1o0MiBDbyMmdChlW5lTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
   [[ "${stableVar}" ]] && \
   grab2=$(echo "==QP9cWS6ZlMahGdykFaCFDTwkFRaRnRXxUNKhVW1xWbZZXVXpVeadFT1lTbiZXVHJWaGdEZ6lTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode) || \
   grab2=$(echo "==QPJl3YsR2VZJnTXlVU5MkTyE1VihWMTVWeG1mYwpkMMxmVtNWbxkmY2VjMM5WNXFGMOhlWwkTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
@@ -641,6 +641,7 @@ run_core_start() {
   xpui_detect
   [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 1; }
   xpui_open
+  (($(ver "${clientVer}") > $(ver "1.2.56.9999") && vendorXpuiJs="${xpuiJs}"
 }
 
 run_patches() {
@@ -828,10 +829,8 @@ aoEx=(
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
 'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
-'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610&1.2.56.502'
-'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610&1.2.56.502'
-'webgateGabo2&\@webgate\/(gabo)&"@" . $1&ge&xpuiJs&1.1.70.610'
-'webgateRemote2&\@webgate\/(remote)&"@" . $1&ge&xpuiJs&1.1.70.610'
+'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
+'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 )
 expEx=(
 'enableAddPlaylistToPlaylist&support for adding a playlist to another playlist",default:\K!1&true&s&xpuiJs&1.1.98.683&1.2.3.1115'
