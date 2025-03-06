@@ -641,7 +641,7 @@ run_core_start() {
   xpui_detect
   [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 1; }
   xpui_open
-  (($(ver "${clientVer}") > $(ver "1.2.56.9999") && vendorXpuiJs="${xpuiJs}"
+  (($(ver "${clientVer}") > $(ver "1.2.56.9999"))) && vendorXpuiJs="${xpuiJs}"
 }
 
 run_patches() {
