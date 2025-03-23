@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.59.518.g42b3652d"
+buildVer="1.2.60.564.gcc6305cb"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -745,8 +745,9 @@ freeEx=(
 )
 devEx=(
 'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{4}&\xB8\x03\x00\x00\x00&s&appBinary&1.1.84.716'
-'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F]\x91\xE2.[\x02\x03\x06\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
-'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644'
+'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F]\x91\xE2.[\x02\x03\x06\x07\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
+'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644&1.2.59.518'
+'enableDebugTools&debug tools and features for employees",default:\K!1&true&s&xpuiJs&1.2.60.564'
 )
 oldUiEx=(
 'disableYLXSidebar&Enable Your Library X view of the left sidebar",default:\K!.(?=})&false&s&xpuiJs&1.1.93.896&1.2.13.661'
@@ -848,6 +849,7 @@ expEx=(
 'enableAudiobookPrerelease&audiobook prerelease pages",default:\K!1&true&s&xpuiJs&1.2.33.1039&1.2.47.366'
 'enableAudiobooks&Audiobooks feature on ClientX",default:\K!1&true&s&xpuiJs&1.1.74.631&1.2.46.462'
 'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205'
+'enableBackendSearchHistory&Enable backend search history",default:\K!1&true&s&xpuiJs&1.2.60.564'
 'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
 'enableBillboardEsperantoMigration&esperanto migration for Billboard Ad Format",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985&1.2.52.442'
@@ -905,7 +907,7 @@ expEx=(
 'enableNewOverlayScrollbars&new overlay scrollbars",default:\K!1&true&s&xpuiJs&1.2.58.492'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
-'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.39.578'
+#'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableNowPlayingBarVideo&showing video in Now Playing Bar when all other video elements are closed",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enableNowPlayingBarVideoSwitch&a switch to toggle video in the Now Playing Bar",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.29.605'
 'enableNPVCredits enableNPVCreditsWithLinkability&credits in the right sidebar",default:\K!.(?=})&true&gs&xpuiJs&1.2.26.1180&1.2.50.335'
@@ -964,6 +966,7 @@ expEx=(
 'enableYLXPrereleaseAlbums&album pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enableYLXPrereleaseAudiobooks&audiobook pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.32.985&1.2.47.366'
 'enableYLXPrereleases&album pre-releases in YLX",default:\K!1&true&s&xpuiJs&1.2.31.1205&1.2.31.1205'
+'enableYlxReverseSorting&Enable reverse sort direction in Your Library",default:\K!1&true&s&xpuiJs&1.2.60.564'
 'enableYLXTypeaheadSearch&jump to the first matching item",default:\K!1&true&s&xpuiJs&1.2.13.656'
 'enableZoomSettingsUIDesktop&zoom settings from the settings page on Desktop",default:\K!1&true&s&xpuiJs&1.2.17.832&1.2.53.437'
 'saveButtonAlwaysVisible&Display save button always in whats new feed",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.28.0'
@@ -972,7 +975,8 @@ expEx=(
 )
 premiumExpEx=(
 'addYourDJToLibraryOnPlayback&Add Your DJ to library on playback",default:\K!1&true&s&xpuiJs&1.2.6.861&1.2.50.335'
-'enableJamBroadcasting&Jam broadcasting and scanning",default:\K!1&true&s&xpuiJs&1.2.45.451'
+'enableJamBroadcasting&Jam broadcasting and scanning",default:\K!1&true&s&xpuiJs&1.2.45.451&1.2.59.518'
+'enableJamNearbyJoining&Jam Nearby Joining Connect devices in Connect Picker",default:\K!1&true&s&xpuiJs&1.2.60.564'
 'enableOfflineAlbumsListPlatform&offline albums loaded over List Platform",default::\K!1&true&s&xpuiJs&1.2.48.404'
 'enableYourDJ&the .Your DJ. feature.,default:\K!1&true&s&xpuiJs&1.2.6.861'
 'enableYourSoundCapsuleModal&showing a modal on desktop to users who have clicked on a Your Sound Capsule share link",default:\K!1&true&s&xpuiJs&1.2.38.720'
