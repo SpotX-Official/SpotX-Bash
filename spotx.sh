@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.60.564.gcc6305cb"
+buildVer="1.2.61.427.g5b75eb06"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -872,7 +872,7 @@ expEx=(
 'enableContextualTrackBans&ability to ban.hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442'
 'enableCreateButton&create button either in the global navbar or in YLX",values:.{1,3},default:.{1,3}.\KNONE&YOUR_LIBRARY&s&xpuiJs&1.2.57.460'
 'enableDiscographyShelf&condensed disography shelf on artist pages",default:\K!.(?=})&true&s&xpuiJs&1.1.79.763&1.2.50.335'
-'enableDynamicNormalizer&dynamic normalizer.compressor",default:\K!1&true&s&xpuiJs&1.2.14.1141'
+'enableDynamicNormalizer&dynamic normalizer.compressor",default:\K!1&true&s&xpuiJs&1.2.14.1141&1.2.60.564'
 'enableEightShortcuts&Increase max number of shortcuts on home to 8",default:\K!1&true&s&xpuiJs&1.2.26.1180&1.2.45.454'
 'enableEncoreCards&all cards throughout app to be Encore Cards",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.33.1042'
 'enableEncorePlaybackButtons&Use Encore components in playback control components",default:\K!1&true&s&xpuiJs&1.2.20.1210&1.2.43.420'
