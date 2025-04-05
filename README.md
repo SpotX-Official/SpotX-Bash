@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.61.427.g5b75eb06
+        <strong>Latest supported version:</strong> 1.2.61.430.gbef83518
     </p> 
 </center>
 
@@ -33,6 +33,10 @@
 - Run the following command in terminal:
 ```
 bash <(curl -sSL https://spotx-official.github.io/run.sh)
+```
+or
+```
+bash <(curl -sSL https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/spotx.sh)
 ```
 - By default...
   - all supported experimental features are enabled
