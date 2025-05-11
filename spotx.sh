@@ -758,7 +758,7 @@ newUiEx=(
 'enableNavAltExperiment2&Enable the new home structure and navigation",values:.,default:.\K.DISABLED&.ENABLED_CENTER&&xpuiJs&1.1.97.956&1.2.2.582'
 'enablePanelSizeCoordination&Enable Panel Size Coordination between the left sidebar, the main view and the right sidebar",default:\K!.(?=})&true&s&xpuiJs&1.2.7.1264&1.2.50.335'
 'enableRightSidebar&Enable the view on the right sidebar",default:\K!1&true&s&xpuiJs&1.1.98.683&1.2.23.1125'
-'enableRightSidebarLyrics&Show lyrics in the right sidebar",default:\K!1&true&s&xpuiJs&1.2.0.1165'
+'enableRightSidebarLyrics&Show lyrics in the right sidebar",default:\K!1&false&s&xpuiJs&1.2.0.1165'
 'enableYLXSidebar&Enable Your Library X view of the left sidebar",default:\K!1&true&s&xpuiJs&1.1.97.962&1.2.13.661'
 )
 podEx=(
