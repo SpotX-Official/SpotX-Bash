@@ -4,7 +4,7 @@
 
 <p align="center">        
       <a href="https://github.com/amd64fox/SpotX"><img src="https://spotx-official.github.io/images/shields/spotx-win_sxb.svg"></a>
-      <a href="https://t.me/SpotX_Chat"><img src="https://spotx-official.github.io/images/shields/SpotX_Community.svg"></a>
+      <a href="https://t.me/SpotxCommunity"><img src="https://spotx-official.github.io/images/shields/SpotX_Community.svg"></a>
       </p>
 
  ***     
@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.62.580.gb27ad23e
+        <strong>Latest supported version:</strong> 1.2.63.394.g126b0d89
     </p> 
 </center>
 
