@@ -218,6 +218,7 @@ macos_prepare() {
   appBinary="${appPath}/Contents/MacOS/Spotify"
   appBak="${appBinary}.bak"
   cachePath="${HOME}/Library/Caches/com.spotify.client"
+  snapshotBinary="${appPath}/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
   xpuiPath="${appPath}/Contents/Resources/Apps"
   [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clr} Codesigning has been skipped.\n" >&2 || true
 }
@@ -319,6 +320,7 @@ linux_prepare() {
   appPath="${installPath}"
   appBinary="${appPath}/spotify"
   appBak="${appBinary}.bak"
+  snapshotBinary="${appPath}/v8_context_snapshot.bin"
   xpuiPath="${appPath}/Apps"
   [[ -z "${cachePath}" ]] && cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(cat /etc/*release | grep PRETTY_NAME | cut -d '"' -f2)"
@@ -373,15 +375,17 @@ client_version_output() {
 
 run_prepare() {
   [[ "${platformType}" == "macOS" ]] && macos_prepare || linux_prepare
-  xpuiDir="${xpuiPath}/xpui"
   xpuiBak="${xpuiPath}/xpui.bak"
+  xpuiDir="${xpuiPath}/xpui"
   xpuiSpa="${xpuiPath}/xpui.spa"
-  xpuiJs="${xpuiDir}/xpui.js"
-  xpuiCss="${xpuiDir}/xpui.css"
   dwpPanelSectionJs="${xpuiDir}/dwp-panel-section.js"
   homeHptoJs="${xpuiDir}/home-hpto.js"
+  indexHtml="${xpuiDir}/index.html"
   vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
+  xpuiCss="${xpuiDir}/xpui.css"
   xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
+  xpuiJs="${xpuiDir}/xpui.js"
+  xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
   existing_client_ver
   client_version_output
   ver_check
@@ -602,6 +606,17 @@ xpui_detect() {
   cp "${xpuiSpa}" "${xpuiBak}"
   cp "${appBinary}" "${appBak}"
   printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+}
+
+snapshot_check() {
+  START_XM="76006100720020005F005F007700650062007000610063006B005F006D006F00640075006C00650073005F005F003D007B00"
+  END_XM="78007000750069002D006D006F00640075006C00650073002E006A0073002E006D0061007000"
+  [[ ! -f "${xpuiJs}" ]] && [[ -f "${xpuiSnapshotJs}" ]] && {
+    [[ "${debug}" ]] && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x53\x6E\x61\x70\x73\x68\x6F\x74${clr}\n"
+    perl -e 'use strict; use warnings; use Encode qw(decode); open my $in_fh, "<:raw", $ARGV[0] or die; binmode $in_fh; my $bin_content; { local $/; $bin_content = <$in_fh>; } close $in_fh; die unless (length($bin_content) >= 2 && substr($bin_content, 0, 2) eq "\xFF\xFE") || (length($bin_content) > 100 && substr($bin_content, 1, 1) eq "\x00"); my $start_marker = pack("H*", $ARGV[1]); my $end_marker = pack("H*", $ARGV[2]); my $start_idx = index($bin_content, $start_marker, 2); die if $start_idx == -1; my $end_idx = index($bin_content, $end_marker, $start_idx + length($start_marker)); die if $end_idx == -1; my $extracted = substr($bin_content, $start_idx, $end_idx - $start_idx + length($end_marker)); my $decoded = decode("UTF-16LE", $extracted); open my $out_fh, "+<:encoding(UTF-8)", $ARGV[3] or die; my $existing_content; { local $/; $existing_content = <$out_fh>; } seek $out_fh, 0, 0; print $out_fh $decoded, "\n", $existing_content; truncate $out_fh, tell($out_fh); close $out_fh;' "${snapshotBinary}" "${START_XM}" "${END_XM}" "${xpuiSnapshotJs}" || { uninstall_spotx; echo -e "\n${red}Error:${clr} Snapshot processing failed\n" >&2; exit 1; }
+    xpuiCss="${xpuiDir}/xpui-snapshot.css"
+    xpuiJs="${xpuiSnapshotJs}"
+  }
 }
 
 xpui_open() {
