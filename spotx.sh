@@ -622,6 +622,7 @@ snapshot_check() {
 xpui_open() {
   mkdir -p "${xpuiDir}"
   unzip -qq "${xpuiSpa}" -d "${xpuiDir}"
+  snapshot_check
   [[ "${versionFailed}" && -z "${forceVer+x}" || -z "${forceVer+x}" && "${debug}" && "${devMode}" && "${t}" ]] && {
     clientVer=$(perl -ne '/[Vv]ersion[:=,\x22]{1,3}(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"' "${xpuiJs}")
     [[ -z "${clientVer}" && "${debug}" && "${devMode}" && "${t}" ]] && {
