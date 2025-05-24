@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.63.394.g126b0d89"
+buildVer="1.2.64.408.g0a9b557c"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -802,6 +802,7 @@ aoEx=(
 'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210&1.2.52.442'
 'enableDSASetting&Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
 'enableEnhancedAdsClientDeconfliction&Enable refactored version of ads orchestrator middleware",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460&1.2.61.443'
+'enableEmbeddedAdVisibilityLogging&When enabled, enhanced visibility logs will be sent for embedded ads",default:\K!.(?=})&false&s&xpuiJs&1.2.64.407'
 'enableEmbeddedNpvAds&Enable embedded display ads on NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460'
 'enableEsperantoMigration&Enable esperanto Migration for (HPTO\s)?Ad Formats?",default:\K!.(?=})&false&s&xpuiJs&1.2.6.861&1.2.50.335'
 'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985'
@@ -825,13 +826,13 @@ aoEx=(
 'enableSaxLeaderboardAds&Enable SAX Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.62.575'
 'enableShowLeavebehindConsolidation&Enable show leavebehinds consolidated experience",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114'
 'enableSponsoredPlaylistEsperantoMigration&Enable esperanto Migration for Sponsored Playlist Ad Formats",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.50.335'
-'enableSurveyAds&Enable Spotify Brand Lift .SBL. Surveys in the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.43.420'
-'enableUserFraudCanvas&Enable user fraud Canvas Fingerprinting",default:\K!.(?=})&false&s&xpuiJs&1.2.13.656'
+'enableSurveyAds&Enable Spotify Brand Lift .SBL. Surveys in the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.43.420&1.2.63.394'
+'enableUserFraudCanvas&Enable user fraud Canvas Fingerprinting",default:\K!.(?=})&false&s&xpuiJs&1.2.13.656&1.2.63.394'
 'enableUserFraudCspViolation&Enable CSP violation detection",default:\K!.(?=})&false&s&xpuiJs&1.2.17.832&1.2.62.580'
 'enableUserFraudSignals&Enable user fraud signals",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751&1.2.62.580'
 'enableUserFraudVerification&Enable user fraud verification",default:\K!.(?=})&false&s&xpuiJs&1.2.3.1107&1.2.62.580'
 'enableUserFraudVerificationRequest&Enable the IAV component make api requests",default:\K!.(?=})&false&s&xpuiJs&1.2.5.954&1.2.62.580'
-'enableYourListeningUpsell&Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009'
+'enableYourListeningUpsell&Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.63.394'
 'hideUpgradeCTA&Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180'
 'logSentry&(this\.getStackTop\(\)\.client=.)&return;$1&&vendorXpuiJs&1.1.70.610&1.2.29.605'
 'logSentry2&sentry\.io&localhost.io&&xpuiJs&1.1.70.610'
@@ -878,7 +879,7 @@ expEx=(
 'enableClearAllDownloads&option in settings to clear all downloads",default:\K!1&true&s&xpuiJs&1.1.92.644&1.1.98.691'
 'enableConcertEntityPathfinderDWP&Use pathfinder for the concert entity page on DWP",default:\K!1&true&s&xpuiJs&1.2.25.1009&1.2.33.1039'
 'enableConcertGenres&concert genres on the live events feed",default:\K!1&true&s&xpuiJs&1.2.46.462&1.2.58.498'
-'enableConcertsCarouselForThisIsPlaylist&Concerts Carousel on This is Playlist",default:\K!1&true&s&xpuiJs&1.2.26.1180'
+'enableConcertsCarouselForThisIsPlaylist&Concerts Carousel on This is Playlist",default:\K!1&true&s&xpuiJs&1.2.26.1180&1.2.63.394'
 'enableConcertsForThisIsPlaylist&Tour Card on This is Playlist",default:\K!1&true&s&xpuiJs&1.2.11.911&1.2.62.580'
 'enableConcertsInSearch&concerts in search",default:\K!1&true&s&xpuiJs&1.2.33.1039'
 'enableConcertsInterested&Save . Retrieve feature for concerts",default:\K!1&true&s&xpuiJs&1.2.7.1264&1.2.62.580'
@@ -921,7 +922,7 @@ expEx=(
 'enableNewConcertLocationExperience&new concert location experience modal selector.",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.42.290'
 'enableNewEntityHeaders&New Entity Headers",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.28.0'
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.62.580'
-'enableNewOverlayScrollbars&new overlay scrollbars",default:\K!1&true&s&xpuiJs&1.2.58.492'
+#'enableNewOverlayScrollbars&new overlay scrollbars",default:\K!1&true&s&xpuiJs&1.2.58.492'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
 #'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.39.578'
