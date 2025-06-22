@@ -1,104 +1,90 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
 buildVer="1.2.66.447.g4e37e896"
+command -v perl >/dev/null || { echo -e "\n\033[0;31mError:\033[0m perl not found. Install it and retry.\n"; exit 1; }
 
-command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
+# Color setup
+clr='\033[0m'; green='\033[0;32m'; red='\033[0;31m'; yellow='\033[0;33m'
+[[ $(uname | tr '[:upper:]' '[:lower:]') == darwin* ]] && platformType='macOS' || platformType='Linux'
 
-case $(uname | tr '[:upper:]' '[:lower:]') in
-  darwin*) platformType='macOS' ;;
-        *) platformType='Linux' ;;
-esac
-
-clr='\033[0m'
-green='\033[0;32m'
-red='\033[0;31m'
-yellow='\033[0;33m'
-
+# Help function
 show_help() {
-  echo -e \
-"Options:
--B, --blockupdates     : block client auto-updates [macOS]
--c, --clearcache       : clear client app cache
--d, --devmode          : enable developer mode
--e, --noexp            : exclude all experimental features
--f, --force            : force SpotX-Bash to run
--h, --hide             : hide non-music on home screen
---help                 : print this help message
--i, --interactive      : enable interactive mode
---installdeb           : install latest client deb pkg on APT-based distros [Linux]
---installmac           : install latest supported client version [macOS]
--l, --lyricsbg         : set lyrics background color to black
---nocolor              : remove colors from SpotX-Bash output
--o, --oldui            : use old home screen UI
--p, --premium          : paid premium-tier subscriber
--P <path>              : set path to client
--S, --skipcodesign     : skip codesigning [macOS]
---stable               : use with '--installdeb' for stable branch [Linux]
---uninstall            : uninstall SpotX-Bash
--v, --version          : print SpotX-Bash version
--V <version>           : install specific client version [macOS]
-"
+cat <<EOF
+Options:
+-B|--blockupdates [macOS]     - Block auto-updates
+-c|--clearcache               - Clear app cache
+-d|--devmode                  - Enable developer mode
+-e|--noexp                    - Exclude experimental features
+-f|--force                    - Force execution
+-h|--hide                     - Hide non-music content
+--help                        - Show this help message
+-i|--interactive              - Enable interactive mode
+--installdeb [Linux]          - Install latest deb client
+--installmac [macOS]          - Install latest supported version
+-l|--lyricsbg                 - Black lyrics background
+--nocolor                     - Disable color output
+-o|--oldui                    - Use old UI
+-p|--premium                  - Premium user
+-P <path>                     - Set install path
+-S|--skipcodesign [macOS]     - Skip code signing
+--stable [Linux]              - Use stable branch
+--uninstall                   - Uninstall SpotX
+-v|--version                  - Show version
+-V <version> [macOS]          - Install specific version
+EOF
 }
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
-  case "${flag}" in
+  case "$flag" in
     -)
       case "${OPTARG}" in
-        blockupdates) [[ "${platformType}" == "macOS" ]] && blockUpdates='true' ;;
-        clearcache) clearCache='true' ;;
-        debug) debug='true' ;;
-        devmode) devMode='true' ;;
-        force) forceSpotx='true' ;;
+        blockupdates) [[ "$platformType" == "macOS" ]] && blockUpdates=1 ;;
+        clearcache) clearCache=1 ;;
+        debug) debug=1 ;;
+        devmode) devMode=1 ;;
+        force) forceSpotx=1 ;;
         help) show_help; exit 0 ;;
-        hide) hideNonMusic='true' ;;
-        installdeb) [[ "${platformType}" == "Linux" ]] && installDeb='true' ;;
-        installmac) [[ "${platformType}" == "macOS" ]] && installMac='true' ;;
-        interactive) interactiveMode='true' ;;
-        logo) logoVar='true' ;;
-        lyricsbg) lyricsBg='true' ;;
-        nocolor) unset clr green red yellow ;;
-        noexp) excludeExp='true' ;;
-        oldui) oldUi='true' ;;
-        premium) paidPremium='true' ;;
-        skipcodesign) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
-        stable) [[ "${platformType}" == "Linux" ]] && stableVar='true' ;;
-        uninstall) uninstallSpotx='true' ;;
-        version) verPrint='true' ;;
-        $(date +"%y%d%m%H:%M")) t='true' ;;
-        *) echo -e "${red}Error:${clr} '--""${OPTARG}""' not supported\n\n$(show_help)\n" >&2; exit 1 ;;
+        hide) hideNonMusic=1 ;;
+        installdeb) [[ "$platformType" == "Linux" ]] && installDeb=1 ;;
+        installmac) [[ "$platformType" == "macOS" ]] && installMac=1 ;;
+        interactive) interactiveMode=1 ;;
+        logo) logoVar=1 ;;
+        lyricsbg) lyricsBg=1 ;;
+        nocolor) unset clr red green yellow ;;
+        noexp) excludeExp=1 ;;
+        oldui) oldUi=1 ;;
+        premium) paidPremium=1 ;;
+        skipcodesign) [[ "$platformType" == "macOS" ]] && skipCodesign=1 ;;
+        stable) [[ "$platformType" == "Linux" ]] && stableVar=1 ;;
+        uninstall) uninstallSpotx=1 ;;
+        version) verPrint=1 ;;
+        *) echo -e "${red}Error:${clr} Unknown flag --${OPTARG}\n"; show_help; exit 1 ;;
       esac ;;
-    B) [[ "${platformType}" == "macOS" ]] && blockUpdates='true' ;;
-    c) clearCache='true' ;;
-    d) devMode='true' ;;
-    e) excludeExp='true' ;;
-    f) forceSpotx='true' ;;
-    F) forceVer="${OPTARG}"; clientVer="${forceVer}" ;;
-    h) hideNonMusic='true' ;;
-    i) interactiveMode='true' ;;
-    l) lyricsBg='true' ;;
-    o) oldUi='true' ;;
-    p) paidPremium='true' ;;
-    P) p="${OPTARG}"; installPath="${p}"; installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|') ;;
-    S) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
-    v) verPrint='true' ;;
-    V) [[ "${platformType}" == "macOS" ]] && { 
-         [[ "${OPTARG}" =~ ^1\.[12]\.[0-9]{1,2}\.[0-9]{3,}.*$ ]] && {
-           versionVar="${OPTARG}"
-           installMac='true'
-         } || {
-           echo -e "${red}Error:${clr} Invalid or unsupported version\n" >&2
-           exit 1
-         }
-       } || {
-         echo -e "${red}Error:${clr} SpotX-Bash does not support '-V' on Linux\n" >&2
-         exit 1
-       } ;;
-    \?) echo -e "${red}Error:${clr} '-""${OPTARG}""' not supported\n\n$(show_help)\n" >&2; exit 1 ;;
-    :) echo -e "${red}Error:${clr} '-""${OPTARG}""' requires additional argument\n\n$(show_help)\n" >&2; exit 1 ;;
+    B) [[ "$platformType" == "macOS" ]] && blockUpdates=1 ;;
+    c) clearCache=1 ;;
+    d) devMode=1 ;;
+    e) excludeExp=1 ;;
+    f) forceSpotx=1 ;;
+    F) forceVer="$OPTARG"; clientVer="$forceVer" ;;
+    h) hideNonMusic=1 ;;
+    i) interactiveMode=1 ;;
+    l) lyricsBg=1 ;;
+    o) oldUi=1 ;;
+    p) paidPremium=1 ;;
+    P) installPath="$OPTARG"; installOutput=$(echo "$installPath" | perl -pe 's|^$ENV{HOME}|~|') ;;
+    S) [[ "$platformType" == "macOS" ]] && skipCodesign=1 ;;
+    v) verPrint=1 ;;
+    V)
+      if [[ "$platformType" == "macOS" && "$OPTARG" =~ ^1\.[12]\.[0-9]{1,2}\.[0-9]{3,}.*$ ]]; then
+        versionVar="$OPTARG"; installMac=1
+      else
+        echo -e "${red}Error:${clr} Invalid or unsupported version\n"; exit 1
+      fi ;;
+    \?) echo -e "${red}Error:${clr} Invalid flag -${OPTARG}\n"; show_help; exit 1 ;;
+    :) echo -e "${red}Error:${clr} Missing argument for -${OPTARG}\n"; show_help; exit 1 ;;
   esac
 done
 
-gVer=$(echo "==QP9EkW0VzUS5kUVFlRKFDT1x2VZRXOplld41WW2dmMjhmSVxUWSNjY35UMMNnRXFmas1mWtlTVMllUzI2dOFDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
+gVer=$(echo "==QP9EkW0VzUS5kUVFlRKFDT1x2VZRXOplld41WW2dmMjhmSVxUWSNjY35UMMNnRXFmas1mWtlTVMllUzI2dOFDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY"| rev | base64 --decode | base64 --decode)
 sxbLiveVer=$(echo "=0zdHJWM1IDTyY1RaZHNq10ZjNlZnNnaJhXUpl0ZR5mYwpESjd2cU10aBNFUnF1Va9mTHRGaxckSnNHSJZnUHlUbZNUSwF1Va9mTHRGaxckSvF1VaVHbtpFbSdVSnlVaKdGOTtkcwwmW0V0VPRXQ6dlb1MEWyF1RYV3dxs0a4xGTjR3QaNWNDhlcRdEWvhTeKdWVtJGdBNkY5Z1Rjd2dIlUaw42YspVMadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
 sxbLive=$(eval "${sxbLiveVer}")
 sxbVer=$(echo ${buildVer} | perl -ne '/(.*)\./ && print "$1"')
@@ -116,173 +102,146 @@ echo "╚══█║█╔═╝ █║  █║  █║   █╔█╗╚═╝
 echo "████║█║   ╚███╔╝  █║  █╔╝ █╗  ███╔╝█║ █║████║█║ █║"
 echo "╚═══╝╚╝    ╚══╝   ╚╝  ╚╝  ╚╝  ╚══╝ ╚╝ ╚╝╚═══╝╚╝ ╚╝"
 echo 
-[[ "${logoVar}" ]] && exit 0
+[[ "$logoVar" ]] && exit 0
 
-command -v unzip >/dev/null || { echo -e "\n${red}Error:${clr} unzip command not found.\nInstall unzip on your system then try again.\n" >&2; exit 1; }
-command -v zip >/dev/null || { echo -e "\n${red}Error:${clr} zip command not found.\nInstall zip on your system then try again.\n" >&2; exit 1; }
+# Check unzip/zip
+for bin in unzip zip; do
+  command -v $bin >/dev/null || {
+    echo -e "\n${red}Error:${clr} '$bin' not found. Install it.\n"; exit 1;
+  }
+done
 
 macos_requirements_check() {
-  (("${OSTYPE:6:2}" < 15)) && {
-    echo -e "\n${red}Error:${clr} OS X 10.11+ required\n" >&2
-    exit 1
-  }
-  [[ -z "${skipCodesign+x}" ]] && {
-    command -v codesign >/dev/null || {
-      echo -e "\n${red}Error:${clr} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clr}\n" >&2
-      exit 1
-    }
-  }
+  [[ $(sw_vers -productVersion | cut -d. -f2) -lt 11 ]] && { echo -e "\n${red}Error:${clr} OS X 10.11+ required\n" >&2; exit 1; }
+  [[ -z "${skipCodesign+x}" ]] && command -v codesign >/dev/null || {
+    echo -e "\n${red}Error:${clr} codesign not found.\nInstall Xcode tools:\n${yellow}xcode-select --install${clr}\n" >&2; exit 1; }
 }
 
 macos_set_version() {
-  macOSVer=$(sw_vers -productVersion | cut -d '.' -f 1,2)
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} macOS ${macOSVer} detected"
-  [[ -z ${versionVar+x} ]] && {
-    [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && {
-      versionVar="1.1.89.862"
-      return
-    }
-    [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && {
-      versionVar="1.2.20.1218"
-      return
-    }
-    [[ "${macOSVer}" == "10.15" ]] && {
-      versionVar="1.2.37.701"
-      return
-    }
-    versionVar="${buildVer}"
-  }
-  [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && (($(ver "${versionVar}") > $(ver "1.1.89.862"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.11 or 10.12.\nPlease install version 1.1.89.862 or lower.\n" >&2
-    exit 1
-  }
-  [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && (($(ver "${versionVar}") > $(ver "1.2.20.1218"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.13 or 10.14.\nPlease install version 1.2.20.1218 or lower.\n" >&2
-    exit 1
-  }
-  [[ "${macOSVer}" == "10.15" ]] && (($(ver "${versionVar}") > $(ver "1.2.37.701"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.15.\nPlease install version 1.2.37.701 or lower.\n" >&2
-    exit 1
-  }
+  local v=$(sw_vers -productVersion | cut -d. -f1,2)
+  [[ $debug ]] && echo -e "${green}Debug:${clr} macOS $v detected"
+  declare -A arr=( ["10.11"]="1.1.89.862" ["10.12"]="1.1.89.862" ["10.13"]="1.2.20.1218" ["10.14"]="1.2.20.1218" ["10.15"]="1.2.37.701" )
+  versionVar="${versionVar:-${arr[$v]:-$buildVer}}"
+  [[ ${arr[$v]} && $(ver "$versionVar") -gt $(ver "${arr[$v]}") ]] && {
+    echo -e "${red}Error:${clr} $versionVar not supported on macOS $v.\nUse ${arr[$v]} or lower.\n" >&2; exit 1; }
 }
 
 macos_set_path() {
   [[ -z "${installPath+x}" ]] && {
-    appPath="/Applications/Spotify.app"
-    [[ -d "${HOME}${appPath}" ]] && { 
-      installPath="${HOME}/Applications"
-      installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|')
-      return
-    }
-    [[ -d "${appPath}" ]] && {
-      installPath="/Applications"
-      installOutput="${installPath}"
-      return
-    }
-    interactiveMode='true'
-    notInstalled='true'
-    installPath="/Applications"
-    installOutput="${installPath}"
-    echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
-  } || {
-    [[ -d "${installPath}/Spotify.app" ]] || {
-      echo -e "${red}Error:${clr} Spotify.app not found in the path set by '-P'.\nConfirm the directory and try again.\n" >&2
-      exit 1
-    }
-  }
+    for p in "$HOME/Applications" "/Applications"; do
+      [[ -d "$p/Spotify.app" ]] && { installPath="$p"; installOutput="${p/$HOME/~}"; return; }
+    done
+    interactiveMode=1; notInstalled=1; installPath="/Applications"; installOutput="/Applications"
+    echo -e "\n${yellow}Warning:${clr} Client not found. Interactive mode...\n" >&2
+  } || [[ ! -d "${installPath}/Spotify.app" ]] && {
+    echo -e "${red}Error:${clr} Spotify.app not in -P path.\n" >&2; exit 1; }
 }
 
 macos_autoupdate_check() {
-  autoupdatePath="${HOME}/Library/Application Support/Spotify/PersistentCache/Update"
-  [[ -d "${autoupdatePath}" && "$(ls -A "${autoupdatePath}")" ]] && {
-    rm -rf "${autoupdatePath}" 2>/dev/null
-    echo -e "${green}Notice:${clr} Deleted stock auto-update file waiting to be installed"
-  }
+  local p="$HOME/Library/Application Support/Spotify/PersistentCache/Update"
+  [[ -d "$p" && "$(ls -A "$p")" ]] && { rm -rf "$p" 2>/dev/null; echo -e "${green}Notice:${clr} Deleted auto-update file"; }
 }
 
 macos_prepare() {
   macos_requirements_check
   macos_set_version
-  archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} detected"
-  grab1=$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-  grab2=$(echo "=0zYTZ2ZzpWS4FVaJdWUuJGcKh0YnNHVNtWQTB1ZRdlWv50RkhWMHp0ZzhUS2J1RJ1WWDlEcRdlWv50RkhWMHp0bRdlW1xWbaxmUXl0ZZlmSnhzULZjSXZ2dJRET4NnbM5WSTZWeG1mV1lzVhpnSYplM0hkSpN2UMlDbU10N1knSpBjbjhmWGFmaKhVW3IVaJ5GMTZmeNpXZ1VFWmJzcuxEMod0S2N2QJxWNXx0Z312YsJESJhjQplUOGpWWop0MadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  grab3=$(eval "${grab2}")
-  fileVar=$(echo "${grab3}" | perl -ne '/\/([^\/]+\.tbz)/ && print "$1"')
-  [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
-  [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
+  archVar=$([[ $(sysctl -n machdep.cpu.brand_string) =~ Apple ]] && echo arm64 || echo x86_64)
+  [[ $debug ]] && echo -e "${green}Debug:${clr} $archVar detected"
+  grab2=$(echo "=0zYTZ2ZzpWS4FVaJdWUuJGcKh0YnNHVNtWQTB1ZRdlWv50RkhWMHp0bRdlW1xWbaxmUXl0ZZlmSnhzULZjSXZ2dJRET4NnbM5WSTZWeG1mV1lzVhpnSYplM0hkSpN2UMlDbU10N1knSpBjbjhmWGFmaKhVW3IVaJ5GMTZmeNpXZ1VFWmJzcuxEMod0S2N2QJxWNXx0Z312YsJESJhjQplUOGpWWop0MadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  fileVar=$(eval "$grab2" | perl -ne '/\/([^\/]+\.tbz)/ && print "$1"')
+  [[ $installMac ]] && installClient=1 && downloadVer=$(echo "$fileVar" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
+  [[ $downloadVer && $(ver "$downloadVer") -lt $(ver "1.1.59.710") ]] && { echo -e "${red}Error:${clr} $downloadVer not supported\n" >&2; exit 1; }
   macos_set_path
   macos_autoupdate_check
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Install directory: ${installOutput}\n"
-  appPath="${installPath}/Spotify.app"
-  appBinary="${appPath}/Contents/MacOS/Spotify"
-  appBak="${appBinary}.bak"
-  cachePath="${HOME}/Library/Caches/com.spotify.client"
-  snapshotBinary="${appPath}/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
-  xpuiPath="${appPath}/Contents/Resources/Apps"
-  [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clr} Codesigning has been skipped.\n" >&2 || true
+  [[ $debug ]] && echo -e "${green}Debug:${clr} Install dir: $installOutput\n"
+  appPath="$installPath/Spotify.app"
+  appBinary="$appPath/Contents/MacOS/Spotify"
+  appBak="$appBinary.bak"
+  cachePath="$HOME/Library/Caches/com.spotify.client"
+  snapshotBinary="$appPath/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
+  xpuiPath="$appPath/Contents/Resources/Apps"
+  [[ $skipCodesign ]] && echo -e "${yellow}Warning:${clr} Codesigning skipped.\n" >&2
 }
 
+
+
 linux_client_variant() {
-  [[ "${installPath}" == *"flatpak"* ]] && {
-    command -v flatpak >/dev/null && flatpak list | grep spotify >/dev/null && {
-      flatpakVer=$(LANG=C.UTF-8 flatpak info com.spotify.Client | grep Version: | perl -ne '/Version: (1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"')
-      [[ -z "${flatpakVer+x}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
-      cachePath=$(timeout 10 find /var/lib/flatpak/ $HOME/.var/app -type d -path "*com.spotify.Client/cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
-    }
+  # Flatpak detection (any distro)
+  if [[ "$installPath" == *flatpak* ]]; then
+    if command -v flatpak >/dev/null && flatpak list | grep -q spotify; then
+      flatpakVer=$(LANG=C.UTF-8 flatpak info com.spotify.Client 2>/dev/null | perl -ne '/Version:\s*(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g/ && print "$1"')
+      [[ -z "$flatpakVer" ]] && versionFailed=1 || { clientVer="$flatpakVer"; flatpakClient=1; }
+      cachePath=$(timeout 10 find /var/lib/flatpak/ "$HOME/.var/app" -type d -path "*com.spotify.Client/cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
+    fi
     return 0
-  }
-  [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* ]] && {
-    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
+  fi
+  # Arch/Community/Opt/Launcher/Usr-share
+  if [[ "$installPath" == *opt/spotify* || "$installPath" == *spotify-launcher* || "$installPath" == *usr/share/spotify* || "$installPath" == *lib/spotify* ]]; then
+    cachePath=$(timeout 10 find "$HOME/.cache/" -type d -path "*.cache/spotify*" ! -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
     return 0
-  }
+  fi
   return 0
 }
 
 linux_deb_prepare() {
-  command -v apt >/dev/null || { echo -e "${red}Error:${clear} Debian-based Linux distro with APT support is required." >&2; exit 1; }
-  installPath=/usr/share/spotify
-  installOutput="${installPath}"
-  linux_client_variant
-  installClient='true'
+  command -v apt >/dev/null || { echo -e "${red}Error:${clr} Debian/Ubuntu APT required." >&2; exit 1; }
+  installPath=/usr/share/spotify; installOutput="$installPath"; linux_client_variant; installClient=1
   grab1=$(echo "=0TP3xEd5ITW1tmbaBnUzI2dO5GT1o0MiBDbyMmdChlW5lTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-  [[ "${stableVar}" ]] && \
-  grab2=$(echo "==QP9cWS6ZlMahGdykFaCFDTwkFRaRnRXxUNKhVW1xWbZZXVXpVeadFT1lTbiZXVHJWaGdEZ6lTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode) || \
-  grab2=$(echo "==QPJl3YsR2VZJnTXlVU5MkTyE1VihWMTVWeG1mYwpkMMxmVtNWbxkmY2VjMM5WNXFGMOhlWwkTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  grab3=$(eval "${grab2}" 2>/dev/null)
-  grab4=$(echo "${grab3}" | grep -m 1 "^Filename: " | perl -pe 's/^Filename: //')
+  if [[ "$stableVar" ]]; then
+    grab2=$(echo "==QP9cWS6ZlMahGdykFaCFDTwkFRaRnRXxUNKhVW1xWbZZXVXpVeadFT1lTbiZXVHJWaGdEZ6lTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  else
+    grab2=$(echo "==QPJl3YsR2VZJnTXlVU5MkTyE1VihWMTVWeG1mYwpkMMxmVtNWbxkmY2VjMM5WNXFGMOhlWwkTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  fi
+  grab3=$(eval "$grab2" 2>/dev/null)
+  grab4=$(echo "$grab3" | grep -m 1 "^Filename: " | perl -pe 's/^Filename: //')
+  fileVar=$(basename "$grab4")
+  downloadVer=$(echo "$fileVar" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
   grab5="${grab1}${grab4}"
-  fileVar=$(basename "${grab4}")
-  downloadVer=$(echo "${fileVar}" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
-  [[ ! -f "${installPath}/Apps/xpui.spa" ]] && notInstalled='true'
+  [[ ! -f "${installPath}/Apps/xpui.spa" ]] && notInstalled=1
+}
+
+linux_arch_prepare() {
+  command -v pacman >/dev/null || { echo -e "${red}Error:${clr} Arch/Manjaro pacman required." >&2; exit 1; }
+  for p in "/usr/lib/spotify" "/opt/spotify" "/usr/share/spotify"; do
+    [[ -d "$p" && -f "$p/Apps/xpui.spa" ]] && { installPath="$p"; installOutput="$p"; break; }
+  done
+  [[ -z "$installPath" ]] && installPath="/usr/lib/spotify" && installOutput="$installPath"
+  linux_client_variant; installClient=1
+  [[ ! -f "${installPath}/Apps/xpui.spa" ]] && notInstalled=1
 }
 
 linux_no_client() {
-  command -v snap >/dev/null && snap list spotify &>/dev/null && {
-    echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\nIf another Spotify package is installed, set directory path with '-P' flag.\n" >&2
-    exit 1
-  }
-  command -v apt >/dev/null && { 
-    interactiveMode='true'
-    linux_deb_prepare
-    echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
-    return
-  }
-  echo -e "${red}Error:${clr} Client installation not found.\nInstall client or set directory path with '-P' flag.\n" >&2
-  command -v spicetify >/dev/null && echo -e "If client is installed but Spicetify has been applied,\nrun ${yellow}'spicetify restore'${clr} then try again.\n" >&2
+  if command -v snap &>/dev/null && snap list spotify &>/dev/null; then
+    echo -e "${red}Error:${clr} Snap client not supported. See FAQ.\nSet dir with '-P'.\n" >&2; exit 1
+  fi
+  if command -v apt &>/dev/null; then
+    interactiveMode=1; linux_deb_prepare
+    echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2; return
+  fi
+  if command -v pacman &>/dev/null; then
+    interactiveMode=1; linux_arch_prepare
+    echo -e "\n${yellow}Warning:${clr} Arch Linux detected. Starting interactive mode...\n" >&2; return
+  fi
+  echo -e "${red}Error:${clr} Client not found.\nSet directory with '-P'.\n" >&2
+  command -v spicetify &>/dev/null && echo -e "If Spicetify was used,\nrun ${yellow}'spicetify restore'${clr} and try again.\n" >&2
   exit 1
 }
 
 linux_search_path() {
   local timeout=6
-  local paths=("/opt" "/usr/share" "/var/lib/flatpak" "$HOME/.local/share" "/")
+  if command -v pacman >/dev/null && command -v flatpak >/dev/null; then
+    installPath=$(timeout $timeout find "$HOME/.var/app/com.spotify.Client" "/var/lib/flatpak/app/com.spotify.Client" \
+      -type f -path "*/spotify*Apps/*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+    [[ "$installPath" ]] && return 0
+  fi
+  local paths=("/opt" "/usr/share" "/var/lib/flatpak" "$HOME/.local/share" "/usr/lib" "/")
   for path in "${paths[@]}"; do
-    local path="${path}"
-    local timeLimit=$(($(date +%s) + timeout))
-    while (( $(date +%s) < "${timeLimit}" )); do
-      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-      [[ -n "${installPath}" ]] && return 0
-      pgrep -x find > /dev/null || break
+    local end=$(( $(date +%s) + timeout ))
+    while (( $(date +%s) < end )); do
+      installPath=$(find "$path" -type f -path "*/spotify*Apps/*" ! -path "*snapd/snap*" ! -path "*snap/spotify*" ! -path "*snap/bin*" \
+        -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+      [[ "$installPath" ]] && return 0
+      pgrep -x find >/dev/null || break
       sleep 1
     done
   done
@@ -290,323 +249,276 @@ linux_search_path() {
 }
 
 linux_set_path() {
-  [[ "${installDeb}" ]] && { linux_deb_prepare; return; }
+  [[ "$installDeb" ]] && { linux_deb_prepare; return; }
+  [[ "$installArch" ]] && { linux_arch_prepare; return; }
   [[ -z "${installPath+x}" ]] && {
-    echo -e "Searching for client directory...\n"
+    echo "Searching for client directory..."
     linux_search_path
-    [[ -d "${installPath}" ]] && {
-      installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|')
-      echo -e "Found client Directory: ${installOutput}\n"
+    if [[ -d "$installPath" ]]; then
+      installOutput=$(echo "$installPath" | perl -pe 's|^$ENV{HOME}|~|')
+      echo "Found client Directory: $installOutput"
       linux_client_variant
-    } || linux_no_client
+    else
+      linux_no_client
+    fi
     return
   }
-  [[ "${installPath}" == *"snapd/snap"* || "${installPath}" == *"snap/spotify"* || "${installPath}" == *"snap/bin"* ]] && {
-    echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\n" >&2
-    exit 1
-  }
-  [[ -f "${installPath}/Apps/xpui.spa" ]] && {
-    echo -e "Using client Directory: ${installOutput}\n"
+  if [[ "$installPath" == *"snapd/snap"* || "$installPath" == *"snap/spotify"* || "$installPath" == *"snap/bin"* ]]; then
+    echo -e "${red}Error:${clr} Snap client not supported. See FAQ.\n" >&2; exit 1
+  fi
+  if [[ -f "$installPath/Apps/xpui.spa" ]]; then
+    echo "Using client Directory: $installOutput"
     linux_client_variant
-  } || {
-    echo -e "${red}Error:${clr} Client not found in path set by '-P'.\nConfirm directory and try again.\n" >&2
-    exit 1
-  }
+  else
+    echo -e "${red}Error:${clr} Client not found in -P path.\nCheck directory and retry.\n" >&2; exit 1
+  fi
 }
 
 linux_prepare() {
-  archVar="x86_64"
+  archVar="$(uname -m)"
   linux_set_path
-  appPath="${installPath}"
-  appBinary="${appPath}/spotify"
-  appBak="${appBinary}.bak"
-  snapshotBinary="${appPath}/v8_context_snapshot.bin"
-  xpuiPath="${appPath}/Apps"
-  [[ -z "${cachePath}" ]] && cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(cat /etc/*release | grep PRETTY_NAME | cut -d '"' -f2)"
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(uname -m) detected"
-  [[ "${debug}" ]] && command -v apt >/dev/null && echo -e "${green}Debug:${clr} APT detected"
-  [[ "${debug}" ]] && command -v flatpak >/dev/null && echo -e "${green}Debug:${clr} flatpak detected"
-  [[ "${debug}" ]] && command -v snap >/dev/null && echo -e "${green}Debug:${clr} snap detected"
-  [[ "${debug}" ]] && { [[ "${cachePath}" ]] && { cacheOutput=$(echo "${cachePath}" | perl -pe 's|^$ENV{HOME}|~|'); echo -e "${green}Debug:${clr} Cache directory: ${cacheOutput}\n"; } || echo; }
+  appPath="$installPath"
+  appBinary="$appPath/spotify"
+  appBak="$appBinary.bak"
+  snapshotBinary="$appPath/v8_context_snapshot.bin"
+  xpuiPath="$appPath/Apps"
+  [[ -z "$cachePath" ]] && cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" ! -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
+  [[ "$debug" ]] && echo -e "${green}Debug:${clr} $(grep PRETTY_NAME /etc/*release | cut -d '"' -f2)"
+  [[ "$debug" ]] && echo -e "${green}Debug:${clr} $archVar detected"
+  [[ "$debug" ]] && command -v apt >/dev/null && echo -e "${green}Debug:${clr} APT detected"
+  [[ "$debug" ]] && command -v flatpak >/dev/null && echo -e "${green}Debug:${clr} flatpak detected"
+  [[ "$debug" ]] && command -v snap >/dev/null && echo -e "${green}Debug:${clr} snap detected"
+  [[ "$debug" ]] && [[ "$cachePath" ]] && cacheOutput=$(echo "$cachePath" | perl -pe 's|^$ENV{HOME}|~|') && echo -e "${green}Debug:${clr} Cache dir: $cacheOutput\n"
 }
 
+
 existing_client_ver() {
-  [[ "${platformType}" == "macOS" ]] && {
-    [[ -z "${installMac+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" ]] && {
-      [[ -f "${appPath}/Contents/Info.plist" ]] && {
-        clientVer=$(defaults read "${appPath}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -pe 's/\.g[0-9a-f]+//')
-        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
-      } || versionFailed='true'
-    }
+  if [[ $platformType == "macOS" ]]; then
+    [[ -z $installMac && -z $notInstalled && -z $forceVer ]] && \
+    { [[ -f $appPath/Contents/Info.plist ]] && \
+      clientVer=$(defaults read "$appPath/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -pe 's/\.g[0-9a-f]+//'); \
+      [[ -z $clientVer ]] && versionFailed=true; } || versionFailed=true
     return
-  }
-  [[ "${platformType}" == "Linux" ]] && {
-    [[ -z "${installClient+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" && -z "${flatpakClient}" ]] && {
-      "${appBinary}" --version >/dev/null 2>/dev/null && {
-        clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev)
-        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
-      } || versionFailed='true'
-    }
-  }
+  fi
+  if [[ $platformType == "Linux" ]]; then
+    [[ -z $installClient && -z $notInstalled && -z $forceVer && -z $flatpakClient ]] && \
+    { $appBinary --version &>/dev/null && \
+      clientVer=$($appBinary --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev); \
+      [[ -z $clientVer ]] && versionFailed=true; } || versionFailed=true
+  fi
 }
 
 client_version_output() {
-  echo -e "Latest supported version: ${sxbVer}"
-  [[ "${forceVer}" ]] && {
-    echo -e "Forced client version: ${forceVer}\n"; return
-  }
-  [[ "${notInstalled}" || "${versionFailed}" ]] && [[ -z "${installClient+x}" ]] && {
-    echo -e "Detected client version: ${red}N/A${clr}\n"; return
-  }
-  [[ "${installClient}" ]] && (($(ver "${downloadVer}") <= $(ver "${sxbVer}") && $(ver "${downloadVer}") > $(ver "0"))) && {
-    echo -e "Requested client version: ${green}${downloadVer}${clr}\n"; return
-  }
-  [[ "${installClient}" ]] && (($(ver "${downloadVer}") > $(ver "${sxbVer}"))) && {
-    echo -e "Requested client version: ${red}${downloadVer}${clr}\n"; return
-  }
-  (($(ver "${clientVer}") <= $(ver "${sxbVer}") && $(ver "${clientVer}") > $(ver "0"))) && {
-    echo -e "Detected client version: ${green}${clientVer}${clr}\n"; return
-  }
-  (($(ver "${clientVer}") > $(ver "${sxbVer}"))) && {
-    echo -e "Detected client version: ${red}${clientVer}${clr}\n"; return
-  }
+  echo -e "Latest supported version: $sxbVer"
+  [[ $forceVer ]] && { echo -e "Forced client version: $forceVer\n"; return; }
+  [[ $notInstalled || $versionFailed ]] && [[ -z $installClient ]] && { echo -e "Detected client version: ${red}N/A${clr}\n"; return; }
+  if [[ $installClient ]]; then
+    if (( $(ver "$downloadVer") <= $(ver "$sxbVer") && $(ver "$downloadVer") > $(ver "0") )); then
+      echo -e "Requested client version: ${green}${downloadVer}${clr}\n"; return
+    elif (( $(ver "$downloadVer") > $(ver "$sxbVer") )); then
+      echo -e "Requested client version: ${red}${downloadVer}${clr}\n"; return
+    fi
+  fi
+  if (( $(ver "$clientVer") <= $(ver "$sxbVer") && $(ver "$clientVer") > $(ver "0") )); then
+    echo -e "Detected client version: ${green}${clientVer}${clr}\n"
+  elif (( $(ver "$clientVer") > $(ver "$sxbVer") )); then
+    echo -e "Detected client version: ${red}${clientVer}${clr}\n"
+  fi
 }
 
 run_prepare() {
-  [[ "${platformType}" == "macOS" ]] && macos_prepare || linux_prepare
-  xpuiBak="${xpuiPath}/xpui.bak"
-  xpuiDir="${xpuiPath}/xpui"
-  xpuiSpa="${xpuiPath}/xpui.spa"
-  dwpPanelSectionJs="${xpuiDir}/dwp-panel-section.js"
-  homeHptoJs="${xpuiDir}/home-hpto.js"
-  indexHtml="${xpuiDir}/index.html"
-  vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
-  xpuiCss="${xpuiDir}/xpui.css"
-  xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
-  xpuiJs="${xpuiDir}/xpui.js"
-  xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
-  existing_client_ver
-  client_version_output
-  ver_check
-  command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
-  [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
+  [[ $platformType == "macOS" ]] && macos_prepare || linux_prepare
+  xpuiBak="$xpuiPath/xpui.bak"; xpuiDir="$xpuiPath/xpui"; xpuiSpa="$xpuiPath/xpui.spa"
+  dwpPanelSectionJs="$xpuiDir/dwp-panel-section.js"; homeHptoJs="$xpuiDir/home-hpto.js"
+  indexHtml="$xpuiDir/index.html"; vendorXpuiJs="$xpuiDir/vendor~xpui.js"
+  xpuiCss="$xpuiDir/xpui.css"; xpuiDesktopModalsJs="$xpuiDir/xpui-desktop-modals.js"
+  xpuiJs="$xpuiDir/xpui.js"; xpuiSnapshotJs="$xpuiDir/xpui-snapshot.js"
+  existing_client_ver; client_version_output; ver_check
+  pgrep -f '[sS]potify' 2>/dev/null | xargs kill -9 2>/dev/null
+  [[ -f $appBinary ]] && cleanAB=$(perl -ne '$found1=1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2=1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END{print "true" if $found1&&$found2}' "$appBinary")
 }
 
 check_write_permission() {
-  local paths=("$@")
-  for path in "${paths[@]}"; do
-    local path="${path}"
-    [[ ! -w "${path}" ]] && {
+  for path in "$@"; do
+    [[ ! -w $path ]] && {
       sudo -n true 2>/dev/null || {
-        echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in client directory.\nRequesting sudo permission..." >&2
-        sudo -v || {
-          echo -e "\n${red}Error:${clr} SpotX-Bash was not given sudo permission. Exiting...\n" >&2
-          exit 1
-        }
+        echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission. Requesting sudo..." >&2
+        sudo -v || { echo -e "\n${red}Error:${clr} No sudo. Exiting...\n" >&2; exit 1; }
       }
-      sudo chmod -R a+wr "${appPath}"
+      sudo chmod -R a+wr "$appPath"
     }
   done
 }
 
 uninstall_spotx() {
-  rm "${appBinary}" 2>/dev/null
-  mv "${appBak}" "${appBinary}"
-  rm "${xpuiSpa}" 2>/dev/null
-  mv "${xpuiBak}" "${xpuiSpa}"
-  rm -rf "${xpuiDir}" 2>/dev/null
+  rm "$appBinary" 2>/dev/null; mv "$appBak" "$appBinary"
+  rm "$xpuiSpa" 2>/dev/null; mv "$xpuiBak" "$xpuiSpa"
+  rm -rf "$xpuiDir" 2>/dev/null
 }
 
 run_uninstall_check() {
-  [[ "${uninstallSpotx}" ]] && {
-    [[ ! -f "${appBak}" || ! -f "${xpuiBak}" ]] && {
-      echo -e "${red}Error:${clr} No backup found, exiting...\n" >&2
-      exit 1
-    }
-    check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
-    [[ "${cleanAB}" ]] && {
-      echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
-      rm "${appBak}" 2>/dev/null
-      rm "${xpuiBak}" 2>/dev/null
-    } || {
-      uninstall_spotx
-    }
-    printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n\n"
-    exit 0
-  }
+  [[ $uninstallSpotx ]] || return
+  [[ ! -f $appBak || ! -f $xpuiBak ]] && { echo -e "${red}Error:${clr} No backup found, exiting...\n" >&2; exit 1; }
+  check_write_permission "$appPath" "$appBinary" "$xpuiPath" "$xpuiSpa"
+  if [[ $cleanAB ]]; then
+    echo -e "${yellow}Warning:${clr} SpotX-Bash detected abnormal behavior. Reinstall may be needed...\n" >&2
+    rm "$appBak" "$xpuiBak" 2>/dev/null
+  else
+    uninstall_spotx
+  fi
+  printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n\n"
+  exit 0
 }
 
 perlvar() {
-  { local e; e=$($perlVar 'BEGIN { $m = 0; $c = 0 } $c += s&'"${a[1]}"'&'"${a[2]}"'&'"${a[3]}"' and $m = 1; END { print "$m,$c" }' "${p}")
-    local s="$?"
-    local m=$(echo "${e}" | cut -d',' -f1)
-    local c=$(echo "${e}" | cut -d',' -f2)
-    { { [[ "${s}" != 0 && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${red}Error:${clr} ${a[0]} invalid entry"; } ||
-      { [[ "${m}" == 0 && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${yellow}Warning:${clr} ${a[0]} missing"; } ||
-      { [[ "${a[9]}" && "${c}" != "${a[9]}" && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${yellow}Warning:${clr} ${a[0]} ${a[9]}, ${c}"; }
-    }
-  }
+  local e s m c
+  e=$($perlVar 'BEGIN{$m=0;$c=0}$c+=s&'"${a[1]}"'&'"${a[2]}"'&'"${a[3]}"'and$m=1;END{print"$m,$c"}' "$p")
+  s=$?; m=${e%%,*}; c=${e##*,}
+  [[ $s != 0 && $debug && $devMode && $t ]] && echo -e "${red}Error:${clr} ${a[0]} invalid entry"
+  [[ $m == 0 && $debug && $devMode && $t ]] && echo -e "${yellow}Warning:${clr} ${a[0]} missing"
+  [[ ${a[9]} && $c != ${a[9]} && $debug && $devMode && $t ]] && echo -e "${yellow}Warning:${clr} ${a[0]} ${a[9]}, $c"
 }
 
 read_yn() {
-  local yn
-  while : ; do
+  local yn; while :; do
     read -rp "$*" yn
-    case "$yn" in
-      [Yy]* ) return 0 ;;
-      [Nn]* ) return 1 ;;
-          * ) echo "Please enter [y]es or [n]o." ;;
-    esac
+    case $yn in [Yy]*) return 0 ;; [Nn]*) return 1 ;; *) echo "Please enter [y]es or [n]o." ;; esac
   done
 }
 
 run_interactive_check() {
-  [[ "${interactiveMode}" ]] && {
-    printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n\n"
-    [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
-    [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
-    [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
-    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
-    [[ -d "${cachePath}" ]] && read_yn "Clear client app cache? " && clearCache='true'
-    (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
-    (($(ver "${clientVer}") > $(ver "1.1.99.878"))) && { read_yn "Enable developer mode? " && devMode='true'; }
-    (($(ver "${clientVer}") >= $(ver "1.1.70.610"))) && { read_yn "Hide non-music categories on home screen? " && hideNonMusic='true'; }
-    (($(ver "${clientVer}") >= $(ver "1.2.0.1165"))) && { read_yn "Set lyrics background color to black? " && lyricsBg='true'; }
-    echo
-  }
+  [[ $interactiveMode ]] || return
+  printf "\xE2\x9C\x94\x20Started interactive mode [enter y/n]\n\n"
+  if [[ $platformType == "macOS" ]]; then
+    [[ -z $clientVer ]] && clientVer="$versionVar"
+    [[ -z $installMac ]] && { read_yn "Download & install client $versionVar? " && installClient=true installMac=true; }
+    read_yn "Block client auto-updates? " && blockUpdates=true
+  elif [[ $platformType == "Linux" ]]; then
+    if command -v pacman &>/dev/null && [[ -z $installArch && $notInstalled ]]; then
+      echo -e "Arch Linux detected!"
+      read_yn "Install Spotify via Arch repo (spotify-launcher)? " && installClient=true installArch=true clientVer="repo" \
+        || { read_yn "Install via Flatpak? " && installClient=true installFlatpak=true clientVer="flatpak"; }
+    fi
+    [[ -z $installDeb && $notInstalled && ! $installArch && ! $installFlatpak ]] && \
+      { read_yn "Download & install client $downloadVer deb pkg? " && installDeb=true clientVer="$downloadVer" || installClient=false; }
+  fi
+  [[ -d $cachePath ]] && read_yn "Clear client app cache? " && clearCache=true
+  (( $(ver "$clientVer") >= $(ver "1.1.93.896") && $(ver "$clientVer") <= $(ver "1.2.13.661") )) && { read_yn "Enable new home screen UI? " || oldUi=true; }
+  (( $(ver "$clientVer") > $(ver "1.1.99.878") )) && { read_yn "Enable developer mode? " && devMode=true; }
+  (( $(ver "$clientVer") >= $(ver "1.1.70.610") )) && { read_yn "Hide non-music categories on home screen? " && hideNonMusic=true; }
+  (( $(ver "$clientVer") >= $(ver "1.2.0.1165") )) && { read_yn "Set lyrics background color to black? " && lyricsBg=true; }
+  echo
 }
 
 sudo_check() {
-  command -v sudo &> /dev/null || { 
-    echo -e "\n${red}Error:${clr} sudo command not found. Install sudo or run this script as root.\n" >&2
+  command -v sudo &>/dev/null || {
+    echo -e "\n${red}Error:${clr} sudo not found. Please install sudo (or use root)."
+    [[ $(command -v doas) ]] && echo -e "${yellow}Hint:${clr} 'doas' detected. Edit the script to use it if preferred.\n"
     exit 1
   }
-  sudo -n true &> /dev/null || {
-    echo -e "This script requires sudo permission to install the client.\nPlease enter your sudo password..."
-    sudo -v || { 
-      echo -e "\n${red}Error:${clr} Failed to obtain sudo permission. Exiting...\n" >&2
-      exit 1
-    }
+  sudo -n true &>/dev/null || {
+    echo -e "Script needs sudo permission. Please enter your password..."
+    sudo -v || { echo -e "\n${red}Error:${clr} Failed to obtain sudo. Exiting...\n" >&2; exit 1; }
   }
 }
+
+
 
 linux_working_dir() { [[ -d "/tmp" ]] && workDir="/tmp" || workDir="$HOME"; }
 
 linux_deb_install() {
-  sudo_check
-  linux_working_dir
+  sudo_check; linux_working_dir
   lc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJNlTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   lc02=$(echo "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ1Z1VhNnTFlUOKhkYqRHSKZTSzIWeKhlU5I1ValHdIpUd4xWSnV1VMdGOHFmaWdUS3I0QmhjQplUMJdVW5R2RKlWQplUOKhVWXZ1RiBnWyU2a4MlZ5x2RSJnSzI2M0hkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  eval "${lc01}"; eval "${lc02}"
-  printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
-  [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
-  [[ -f "${xpuiBak}" ]] && sudo rm "${xpuiBak}" 2>/dev/null
-  [[ -d "${xpuiDir}" ]] && sudo rm -rf "${xpuiDir}" 2>/dev/null
+  eval "$lc01"; eval "$lc02"
+  printf "✔ Downloaded and installing Spotify\n"
+  sudo rm -f "${appBak}" "${xpuiBak}"; sudo rm -rf "${xpuiDir}"
   sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || {
-    sudo apt-get -f install -y &>/dev/null || {
-      rm "${workDir}/${fileVar}" 2>/dev/null
-      echo -e "\n${red}Error:${clr} Failed to install missing dependencies. Exiting...\n" >&2
-      exit 1
-    }
-  } && sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || {
-    rm "${workDir}/${fileVar}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
-    exit 1
+    sudo apt-get -f install -y &>/dev/null || { rm "${workDir}/${fileVar}"; echo -e "\n${red}Error:${clr} Failed to install missing dependencies. Exiting...\n"; exit 1; }
   }
-  printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
-  rm "${workDir}/${fileVar}" 2>/dev/null
+  sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || { rm "${workDir}/${fileVar}"; echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n"; exit 1; }
+  printf "✔ Installed in '${installOutput}'\n"
+  rm -f "${workDir}/${fileVar}"
   clientVer=$(echo "${fileVar}" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
   unset notInstalled versionFailed
 }
 
+linux_arch_install() {
+  sudo_check; linux_working_dir
+  # Use Flatpak if installed and active
+  if command -v flatpak >/dev/null && flatpak list | grep -qw com.spotify.Client; then
+    echo -e "${green}Notice:${clr} Flatpak Spotify already installed.\n"; return 0
+  fi
+  # Otherwise, install from community repo
+  if ! pacman -Qq spotify-launcher &>/dev/null; then
+    echo -e "Installing spotify-launcher from Arch Community repo..."
+    sudo pacman -Sy --noconfirm spotify-launcher || { echo -e "\n${red}Error:${clr} Failed to install spotify-launcher.\n"; exit 1; }
+  fi
+  printf "✔ Installed 'spotify-launcher' from community repo\n"
+  sudo rm -f "${appBak}" "${xpuiBak}"; sudo rm -rf "${xpuiDir}"
+  unset notInstalled versionFailed
+}
+
 macos_client_install() {
-  [[ ! -w "${installPath}" ]] && {
-    echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
-    exit 1
-  }
+  [[ ! -w "${installPath}" ]] && { echo -e "${red}Error:${clr} No write permission in ${installOutput}.\n"; exit 1; }
   mc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJlXTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
   mc02=$(echo "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1RJBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50Vad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzRSZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  eval "${mc01}"; eval "${mc02}"
-  printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
-  rm -rf "${appPath}" 2>/dev/null
-  mkdir "${appPath}"
-  tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled versionFailed || {
-    rm "$HOME/Downloads/${fileVar}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
-    exit 1
-  }
-  printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
+  eval "$mc01"; eval "$mc02"
+  printf "✔ Downloaded and installing Spotify\n"
+  rm -rf "${appPath}"; mkdir "${appPath}"
+  tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled versionFailed || { rm "$HOME/Downloads/${fileVar}"; echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n"; exit 1; }
+  printf "✔ Installed in '${installOutput}'\n"
   rm "$HOME/Downloads/${fileVar}"
   clientVer=$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')
 }
 
 run_install_check() {
-  [[ "${installClient}" ]] && {
-    [[ "${installDeb}" ]] && linux_deb_install
-    [[ "${installMac}" ]] && macos_client_install
-  }
+  [[ $installClient ]] || return
+  [[ $installDeb ]] && linux_deb_install
+  [[ $installArch ]] && linux_arch_install
+  [[ $installMac ]] && macos_client_install
 }
 
 run_cache_check() {
-  [[ "${clearCache}" ]] && {
-    rm -rf "${cachePath}/Browser" 2>/dev/null
-    rm -rf "${cachePath}/Data" 2>/dev/null
-    rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
-    rm -rf "${cachePath}/public.ldb" 2>/dev/null
-    rm "${cachePath}/LocalPrefs.json" 2>/dev/null
-    printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
+  [[ $clearCache ]] && {
+    rm -rf "${cachePath}/Browser" "${cachePath}/Data" "${cachePath}/Default/Local Storage/leveldb" "${cachePath}/public.ldb"
+    rm -f "${cachePath}/LocalPrefs.json"
+    printf "✔ Cleared app cache\n"
   }
 }
 
 final_setup_check() {
-  [[ "${notInstalled}" ]] && { echo -e "${red}Error:${clr} Client not found\n" >&2; exit 1; }
-  [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified client installation!\nReinstall client then try again.\n" >&2; exit 1; }
-  [[ "${clientVer}" ]] && (($(ver "${clientVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${clientVer} not supported by SpotX-Bash\n" >&2; exit 1; }
+  [[ $notInstalled ]] && { echo -e "${red}Error:${clr} Client not found\n"; exit 1; }
+  [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified client install!\nReinstall and try again.\n"; exit 1; }
+  [[ $clientVer && $(ver "$clientVer") -lt $(ver "1.1.59.710") ]] && { echo -e "${red}Error:${clr} $clientVer not supported by SpotX-Bash\n"; exit 1; }
 }
 
 perlVar() {
-  local A=("$@")
-  for cmd in "${A[@]}"; do 
-    IFS='&' read -r -a a <<< "${cmd}"
-    local f="${a[4]}"
-    local p="${!f}"
-    [[ ! -f "${p}" && "${debug}" && "${devMode}" && "${t}" ]] && {
-      echo -e "${red}Error:${clr} ${a[0]} invalid entry"
-      continue
-    }
-    { { [[ -z "${a[5]}" ]] || (( $(ver "${clientVer}") >= $(ver "${a[5]}") )); } &&
-      { [[ -z "${a[6]}" ]] || (( $(ver "${clientVer}") <= $(ver "${a[6]}") )); } &&
-      { [[ -z "${a[7]}" ]] || [[ "${a[7]}" =~ (^|\|)"${platformType}"($|\|) ]]; } &&
-      { [[ -z "${a[8]}" ]] || [[ "${a[8]}" =~ (^|\|)"${archVar}"($|\|) ]]; }
-    } && perlvar "${xpuiSpa}"
+  local A=("$@"); for cmd in "${A[@]}"; do
+    IFS='&' read -r -a a <<< "${cmd}"; local f="${a[4]}"; local p="${!f}"
+    [[ ! -f "$p" && $debug && $devMode && $t ]] && { echo -e "${red}Error:${clr} ${a[0]} invalid entry"; continue; }
+    { [[ -z "${a[5]}" ]] || (( $(ver "$clientVer") >= $(ver "${a[5]}") )); } &&
+    { [[ -z "${a[6]}" ]] || (( $(ver "$clientVer") <= $(ver "${a[6]}") )); } &&
+    { [[ -z "${a[7]}" ]] || [[ "${a[7]}" =~ (^|\|)"${platformType}"($|\|) ]]; } &&
+    { [[ -z "${a[8]}" ]] || [[ "${a[8]}" =~ (^|\|)"${archVar}"($|\|) ]]; } &&
+    perlvar "${xpuiSpa}"
   done
 }
 
 xpui_detect() {
-  [[ (-f "${appBak}" || -f "${xpuiBak}") && "${cleanAB}" ]] && {
-    rm "${appBak}" 2>/dev/null; rm "${xpuiBak}" 2>/dev/null 
-    cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"
-    printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    return
-  }
-  [[ (-f "${appBak}" || -f "${xpuiBak}") && "${forceSpotx}" ]] && {
+  [[ (-f "${appBak}" || -f "${xpuiBak}") && $cleanAB ]] && { rm -f "${appBak}" "${xpuiBak}"; cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"; printf "✔ Created backup\n"; return; }
+  [[ (-f "${appBak}" || -f "${xpuiBak}") && $forceSpotx ]] && {
     [[ -f "${appBak}" ]] && { rm "${appBinary}"; cp "${appBak}" "${appBinary}"; }
     [[ -f "${xpuiBak}" ]] && { rm "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
-    printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    return
+    printf "✔ Detected & restored backup\n"; return
   }
   [[ (-f "${appBak}" || -f "${xpuiBak}") && -z "${forceSpotx+x}" ]] && {
-    xpuiSkip='true'
-    printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    echo -e "\n${yellow}Warning:${clr} SpotX-Bash has already been installed." >&2
-    echo -e "Use the '-f' flag to force SpotX-Bash to run.\n" >&2
-    return
+    xpuiSkip=true; printf "✔ Detected backup\n"
+    echo -e "\n${yellow}Warning:${clr} SpotX-Bash already installed.\nUse '-f' to force re-run.\n"; return
   }
-  cp "${xpuiSpa}" "${xpuiBak}"
-  cp "${appBinary}" "${appBak}"
-  printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+  cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"; printf "✔ Created backup\n"
 }
+
 
 snapshot_check() {
   START_XM="76006100720020005F005F007700650062007000610063006B005F006D006F00640075006C00650073005F005F003D007B00"
