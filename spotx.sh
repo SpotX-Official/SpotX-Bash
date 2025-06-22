@@ -372,7 +372,9 @@ run_uninstall_check() {
 
 perlvar() {
   local e s m c
-  e=$($perlVar 'BEGIN{$m=0;$c=0}$c+=s&'"${a[1]}"'&'"${a[2]}"'&'"${a[3]}"'and$m=1;END{print"$m,$c"}' "$p")
+  # Fallback to 'g' if ${a[3]} is empty
+  local perl_mod=${a[3]:-g}
+  e=$($perlVar 'BEGIN{$m=0;$c=0} $c += s&'"${a[1]}"'&'"${a[2]}"'&'"$perl_mod"'g; $m=1 if $c; END{print "$m,$c"}' "$p")
   s=$?; m=${e%%,*}; c=${e##*,}
   [[ $s != 0 && $debug && $devMode && $t ]] && echo -e "${red}Error:${clr} ${a[0]} invalid entry"
   [[ $m == 0 && $debug && $devMode && $t ]] && echo -e "${yellow}Warning:${clr} ${a[0]} missing"
