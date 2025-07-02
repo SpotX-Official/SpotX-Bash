@@ -12,7 +12,7 @@
 <center>
     <h4 align="center">Adblock for the Spotify desktop client on Linux & macOS</h4>
     <p align="center">
-        <strong>Latest supported version:</strong> 1.2.67.557.g2d9c92d2
+        <strong>Latest supported version:</strong> 1.2.67.560.g46a15f6b
     </p> 
 </center>
 
