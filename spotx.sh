@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.67.560.g46a15f6b"
+buildVer="1.2.68.525.g48fbf8fd"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -946,6 +946,7 @@ expEx=(
 'enablePodcastDescriptionAutomaticLinkification&Linkifies anything looking like a url in a podcast description.",default:\K!1&true&s&xpuiJs&1.2.19.937'
 'enablePremiumUserForMiniPlayer&premium user flag for mini player",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enablePrereleaseRadar&Show a curated list of upcoming albums to a user",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.45.454'
+'enableProgressBarEpisodeChapters&pisode chapters markers in the progress bar",default:\K!1&true&s&xpuiJs&1.2.68.525'
 'enableQueueOnRightPanel&Enable Queue on the right panel.",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180&1.2.61.443'
 'enableQueueOnRightPanelAnimations&animations for Queue on the right panel.",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985&1.2.50.335'
 'enableReactQueryPersistence&React Query persistence",default:\K!.(?=})&true&s&xpuiJs&1.2.30.1135'
