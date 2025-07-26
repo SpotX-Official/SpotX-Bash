@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.69.448.ge76b8882"
+buildVer="1.2.69.449.gfda8591a"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
