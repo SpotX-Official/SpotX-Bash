@@ -28,6 +28,9 @@
 - Install latest desktop client on APT-based distros (Linux)
 - Supports all Linux distros and OS X/macOS 10.11+
 
+### Dependencies:
+- zip (Arch based distros like CachyOS may not include this by default)
+
 ### Usage:
 
 - Run the following command in terminal:
