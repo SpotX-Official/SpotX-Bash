@@ -280,7 +280,7 @@ linux_search_path() {
     local path="${path}"
     local timeLimit=$(($(date +%s) + timeout))
     while (( $(date +%s) < "${timeLimit}" )); do
-      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
       [[ -n "${installPath}" ]] && return 0
       pgrep -x find > /dev/null || break
       sleep 1
