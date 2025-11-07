@@ -137,6 +137,7 @@ macos_requirements_check() {
 macos_set_version() {
   macOSVer=$(sw_vers -productVersion | cut -d '.' -f 1,2)
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} macOS ${macOSVer} detected"
+  [[ $macOSVer =~ ^(1[1-9]|[2-9][0-9])\. ]] && macOSVer=${macOSVer%%.*}
   [[ -z ${versionVar+x} ]] && {
     [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && {
       versionVar="1.1.89.862"
@@ -148,6 +149,10 @@ macos_set_version() {
     }
     [[ "${macOSVer}" == "10.15" ]] && {
       versionVar="1.2.37.701"
+      return
+    }
+    [[ "${macOSVer}" == "11" ]] && {
+      versionVar="1.2.66.447"
       return
     }
     versionVar="${buildVer}"
@@ -162,6 +167,10 @@ macos_set_version() {
   }
   [[ "${macOSVer}" == "10.15" ]] && (($(ver "${versionVar}") > $(ver "1.2.37.701"))) && {
     echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.15.\nPlease install version 1.2.37.701 or lower.\n" >&2
+    exit 1
+  }
+  [[ "${macOSVer}" == "11" ]] && (($(ver "${versionVar}") > $(ver "1.2.66.447"))) && {
+    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 11.\nPlease install version 1.2.66.447 or lower.\n" >&2
     exit 1
   }
 }
