@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.75.510.g8f748905"
+buildVer="1.2.77.357.g6a28e474"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -770,7 +770,7 @@ freeEx=(
 )
 devEx=(
 'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{4}&\xB8\x03\x00\x00\x00&s&appBinary&1.1.84.716'
-'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F\x10\x11\x12\x13]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F\x10\x11\x12\x13]\x91\xE2.[\x02-\x0F\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF5\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
+'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F\x10-\x19]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F\x10-\x19]\x91\xE2.[\x02-\x0F\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF5\xF7\xF8]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
 'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644&1.2.59.518'
 'enableDebugTools&debug tools and features for employees",default:\K!1&true&s&xpuiJs&1.2.60.564'
 )
@@ -852,7 +852,7 @@ aoEx=(
 'logV3&sp://logging/v3/\w+&&g&xpuiJs&1.1.70.610'
 're1&\xE8...[\xFE\xFF]\x4D\x8B.{1,2}\x4D\x85.\x75[\xA0-\xAF]\x48\x8D.{9,10}\K\xE8...[\xFE\xFF](?=[\x40-\x4F][\x80-\x8F])&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&Linux&&2'
 're2&\x24\x24\x4D\x85\xE4\x75\xA9\x48\x8D\x35...\x01\x48\x8D\xBD.[\xFE\xFF]\xFF\xFF\K\xE8....&\x0F\x1F\x44\x00\x00&gs&appBinary&1.2.29.605&&macOS&&2'
-'re3&[\x10-\x1F]\x01\x00\x39\xE0\x03[\x10-\x1F]\xAA...[\x90-\x9F].\x02\x40\xF9[\x70-\x7F]\xFD\xFF\xB5..\x00.\x21..\x91\xE0.[\x00-\x0F]\x91\K....(?=[\xF0-\xFF][\x00-\x0F]....\x00)&\x1F\x20\x03\xD5&gs&appBinary&1.2.29.605&&macOS&&2'
+'re3&[\x10-\x1F]\x01\x00\x39.{0,4}\xE0\x03[\x10-\x1F]\xAA...[\x90-\x9F].[\x02\x03]\x40\xF9[\x70-\x7F]\xFD\xFF\xB5..\x00.\x21..\x91\xE0.[\x00-\x0F]\x91\K....(?=[\xF0-\xFF][\x00-\x0F]....\x00)&\x1F\x20\x03\xD5&gs&appBinary&1.2.29.605&&macOS&&2'
 'searchFix1&(typeName])&$1 || []&s&xpuiJs&1.2.28.581&1.2.57.463'
 'slotMid&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x6D\x69&\x20\x6D\x69&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'slotPost&\x70\x6F\x64\x63\x61\x73\x74\K\x2D\x70\x6F&\x20\x70\x6F&g&appBinary&1.0.29.605&1.0.29.605&macOS'
@@ -884,6 +884,7 @@ expEx=(
 'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
 'enableBillboardEsperantoMigration&esperanto migration for Billboard Ad Format",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985&1.2.52.442'
+'enableBLEJamBroadcasting&Jam Broadcasting for Bluetooth",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableBlockUsers&block users feature in clientX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableBrowseViaPathfinder&Fetch Browse data from Pathfinder",default:\K!1&true&s&xpuiJs&1.1.88.595&1.2.24.756'
 'enableCanvasNpv&short, looping visuals on tracks.",default:..\.\KCONTROL&CANVAS_PLAY_LOOP&s&xpuiJs&1.2.33.1039&1.2.62.580'
@@ -929,7 +930,7 @@ expEx=(
 'enableLyricsCheck&clients will check whether tracks have lyrics available",default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.93.896'
 'enableLyricsMatch&Lyrics match labels in search results",default:\K!.(?=})&true&s&xpuiJs&1.1.87.612&1.2.50.335'
 'enableLyricsNew&new fullscreen lyrics page",default:\K!1&true&s&xpuiJs&1.1.84.716&1.1.86.857'
-'enableLyricsScrollToCurrentLineButton&scroll to current line button in lyrics",default:\K!1&true&s&xpuiJs&1.2.65.255'
+'enableLyricsScrollToCurrentLineButton&scroll to current line button in lyrics",default:\K!1&true&s&xpuiJs&1.2.65.255&1.2.77.144'
 'enableMadeForYouEntryPoint&Show "Made For You" entry point in the left sidebar.,default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.95.893'
 'enableMarkBookAsFinished&ability to mark a book as finished",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
@@ -942,6 +943,7 @@ expEx=(
 'enableNewEpisodes&new episodes view",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.62.580'
 #'enableNewOverlayScrollbars&new overlay scrollbars",default:\K!1&true&s&xpuiJs&1.2.58.492'
 'enableNewPodcastTranscripts&showing podcast transcripts on desktop and web player",default:\K!1&true&s&xpuiJs&1.1.84.716&1.2.25.1011'
+'enableNewRecentsPage&the new Recents page",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableNextBestEpisode&next best episode block on the show page",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.28.581'
 'enableNotificationCenter&notification center for desktop . web",default:\K!1&true&s&xpuiJs&1.2.75.499'
 'enableNowPlayingBarVideo&showing video in Now Playing Bar when all other video elements are closed",default:\K!1&true&s&xpuiJs&1.2.22.975'
@@ -997,6 +999,7 @@ expEx=(
 'enableStrangerThingsEasterEgg&Stranger Things upside down Easter Egg",default:\K!1&true&s&xpuiJs&1.1.91.824'
 'enableSubtitlesAutogeneratedLabel&label in the subtitle picker.,default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableSyncingSearchHistoryToBackend&syncing search history to the backend",default:\K!1&true&s&xpuiJs&1.2.75.499'
+'enableTiltable3DArtwork&tiltable 3D parallax effect on artwork .Cinema Mode and Cover Art Modal.",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableTogglePlaylistColumns&ability to toggle playlist column visibility",default:\K!1&true&s&xpuiJs&1.2.17.832&1.2.66.447'
 'enableTracklistColumnsSorting&column reordering functionality in tracklists",default:\K!1&true&s&xpuiJs&1.2.69.448'
 'enableUserCommentsForEpisodes&user comments for podcast episodes",default:\K!1&true&s&xpuiJs&1.2.49.439'
