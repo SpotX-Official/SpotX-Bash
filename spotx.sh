@@ -216,8 +216,9 @@ macos_prepare() {
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} detected"
   grab1=$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
   grab2=$(echo "=0zYTZ2ZzpWS4FVaJdWUuJGcKh0YnNHVNtWQTB1ZRdlWv50RkhWMHp0ZzhUS2J1RJ1WWDlEcRdlWv50RkhWMHp0bRdlW1xWbaxmUXl0ZZlmSnhzULZjSXZ2dJRET4NnbM5WSTZWeG1mV1lzVhpnSYplM0hkSpN2UMlDbU10N1knSpBjbjhmWGFmaKhVW3IVaJ5GMTZmeNpXZ1VFWmJzcuxEMod0S2N2QJxWNXx0Z312YsJESJhjQplUOGpWWop0MadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  grab3=$(eval "${grab2}")
-  fileVar=$(echo "${grab3}" | perl -ne '/\/([^\/]+\.tbz)/ && print "$1"')
+  grab3=""; for i in {1..5}; do grab3=$(eval "${grab2}"); [[ -n "${grab3}" ]] && break || sleep 2; done
+  [[ -z "${grab3}" ]] && { echo -e "\n${red}Error:${clr} Unable to retrieve download link\n" >&2; exit 1; }
+  fileVar=$(basename "${grab3}")
   [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   macos_set_path
@@ -807,7 +808,7 @@ aoEx=(
 'embeddedAdImpressionDoesNotIgnoreVisilibility&If enabled, we do consider percent visibility when logging the display ad impression.{0,49}",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceComments&Enables the age assurance gating for comments feature",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceFriendActivity&Enables the age assurance gating for friend activity feed",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
-'enableAgeAssuranceProfileMenu&Enables the age assurance entry point in the profile menu (verify age action and warning indicator)",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
+'enableAgeAssuranceProfileMenu&Enables the age assurance entry point in the profile menu .{0,43}",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceSettings&Enables the age assurance section in account settings",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442'
 'enableConnectedStateObserver&observer that logs errors related to connected state and ad info",default:\K!.(?=})&false&s&xpuiJs&1.2.53.437'
