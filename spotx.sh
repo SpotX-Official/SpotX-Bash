@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.82.428.g0ac8be2b"
+buildVer="1.2.83.453.g1fae877b"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -841,7 +841,7 @@ aoEx=(
 'enablePipImpressionLogging&Enables impression logging for PiP",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.78.418'
 'enablePodcastSponsoredContent&Enable sponsored content information for podcasts",default:\K!.(?=})&false&s&xpuiJs&1.2.30.1135&1.2.50.335'
 'enablePromotions&Enables promotions on home",default:\K!.(?=})&false&s&xpuiJs&1.2.38.720&1.2.45.454'
-'enableSaxLeaderboardAds&Enable SAX Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.62.575'
+'enableSaxLeaderboardAds&Enable SAX Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.62.575&1.2.82.428'
 'enableShowLeavebehindConsolidation&Enable show leavebehinds consolidated experience",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114'
 'enableSponsoredPlaylistEsperantoMigration&Enable esperanto Migration for Sponsored Playlist Ad Formats",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.50.335'
 'enableSurveyAds&Enable Spotify Brand Lift .SBL. Surveys in the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.43.420&1.2.63.394'
@@ -965,7 +965,7 @@ expEx=(
 'enablePiPMiniPlayerQueue&PiP Queue behind miniplayer settings",default:\K!1&true&s&xpuiJs&1.2.67.553'
 'enablePiPMiniPlayerSettings&PiP settings",default:\K!1&true&s&xpuiJs&1.2.65.255'
 'enablePiPMiniPlayerVideo&playback of video inside the PiP Mini Player",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985'
-'enablePlaybackBarAnimation&animation of the playback bar",default:\K!1&true&s&xpuiJs&1.2.34.783'
+'enablePlaybackBarAnimation&animation of the playback bar",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.82.428'
 'enablePlaylistCreationFlow&new playlist creation flow in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.93.896'
 'enablePlaylistPermissionsProd&Playlist Permissions flows for Prod",default:\K!.(?=})&true&s&xpuiJs&1.1.75.572&1.2.50.335'
 'enablePodcastChaptersInNpv&showing podcast chapters in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.22.975&1.2.50.335'
@@ -974,7 +974,7 @@ expEx=(
 'enablePrereleaseRadar&Show a curated list of upcoming albums to a user",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.45.454'
 'enableProfileVisibilityControls&profile visibility controls in the settings . profile page",default:\K!1&true&s&xpuiJs&1.2.74.462'
 'enableProgressBarEpisodeChapters&pisode chapters markers in the progress bar",default:\K!1&true&s&xpuiJs&1.2.68.525&1.2.74&1.2.74.477'
-'enableProgressBarRefactorWithChapters&refactored ProgressBar implementation with chapter support",default:\K!1&true&s&xpuiJs&1.2.74.462'
+'enableProgressBarRefactorWithChapters&refactored ProgressBar implementation with chapter support",default:\K!1&true&s&xpuiJs&1.2.74.462&1.2.82.428'
 'enableQueueOnRightPanel&Enable Queue on the right panel.",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180&1.2.61.443'
 'enableQueueOnRightPanelAnimations&animations for Queue on the right panel.",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985&1.2.50.335'
 'enableReactQueryPersistence&React Query persistence",default:\K!.(?=})&true&s&xpuiJs&1.2.30.1135'
