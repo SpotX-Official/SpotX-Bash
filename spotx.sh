@@ -1,6 +1,56 @@
 #!/usr/bin/env bash
 
 buildVer="1.2.85.519.g549a528b"
+rollbackVer="1.2.84.476.ga1ff6607"
+
+latestB_X="4022"
+latestB_A="4022"
+rollbackB_X="2291"
+rollbackB_A="2291"
+
+latestA_X=$(printf "%s" \
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3NzY0Mzc0NzYsIm5iZiI6" \
+  "MTc3Mzg0NTQ3NiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuODUuNTE5Lmc1NDlhNTI4Yi00MDIyLnRieiJ9" \
+  ".EzJU__P0-u_Jr7mW4r0l4LTILC3T2OV978BYRlAc4VL5eDqoZW_JC39SpAhPt_q" \
+  "YiackI8W5SnHtTCyp75LqBngKUsWFHBI-4HdeiL-21c0m2L_XCDVXw8qUMO-fYYb" \
+  "uWWUL_ELJpeeo_pnhdbvc1TFEdEzOcIEo9k43nyhjfquWM_LJDXir4ApJjK37x7r" \
+  "EU2ZdUJsKSH7jWC0s3LsYadtoBb1Rhqi-D-yNuFa3n5W4sPEp1JPmjIbQkW69ak9" \
+  "x_DyQIZ87Aju1UrsqtBCgEQT3QkCpQ9LHxgXS14_b44qLXaWvlSsBld6csY36OW6" \
+  "2UrtpSCtpnTkzzHbVw5HiGQ")
+
+latestA_A=$(printf "%s" \
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3NzY0Mzc0NzUsIm5iZiI6" \
+  "MTc3Mzg0NTQ3NSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi44NS41MTkuZzU0OWE1MjhiLTQwMjIudGJ6In0." \
+  "XI0QtehAts_0GR_x8vK4k0lrVGhqhkCUk_kRQoMoQ2_H5gf01cxfuMXfokcPyeTR" \
+  "OogySa102KGnWpgWAmR64GAhRK3Uy0W2ku7ZUAeaSt3mDJZ_yj5ur5Lq18s57u4x" \
+  "wEx360VF0wYwoOVQ0vB50cNlELfRNHWiegSAPYsKm0Nw9z0MW6pcTEYiJa3mVx1t" \
+  "vkIrVGuTYWIs1ijoxRKobUp-DvitkBwP4DK6YplUYOgDGyf9HfWuJ1H26-2YKSfq" \
+  "Sr0m-Ke3c5NrI2Txd81VWLuhxUEu572pUpOLRN4HrcGQ17itvwjkq2vIAFsAAX0I" \
+  "2pwXtVwpe6RUs--UryBK9A")
+
+rollbackA_X=$(printf "%s" \
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3NzYxOTUyOTIsIm5iZiI6" \
+  "MTc3MzYwMzI5MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuODQuNDc2LmdhMWZmNjYwNy0yMjkxLnRieiJ9" \
+  ".lLZNkxsykwNzyl1SLyE0EHrwmurAfsTFdmEOfJ_K_wR-ReobNpKAtoD9v38yPXv" \
+  "WTOuquTNUYcqMv9GSlqq3k64xhcWElpKRbTWLHOMU_6fx37hrEmUsKUp24KzaFeI" \
+  "rjmaVoV4eAOsXDnPd4vVSe59qFyNjUAeVHpMouOWfQbn5ulHOtFYEqHe8yLDRxAj" \
+  "5Al_KPKQekdtEqomV6UzZ29QYnFX0QxYJAbHJGTgEXKg5MX38w0U40i8SnDygCKE" \
+  "mDXCw_Wdp6nJ74_EF2E4EMka5YOBIqECsO7m61KF2vYBfrwW768sSPGi2-2nzeVI" \
+  "EJPrZQ_KLrbRMi8RpbWaWCQ")
+
+rollbackA_A=$(printf "%s" \
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3NzYxOTUyOTEsIm5iZiI6" \
+  "MTc3MzYwMzI5MSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi44NC40NzYuZ2ExZmY2NjA3LTIyOTEudGJ6In0." \
+  "orSrmzelx4KoobK1ewzu_7G6xv5gF99AM3GuFcOnLwAwYLhZsBmGEuKlwnTn1rQx" \
+  "JMlgULk1atPSCRXUB-clCQvSxNRdUOO554tIpX6TFNN58-uY7gFyLTWseGy6BVHi" \
+  "m607wh7HCtXhVdqbet9b2U84f5JESKU32InnhHKqmXiqgfQp3akFdd-AWYyFvyyA" \
+  "kDhTI0jU09o_Wz8G17XLzWQvPnTjr26-FpkXYEUjvroiIIxEMYkn16VAZLUSPKDv" \
+  "9QUN6CPnXNQCxnySgKCuYDVW-bW3FGMz8V6RHjf4ErQzfNoxwfwwWcWAW_y0e5rU" \
+  "sUYCYAflIN-5APngpl_aAQ")
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -32,11 +82,11 @@ show_help() {
 -o, --oldui            : use old home screen UI
 -p, --premium          : paid premium-tier subscriber
 -P <path>              : set path to client
+--rollback             : install previous supported client version [macOS]
 -S, --skipcodesign     : skip codesigning [macOS]
 --stable               : use with '--installdeb' for stable branch [Linux]
 --uninstall            : uninstall SpotX-Bash
 -v, --version          : print SpotX-Bash version
--V <version>           : install specific client version [macOS]
 "
 }
 
@@ -60,6 +110,7 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
         noexp) excludeExp='true' ;;
         oldui) oldUi='true' ;;
         premium) paidPremium='true' ;;
+        rollback) [[ "${platformType}" == "macOS" ]] && rollback='true'; installMac='true' ;;
         skipcodesign) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
         stable) [[ "${platformType}" == "Linux" ]] && stableVar='true' ;;
         uninstall) uninstallSpotx='true' ;;
@@ -81,28 +132,27 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
     P) p="${OPTARG}"; installPath="${p}"; installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|') ;;
     S) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
     v) verPrint='true' ;;
-    V) [[ "${platformType}" == "macOS" ]] && { 
-         [[ "${OPTARG}" =~ ^1\.[12]\.[0-9]{1,2}\.[0-9]{3,}.*$ ]] && {
-           versionVar="${OPTARG}"
-           installMac='true'
-         } || {
-           echo -e "${red}Error:${clr} Invalid or unsupported version\n" >&2
-           exit 1
-         }
-       } || {
-         echo -e "${red}Error:${clr} SpotX-Bash does not support '-V' on Linux\n" >&2
-         exit 1
-       } ;;
+    V) echo -e "${red}Error:${clr} '-V' is no longer supported. Use '--installmac' for latest or '--rollback' for previous build.\n" >&2; exit 1 ;;
     \?) echo -e "${red}Error:${clr} '-""${OPTARG}""' not supported\n\n$(show_help)\n" >&2; exit 1 ;;
     :) echo -e "${red}Error:${clr} '-""${OPTARG}""' requires additional argument\n\n$(show_help)\n" >&2; exit 1 ;;
   esac
 done
 
 gVer=$(echo "==QP9EkW0VzUS5kUVFlRKFDT1x2VZRXOplld41WW2dmMjhmSVxUWSNjY35UMMNnRXFmas1mWtlTVMllUzI2dOFDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-sxbLiveVer=$(echo "=0zdHJWM1IDTyY1RaZHNq10ZjNlZnNnaJhXUpl0ZR5mYwpESjd2cU10aBNFUnF1Va9mTHRGaxckSnNHSJZnUHlUbZNUSwF1Va9mTHRGaxckSvF1VaVHbtpFbSdVSnlVaKdGOTtkcwwmW0V0VPRXQ6dlb1MEWyF1RYV3dxs0a4xGTjR3QaNWNDhlcRdEWvhTeKdWVtJGdBNkY5Z1Rjd2dIlUaw42YspVMadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+sxbLiveVer=$(printf "%s" \
+  "=0zdHJWM1IDTyY1RaZHNq10ZjNlZnNnaJhXUpl0ZR5mYwpESjd2cU10aBNFUnF1Va9m" \
+  "THRGaxckSnNHSJZnUHlUbZNUSwF1Va9mTHRGaxckSvF1VaVHbtpFbSdVSnlVaKdGOTt" \
+  "kcwwmW0V0VPRXQ6dlb1MEWyF1RYV3dxs0a4xGTjR3QaNWNDhlcRdEWvhTeKdWVtJGd" \
+  "BNkY5Z1Rjd2dIlUaw42YspVMadjUpl0Z3BzY0F0UjRXQDJWeWNTW" \
+  | rev | base64 --decode | base64 --decode)
 sxbLive=$(eval "${sxbLiveVer}")
 sxbVer=$(echo ${buildVer} | perl -ne '/(.*)\./ && print "$1"')
-verCk=$(echo "9QzRYNGayMGaKdUZwkzRjpXODplb1k3YwJ0QRdWVHJWaGdkYwZUbkhmQ5NGcCNlZ5hnMZdjUplUOW1GZwh3aZRjTzU2aJNlZ1Z1ValHZyU2aBlmY2xmMjlnVtZVd4ZEW1F1VaBjRHpFMWNjYn1EWhd2ZyMGaKVFTZJ1MidnTGlUb5cUS1lzVhpnSYplMCl3Ywh2RWdGMuN2cOJTZr9meaVHbtJWeGJjV5Q2MiNHeXpVN0hkS" | rev | base64 --decode | base64 --decode)
+verCk=$(printf "%s" \
+  "9QzRYNGayMGaKdUZwkzRjpXODplb1k3YwJ0QRdWVHJWaGdkYwZUbkhmQ5NGcCNl" \
+  "Z5hnMZdjUplUOW1GZwh3aZRjTzU2aJNlZ1Z1ValHZyU2aBlmY2xmMjlnVtZVd4ZE" \
+  "W1F1VaBjRHpFMWNjYn1EWhd2ZyMGaKVFTZJ1MidnTGlUb5cUS1lzVhpnSYplMCl3" \
+  "Ywh2RWdGMuN2cOJTZr9meaVHbtJWeGJjV5Q2MiNHeXpVN0hkS" \
+  | rev | base64 --decode | base64 --decode)
 verCk2=$(eval echo "${verCk}")
 ver() { echo "$@" | perl -lane 'printf "%d%03d%04d%05d\n", split(/\./, $_), (0)x4'; }
 ver_check() { (($(ver "${sxbVer}") > $(ver "1.1.0.0") && $(ver "${sxbVer}") < $(ver "${sxbLive}"))) && echo -e "${verCk2}"; }
@@ -138,41 +188,24 @@ macos_set_version() {
   macOSVer=$(sw_vers -productVersion | cut -d '.' -f 1,2)
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} macOS ${macOSVer} detected"
   [[ $macOSVer =~ ^(1[1-9]|[2-9][0-9])\. ]] && macOSVer=${macOSVer%%.*}
-  [[ -z ${versionVar+x} ]] && {
-    [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && {
-      versionVar="1.1.89.862"
-      return
-    }
-    [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && {
-      versionVar="1.2.20.1218"
-      return
-    }
-    [[ "${macOSVer}" == "10.15" ]] && {
-      versionVar="1.2.37.701"
-      return
-    }
-    [[ "${macOSVer}" == "11" ]] && {
-      versionVar="1.2.66.447"
-      return
-    }
-    versionVar="${buildVer}"
-  }
-  [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && (($(ver "${versionVar}") > $(ver "1.1.89.862"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.11 or 10.12.\nPlease install version 1.1.89.862 or lower.\n" >&2
-    exit 1
-  }
-  [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && (($(ver "${versionVar}") > $(ver "1.2.20.1218"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.13 or 10.14.\nPlease install version 1.2.20.1218 or lower.\n" >&2
-    exit 1
-  }
-  [[ "${macOSVer}" == "10.15" ]] && (($(ver "${versionVar}") > $(ver "1.2.37.701"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 10.15.\nPlease install version 1.2.37.701 or lower.\n" >&2
-    exit 1
-  }
-  [[ "${macOSVer}" == "11" ]] && (($(ver "${versionVar}") > $(ver "1.2.66.447"))) && {
-    echo -e "${red}Error:${clr} Client version ${versionVar} is not supported on macOS 11.\nPlease install version 1.2.66.447 or lower.\n" >&2
-    exit 1
-  }
+  [[ "${macOSVer}" == "10.11" || "${macOSVer}" == "10.12" ]] && { legacyMac="10.11-12"; legacyMaxVer="1.1.89.862"; return; }
+  [[ "${macOSVer}" == "10.13" || "${macOSVer}" == "10.14" ]] && { legacyMac="10.13-14"; legacyMaxVer="1.2.20.1218"; return; }
+  [[ "${macOSVer}" == "10.15" ]] && { legacyMac="10.15"; legacyMaxVer="1.2.37.701"; return; }
+  [[ "${macOSVer}" == "11" ]] && { legacyMac="11"; legacyMaxVer="1.2.66.447"; return; }
+  [[ "${rollback}" ]] && versionVar="${rollbackVer}" || versionVar="${buildVer}"
+}
+
+macos_legacy_notice() {
+  local reason="${1}" dGrab
+  local d1112=$(echo "=k2YXJ2a1kWT4BzUNhHND1EewMVZtx2RkZnQzUld4ITW1RzRapmTux0aGJjYzVjMkZnUywkdvR0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
+  local d1314=$(echo "90zZJ5WMHpVdRRVT01EVNVXQU1Edr5mWwJ1MidnTxwkdO1GT1JlMZpXNDpFa5ckY1R2MitWO5xkNNh0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
+  local d1015=$(echo "=0TPnlkbxckW1VFVNVXQU1Edr5mWwJ1MidnTxwkdO1GT1JlMZpXNDpFa5ckY1R2MitWO5xkNNh0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
+  [[ "${legacyMac}" == "10.11-12" ]] && dGrab=$(eval "${d1112}")
+  [[ "${legacyMac}" == "10.13-14" ]] && dGrab=$(eval "${d1314}")
+  [[ "${legacyMac}" == "10.15" || "${legacyMac}" == "11" ]] && dGrab=$(eval "${d1015}")
+  [[ "${reason}" == "toohigh" ]] && { echo -e "\n${red}Error:${clr} v${clientVer} not supported on macOS ${macOSVer} (max: ${legacyMaxVer}).\nInstall compatible version then re-run SpotX-Bash:\n\n${green} -> ${dGrab}${clr}\n" >&2; exit 1; }
+  echo -e "\n${yellow}Warning:${clr} macOS ${macOSVer} not supported by current Spotify builds.\nDownload and install compatible version (max: ${legacyMaxVer}) then re-run SpotX-Bash:\n\n${green} -> ${dGrab}${clr}\n"
+  exit 0
 }
 
 macos_set_path() {
@@ -210,18 +243,31 @@ macos_autoupdate_check() {
 }
 
 macos_prepare() {
+  local tbzTpl=$(printf "%s" \
+    "9k0Um9mUYRGaatWZpJ1MltGNT90SOtmVZJ0MhpkWUNFROdlTTVzVTpHbVF2TGR1U" \
+    "2YVMVtEbyQFcOJjUphWbTREeVFmVSZlVVxmehRFbzMmVax2UXBHWVh3YtVmUstWV" \
+    "FZlVOpGcIZ1QKxmVSJFVUVVOFJFMWtmVKVTRihlVW9kRWZkVLxmMUBnRxYFaK52U" \
+    "1Y1VQ9mUYRGaaJDU2o0RkVHMIp1csdFZDBnbZBDdIpEdw42YopFbiZHbyMWeW1GZ" \
+    "3I1UMxmUYl1aChFZ2JFWkhWMTVWbsdEZ2J0MjZHMuNGaaZUYqpEWZdjUTxENONjY" \
+    "2FlbixGbHJma5MlWrZUbj5mQYRmd4ITW1RzRapmTuxEbSdVW5R2RjFTO5xkNNh0Y" \
+    "wIFShlWQ5J2bOdlW" \
+    | rev | base64 --decode | base64 --decode)
   macos_requirements_check
   macos_set_version
   archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} detected"
-  grab1=$(echo "==wSRhUZwUTejxGeHNGdGdUZslTaiBnRXJmdJJjYzpkMMVjWXFWYKVkV21kajBnWHRGbwJDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-  grab2=$(echo "=0zYTZ2ZzpWS4FVaJdWUuJGcKh0YnNHVNtWQTB1ZRdlWv50RkhWMHp0ZzhUS2J1RJ1WWDlEcRdlWv50RkhWMHp0bRdlW1xWbaxmUXl0ZZlmSnhzULZjSXZ2dJRET4NnbM5WSTZWeG1mV1lzVhpnSYplM0hkSpN2UMlDbU10N1knSpBjbjhmWGFmaKhVW3IVaJ5GMTZmeNpXZ1VFWmJzcuxEMod0S2N2QJxWNXx0Z312YsJESJhjQplUOGpWWop0MadjUpl0Z3BzY0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  grab3=""; for i in {1..5}; do grab3=$(eval "${grab2}"); [[ -n "${grab3}" ]] && break || sleep 2; done
-  [[ -z "${grab3}" ]] && { echo -e "\n${red}Error:${clr} Unable to retrieve download link\n" >&2; exit 1; }
-  fileVar=$(basename "${grab3}")
+  [[ -z "${legacyMac+x}" ]] && {
+    [[ "${archVar}" == "arm64" && "${rollback}" ]] && { tbzBuild="${rollbackB_A}"; tbzFauth="${rollbackA_A}"; }
+    [[ "${archVar}" == "arm64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_A}"; tbzFauth="${latestA_A}"; }
+    [[ "${archVar}" == "x86_64" && "${rollback}" ]] && { tbzBuild="${rollbackB_X}"; tbzFauth="${rollbackA_X}"; }
+    [[ "${archVar}" == "x86_64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_X}"; tbzFauth="${latestA_X}"; }
+    grab3=$(eval "${tbzTpl}"); fileVar="${grab3%%\?*}"; fileVar="${fileVar##*/}"
+  }
+  [[ "${installMac}" && "${legacyMac}" ]] && macos_legacy_notice
   [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   macos_set_path
+  [[ "${notInstalled}" && "${legacyMac}" ]] && macos_legacy_notice
   macos_autoupdate_check
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Install directory: ${installOutput}\n"
   appPath="${installPath}/Spotify.app"
@@ -397,6 +443,8 @@ run_prepare() {
   xpuiJs="${xpuiDir}/xpui.js"
   xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
   existing_client_ver
+  [[ "${platformType}" == "macOS" && "${legacyMac}" && "${clientVer}" ]] && \
+    (($(ver "${clientVer}") > $(ver "${legacyMaxVer}"))) && macos_legacy_notice "toohigh"
   client_version_output
   ver_check
   command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
@@ -474,8 +522,9 @@ read_yn() {
 run_interactive_check() {
   [[ "${interactiveMode}" ]] && {
     printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n\n"
+    [[ "${platformType}" == "macOS" && "${legacyMac}" && "${notInstalled}" ]] && macos_legacy_notice
     [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
-    [[ "${platformType}" == "macOS" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
+    [[ "${platformType}" == "macOS" && -z "${legacyMac+x}" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
     [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
     [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
     [[ -d "${cachePath}" ]] && read_yn "Clear client app cache? " && clearCache='true'
@@ -506,8 +555,19 @@ linux_working_dir() { [[ -d "/tmp" ]] && workDir="/tmp" || workDir="$HOME"; }
 linux_deb_install() {
   sudo_check
   linux_working_dir
-  lc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJNlTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  lc02=$(echo "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ1Z1VhNnTFlUOKhkYqRHSKZTSzIWeKhlU5I1ValHdIpUd4xWSnV1VMdGOHFmaWdUS3I0QmhjQplUMJdVW5R2RKlWQplUOKhVWXZ1RiBnWyU2a4MlZ5x2RSJnSzI2M0hkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  lc01=$(printf "%s" \
+    "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlb" \
+    "ixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUe" \
+    "ld2dIZ2ZJNlTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0U" \
+    "jRXQDJWeWNTW" \
+    | rev | base64 --decode | base64 --decode)
+  lc02=$(printf "%s" \
+    "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ" \
+    "1Z1VhNnTFlUOKhkYqRHSKZTSzIWeKhlU5I1ValHdIpUd4xWSnV1VMdGOHFmaWdUS" \
+    "3I0QmhjQplUMJdVW5R2RKlWQplUOKhVWXZ1RiBnWyU2a4MlZ5x2RSJnSzI2M0hkS" \
+    "pFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT" \
+    "0F0UjRXQDJWeWNTW" \
+    | rev | base64 --decode | base64 --decode)
   eval "${lc01}"; eval "${lc02}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
@@ -535,8 +595,19 @@ macos_client_install() {
     echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
     exit 1
   }
-  mc01=$(echo "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlbixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUeld2dIZ2ZJlXTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  mc02=$(echo "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1RJBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50Vad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzRSZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
+  mc01=$(printf "%s" \
+    "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlb" \
+    "ixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUe" \
+    "ld2dIZ2ZJlXTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0U" \
+    "jRXQDJWeWNTW" \
+    | rev | base64 --decode | base64 --decode)
+  mc02=$(printf "%s" \
+    "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1R" \
+    "JBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50V" \
+    "ad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzR" \
+    "SZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EW" \
+    "alHZyIWeChFT0F0UjRXQDJWeWNTW" \
+    | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   rm -rf "${appPath}" 2>/dev/null
@@ -621,9 +692,50 @@ xpui_detect() {
 snapshot_check() {
   START_XM="76006100720020005F005F007700650062007000610063006B005F006D006F00640075006C00650073005F005F003D007B00"
   END_XM="78007000750069002D006D006F00640075006C00650073002E006A0073002E006D0061007000"
+  
   [[ ! -f "${xpuiJs}" ]] && [[ -f "${xpuiSnapshotJs}" ]] && {
     [[ "${debug}" ]] && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x53\x6E\x61\x70\x73\x68\x6F\x74${clr}\n"
-    perl -e 'use strict; use warnings; use Encode qw(decode); open my $in_fh, "<:raw", $ARGV[0] or die; binmode $in_fh; my $bin_content; { local $/; $bin_content = <$in_fh>; } close $in_fh; die unless (length($bin_content) >= 2 && substr($bin_content, 0, 2) eq "\xFF\xFE") || (length($bin_content) > 100 && substr($bin_content, 1, 1) eq "\x00"); my $start_marker = pack("H*", $ARGV[1]); my $end_marker = pack("H*", $ARGV[2]); my $start_idx = index($bin_content, $start_marker, 2); die if $start_idx == -1; my $end_idx = index($bin_content, $end_marker, $start_idx + length($start_marker)); die if $end_idx == -1; my $extracted = substr($bin_content, $start_idx, $end_idx - $start_idx + length($end_marker)); my $decoded = decode("UTF-16LE", $extracted); open my $out_fh, "+<:encoding(UTF-8)", $ARGV[3] or die; my $existing_content; { local $/; $existing_content = <$out_fh>; } seek $out_fh, 0, 0; print $out_fh $decoded, "\n", $existing_content; truncate $out_fh, tell($out_fh); close $out_fh;' "${snapshotBinary}" "${START_XM}" "${END_XM}" "${xpuiSnapshotJs}" || { uninstall_spotx; echo -e "\n${red}Error:${clr} Snapshot processing failed\n" >&2; exit 1; }
+    
+    perl -e '
+      use strict; 
+      use warnings; 
+      use Encode qw(decode); 
+      
+      open my $in_fh, "<:raw", $ARGV[0] or die; 
+      binmode $in_fh; 
+      my $bin_content; 
+      { local $/; $bin_content = <$in_fh>; } 
+      close $in_fh; 
+      
+      die unless (length($bin_content) >= 2 && substr($bin_content, 0, 2) eq "\xFF\xFE") || 
+                 (length($bin_content) > 100 && substr($bin_content, 1, 1) eq "\x00"); 
+                 
+      my $start_marker = pack("H*", $ARGV[1]); 
+      my $end_marker = pack("H*", $ARGV[2]); 
+      
+      my $start_idx = index($bin_content, $start_marker, 2); 
+      die if $start_idx == -1; 
+      
+      my $end_idx = index($bin_content, $end_marker, $start_idx + length($start_marker)); 
+      die if $end_idx == -1; 
+      
+      my $extracted = substr($bin_content, $start_idx, $end_idx - $start_idx + length($end_marker)); 
+      my $decoded = decode("UTF-16LE", $extracted); 
+      
+      open my $out_fh, "+<:encoding(UTF-8)", $ARGV[3] or die; 
+      my $existing_content; 
+      { local $/; $existing_content = <$out_fh>; } 
+      seek $out_fh, 0, 0; 
+      
+      print $out_fh $decoded, "\n", $existing_content; 
+      truncate $out_fh, tell($out_fh); 
+      close $out_fh;
+    ' "${snapshotBinary}" "${START_XM}" "${END_XM}" "${xpuiSnapshotJs}" || { 
+      uninstall_spotx
+      echo -e "\n${red}Error:${clr} Snapshot processing failed\n" >&2
+      exit 1
+    }
+    
     xpuiCss="${xpuiDir}/xpui-snapshot.css"
     xpuiJs="${xpuiSnapshotJs}"
   }

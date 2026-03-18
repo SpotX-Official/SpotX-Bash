@@ -24,8 +24,7 @@
 - Enable experimental features
 - Hide audiobooks, episodes & podcasts on home screen
 - Block automatic updates (macOS)
-- Install supported desktop client versions (macOS)
-- Install latest desktop client on APT-based distros (Linux)
+- Install latest desktop client versions on macOS and APT-based Linux distros
 - Supports all Linux distros and OS X/macOS 10.11+
 
 ### Usage:
@@ -66,11 +65,11 @@ bash <(curl -sSL https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/mai
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  
 | `-P <path>` | set path to client |  
+| `--rollback` | install previous supported client version [macOS] |  
 | `-S` | skip [codesigning](https://github.com/SpotX-Official/SpotX-Bash/discussions/3) [macOS] | 
 | `--stable` | use with '--installdeb' for stable branch [Linux] |   
 | `--uninstall` | uninstall SpotX-Bash |  
 | `-v` | print SpotX-Bash version |  
-| `-V <version>` | install client version [macOS] |  
 
 **Examples:**
 
