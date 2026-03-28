@@ -843,13 +843,13 @@ run_finish() {
 }
 
 perlVar="perl -0777pi -w -e"
-hideDLIcon=' .BKsbV2Xl786X9a09XROH, .GWCBhKJqeZal3n5tCQwl {display:none}'
-hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA {display:none}'
+hideDLIcon=' .BKsbV2Xl786X9a09XROH, .GWCBhKJqeZal3n5tCQwl, .pX3IkLhEry0wVfiU {display:none}'
+hideDLMenu=' button.wC9sIed7pfp47wZbmU6m.pzkhLqffqF_4hucrVVQA, button.dx1wWcqtuxz4HubHAyh_.tT_JypfxNakuY1jHgyBN, button.KzLH25pAEr43wpSc.zVA1h9TUy8QQBogj {display:none}'
 hideDLMenu2=' .pzkhLqffqF_4hucrVVQA, .egE6UQjF_UUoCzvMxREj, .Y98_oiegQgSpY_o7hoKG {display:none}'
-hideDLQual=' :is(.weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0, .eguwzH_QWTBXry7hiNj3):has([for="desktop.settings.downloadQuality"]) {display: none}'
+hideDLQual=' :is(.weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0, .eguwzH_QWTBXry7hiNj3, .qV_CxbowaNkMarye):has([for="desktop.settings.downloadQuality"]) {display: none}'
 hideSubfeed=' .cj6vRk3nFAi80HSVqX91, .c8Z2jJUocJTdV9g741cp, .x_HLN829yDsvJDgl {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
-lyricsBackgroundNew=' .FUYNhisXTCmbzt9IDxnT,\n .tr8V5eHsUaIkOYVw7eSG,\n .hW9km7ku6_iggdWDR_Lg,\n .lofIAg8Ixko3mfBrbfej,\n .Li269NgzkU2gI4KOP9sM,\n .I2WIloMMjsBeMaIS8H3v,\n .McI3hD7aCfpq015LJa6X,\n .gpDSOimnzH4zTJmE7UR5 {\n \t--lyrics-color-active: #C8C8C8 !important;\n \t--lyrics-color-inactive: #575757 !important;\n \t--lyrics-color-passed: #575757 !important;\n \t--lyrics-color-background: #121212 !important;\n }'
+lyricsBackgroundNew=' .FUYNhisXTCmbzt9IDxnT,\n .tr8V5eHsUaIkOYVw7eSG,\n .hW9km7ku6_iggdWDR_Lg,\n .lofIAg8Ixko3mfBrbfej,\n .bbJIIopLxggQmv5x,\n .Li269NgzkU2gI4KOP9sM,\n .I2WIloMMjsBeMaIS8H3v,\n .McI3hD7aCfpq015LJa6X,\n .gpDSOimnzH4zTJmE7UR5 {\n \t--lyrics-color-active: #C8C8C8 !important;\n \t--lyrics-color-inactive: #575757 !important;\n \t--lyrics-color-passed: #575757 !important;\n \t--lyrics-color-background: #121212 !important;\n }'
 updatesEx=(
 'blockUpdates&\x64(?=\x65\x73\x6B\x74\x6F\x70\x2D\x75\x70)&\x00&g&appBinary&1.1.70.610&9.9.9.9&macOS'
 )
@@ -879,7 +879,7 @@ freeEx=(
 'stateS3&[\x00\x0A\x1A]\K\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x73\x74\x61\x74\x65\x00)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235&&macOS'
 )
 devEx=(
-'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65.{5}\x48.{36,50}\K\xE8.{4}(?=\x89)&\xB8\x03\x00\x00\x00&s&appBinary&1.1.84.716'
+'dev1&[\x00\xFF][\x00\xFF]\x48\xB8\x65\x76\x65\x6C.{4}\x48.{36,50}\K\xE8.{4}&\xB8\x03\x00\x00\x00&gs&appBinary&1.1.84.716'
 'dev2&\xF8\xFF[\x37\x77\xB7\xF7][\x06-\x0F\x10-\x19]\x39\xFF.[\x00-\x04]\xB9\xE1[\x03\x43\x83\xC3][\x06-\x0F\x10-\x19]\x91\xE2.[\x02-\x0F\x13]\x91.{0,4}\K...[\x94\x97](?=[\xF0-\xFF]\x03)&\x60\x00\x80\xD2&s&appBinary&1.1.84.716&&macOS'
 'devDebug&(return ).{1,3}(\?(?:.{1,4}createElement|\(.{1,7}.jsxs\)))(\(.{3,7}\{displayText:"Debug Tools"(?:,children.{3,8}jsx\)|},.\.createElement))(\(.{4,6}role.*?Debug Window".*?\))(.*?Locales.{3,8})(:null)&$1true$2$4$6&&xpuiJs&1.1.92.644&1.2.59.518'
 'enableDebugTools&debug tools and features for employees",default:\K!1&true&s&xpuiJs&1.2.60.564'
@@ -963,6 +963,7 @@ aoEx=(
 'enableUserFraudVerificationRequest&Enable the IAV component make api requests",default:\K!.(?=})&false&s&xpuiJs&1.2.5.954&1.2.62.580'
 'enableYourListeningUpsell&Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.63.394'
 'hideUpgradeCTA&Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180'
+'leavebehinds&\/(?:leavebehinds\/mock|leavebehinds|mock|sponsoredplaylist)\/&/localhost/&g&xpuiJs&1.2.55.235'
 'logSentry&(this\.getStackTop\(\)\.client=.)&return;$1&&vendorXpuiJs&1.1.70.610&1.2.29.605'
 'logSentry2&sentry\.io&localhost.io&&xpuiJs&1.1.70.610'
 'lUnsupported&((?:\(?await )?.\.build.{20,60}encodeURIComponent.{20,140}"\/track\/\{trackId\}.+?)(.send)&$1.withHeaders([{key:"spotify-app-version",value:"1.2.45.454"}])$2&s&xpuiJs&1.1.70.610&1.2.45.451'
