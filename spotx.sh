@@ -433,6 +433,7 @@ run_prepare() {
   xpuiSpa="${xpuiPath}/xpui.spa"
   dwpPanelSectionJs="${xpuiDir}/dwp-panel-section.js"
   homeHptoJs="${xpuiDir}/home-hpto.js"
+  homeV2Js="${xpuiDir}/home-v2.js"
   indexHtml="${xpuiDir}/index.html"
   vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
   xpuiCss="${xpuiDir}/xpui.css"
@@ -964,6 +965,7 @@ aoEx=(
 'enableUserFraudVerificationRequest&Enable the IAV component make api requests",default:\K!.(?=})&false&s&xpuiJs&1.2.5.954&1.2.62.580'
 'enableYourListeningUpsell&Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.63.394'
 'hideUpgradeCTA&Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180'
+'homeV2Fix1&("HomeResponsePayload"[\s\S]{0,500}?)0\s*===\s*([A-Za-z_\$][\w\$]*)\.sectionContainer\.sections\.totalCount\s*\|\|\s*0\s*===\s*\2\.sectionContainer\.sections\.items\.length&$1!Array.isArray(null==$2||null==$2.sectionContainer||null==$2.sectionContainer.sections?void 0:$2.sectionContainer.sections.items)||0===$2.sectionContainer.sections.items.length&&homeV2Js&1.1.92.0&1.2.44.9999'
 'leavebehinds&\/(?:leavebehinds\/mock|leavebehinds|mock|sponsoredplaylist)\/&/localhost/&g&xpuiJs&1.2.55.235'
 'logSentry&(this\.getStackTop\(\)\.client=.)&return;$1&&vendorXpuiJs&1.1.70.610&1.2.29.605'
 'logSentry2&sentry\.io&localhost.io&&xpuiJs&1.1.70.610'
