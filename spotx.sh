@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.90.451.gb094aab0"
-rollbackVer="1.2.89.539.gfb3c63a3"
+buildVer="1.2.92.147.g5b8f9367"
+rollbackVer="1.2.90.451.gb094aab0"
 
-latestB_X="262"
-latestB_A="262"
-rollbackB_X="817"
-rollbackB_A="817"
+latestB_X="55"
+latestB_A="55"
+rollbackB_X="262"
+rollbackB_A="262"
 
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
@@ -47,45 +47,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODIwNTAyODksIm5iZiI6" \
-  "MTc3OTQ1ODI4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTAuNDUxLmdiMDk0YWFiMC0yNjIudGJ6In0." \
-  "YiVjryol-t2PZggSbV-c-CWl2eUfj24oW_Yc16aE2nn69BRFX5g_wek6o5rbxKSj" \
-  "50aHCN_St5AMpCIHvLfLRG1Lx4ymBYd4RxvkwPm4t6w_m6IxC0yGJDQOrgXlZ6Au" \
-  "kP_QSVa3T-XCQ3gIdfqLZgrKVvvR8ir338pypzxc-ZKHq_0V9KYwChZB_fa-y2lY" \
-  "uOLONOpaTNISu5vjjLeZwVpP3SMjg8GpBIgu5o8-1tZNFEusepvm_7FFskCagerU" \
-  "flX1cZU3bfLfXuhM2ceshc3giPSv0bvBieYNOqaGEG1LqTXKrvYMg_eEbMOnqctA" \
-  "6049QVYnzDtvKgXGO91QlA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3Njc0ODQsIm5iZiI6" \
+  "MTc4MTE3NTQ4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTIuMTQ3Lmc1YjhmOTM2Ny01NS50YnoifQ.U" \
+  "eNnd2aRKmoL1BooYsfjk1lu0FF4ddi3kSM1GCsl2mw7QgsG8bkarPAG3mhMX8Cgf" \
+  "ms2RwLYBrgnRjjAjIo79FbrSLC0riUTSL92zwIT2mZ8iHIJjaqCI1cW0k95-06HJ" \
+  "hpMmrLNP3_6RuJur7kx5gzvS6arJ_uoyFx7B48RDu4W33XetemotNMsRNAmCmsUn" \
+  "xG-UmrrJTPnOL8R_i9EAFGIm6n6RnUZ_hlcmoZrVRSp7aa-Zv3JJaakS8H7z_0Rl" \
+  "Vf1NIRCNt1J49O-zzm-xY6urTkKoTJmf3Vzlu-yFtm7zIsG717R0a-TconEWBYGF" \
+  "qystFwXnNi4hBaGtb0xXg")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODIwNTAyODgsIm5iZiI6" \
-  "MTc3OTQ1ODI4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45MC40NTEuZ2IwOTRhYWIwLTI2Mi50YnoifQ.o" \
-  "TtWVK70sSlKKXEtKPPEC00-o8txvT4wZ9kpmYQSl4VtqxaEmxe8qcij_sLV13FIv" \
-  "TBTovNiPenBbQ5U3AiVpaLUz-edazy12pZpoWA0xbQWiVTJuktTUqYrRoz5l4rko" \
-  "8FJ9h_QyWaFUqMNvPpS2ZDFZIMZ3mmmwgio0I1joKt_9_NlbFmwpiAPm4wI6x7-b" \
-  "I2AYsYB4OzNhe_pb7jFonxS8F7qIG0VcB9iI1ETFX6iRxil2DsP4JokYgd_EPH7Z" \
-  "r6hz-AsAhVE1q9yl2Q_AaPhaoVfc1F2WsgKp5d51e1ETeMfQrriXyWJn-oqJt4KA" \
-  "6fIvNx10zbaBGMQccWwAw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3Njc0ODMsIm5iZiI6" \
+  "MTc4MTE3NTQ4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Mi4xNDcuZzViOGY5MzY3LTU1LnRieiJ9.Ud-" \
+  "HYhEpO3RmsicG6YqDcGi99ZZYWkFD3_O6UMw_XsgjO03H9ZNQSPtDXt4KRVjtD1Z" \
+  "8oqB4wNKAyYpxBasa9bigwS8eLzyonXqvLhLjqKisf_t067p_rmgNd_AvWIxfIzW" \
+  "0JqEExZ_UdNIKLBSk-t5Mak4z7IrfC8Jd041kjEwwLkPctGLPGoPsj0UyqO8K_PD" \
+  "1Gj8bb57DjzwTLXjlbvcS3LaQMi4J-lByZlc09dlRIjLnCziXQV8PuxeZe_4nYfm" \
+  "W-tWZRxRJKP9MxUxg2sp8j3VqGXXRYb8dzoJ3hLDvgBJdK_BEyPYSkVQJ9RK9gQH" \
+  "iWwdDgWoyiA7GoVV9iQ")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODIwMjUwODQsIm5iZiI6" \
-  "MTc3OTQzMzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuODkuNTM5LmdmYjNjNjNhMy04MTcudGJ6In0." \
-  "qHeGNqgE5cOlhpXrcfXiJhflZrOKbHbJ7NSF87W8N6SNhuncFFqUFUoUPxFYdmCV" \
-  "xqDYfoPheIuWqX6OdpOqa1hT2fpxY9HO04UJ_tX2Kv-eIbO1wGHHci3kjvHILgq0" \
-  "6M7DCdivlHGpHtVxCYOJD7qSQlOZT7Dy_1tBMIoS8goAbCeLzujX1XA6pSP7XKYJ" \
-  "8gJHCD41QzIFtsLgbkgsPEcWxLUdDbXsm6PU3pZ0gyLRGqMMMcg9nkVdlLavc4nP" \
-  "Q6g_GOTY5zdyZCc2_tkyGm7KZ7vDXLxG9VE6Gr5Oj8Z-8OljHfWU1X9r2PBQmFEx" \
-  "Zbsuyym3zo9BjB9P8sJZEw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3NTQ4ODMsIm5iZiI6" \
+  "MTc4MTE2Mjg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTAuNDUxLmdiMDk0YWFiMC0yNjIudGJ6In0." \
+  "l47Ko06VUsa-c_ewiMz-qy4O-4KIKoP6tYXWK5HlAA3f1kwLx6_soevM5xwJu7Gp" \
+  "1U4RLVRRGcDhkqU5jf_GuKSKVqa57HATNOnRficgafGxE5ZR37xwtV9PqvEfXjC9" \
+  "7lIlJz5yGJDEWjxep5Q4ygsHAtlZiFsgMJWHJ0BnLqSQmlQlUwJvEQrXjDPpkJvN" \
+  "gPhYzuUt4A44rvOd_aTSWVPCygO4mZe0ttDff1Mwfyi_f7y_0ItYLTkC3VaxjN--" \
+  "2dOMkL1J7vveF2SnItxaDwQTzT-cQntJwvQ7ldMU90N5RbNLjfnyFwSCCcufnukq" \
+  "xWtbh25WFXg2mib3Gzm0qw")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODIwMjUwODQsIm5iZiI6" \
-  "MTc3OTQzMzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi44OS41MzkuZ2ZiM2M2M2EzLTgxNy50YnoifQ.C" \
-  "IsByIDoplCO-M9qeH_RPmnGUcLgR8WYuAPMoAakwPxNzLP5dRT88fS9WbEFEZ76u" \
-  "KPQzzHUypl_bKTM7x-SXDJxrEJJxj0_Lp238P2Sjjr830ZbnFTmcVScrMLFxfe4o" \
-  "saOSZhvp-X01P_vG128LrP_VXrlXPoR-8n1aZ-SvFVZjv9I9R72j2IsQ0n1AQn0O" \
-  "Y4wdcV9luEmgOn3uHW0aCer2s1f4M8qm0FOLTVgl8beUtdJyVHeHsrt2P7V9vCKL" \
-  "mLQgtjg7WoorKPlEVhcwFXLlkWqEmWPACmvR0nmkzVPUAzADnz5aFKdASY_LNb9d" \
-  "AxACuDJFH657nqfIIaOIw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3NTQ4ODIsIm5iZiI6" \
+  "MTc4MTE2Mjg4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45MC40NTEuZ2IwOTRhYWIwLTI2Mi50YnoifQ.t" \
+  "WmL3dZaukWz18eCr7y1RSPcersdy2hi89RiOtqAbzKZPm17VvOMUbAUFSNUMuuln" \
+  "PBflChHTjoYoKmR67srf81HoYFlYMD8bwuK8cVSL61S5-robA8wU014z4GGG1d-m" \
+  "1H2ljHmF5AErrIJfR8ddrUVs4ftFm45UQczkMYzvVhao2YkI5qpMuCkqTdn7ZuI2" \
+  "E4A8AuaRd5EYzGEkOVMthhZRGLjt7QX1am-aHh747ZSpAeaCry8wfXakhV4V22o6" \
+  "JMPClnf7SSe-asDDcdgDkcPMnMvCgA13KvqN6uKCytyzgOYALCXaopHtLD49pfCq" \
+  "_LMhcloi_cK7cv1v5YTRw")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -934,11 +934,12 @@ aoEx=(
 'enableEmbeddedAdVisibilityLogging&When enabled, enhanced visibility logs will be sent for embedded ads",default:\K!.(?=})&false&s&xpuiJs&1.2.64.407&1.2.77.358'
 'enableEmbeddedNpvAds&Enable embedded display ads on NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460&1.2.77.358'
 'enableEsperantoMigration&Enable esperanto Migration for (HPTO\s)?Ad Formats?",default:\K!.(?=})&false&s&xpuiJs&1.2.6.861&1.2.50.335'
-'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985'
+'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.91.9999'
 'enableFraudLoadSignals&Enable user fraud signals emitted on page load",default:\K!.(?=})&false&s&xpuiJs&1.2.22.975&1.2.62.580'
 'enableHomeAds&Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})&false&s&xpuiJs&1.2.31.1205&1.2.84.477'
 'enableHomeAdStaticBanner&Enables temporary home banner, static version",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.53.440'
 'enableHpto&Hpto announcements on Home",default:\K!.(?=})&false&s&xpuiJs&1.2.65.255'
+'enableHptoLayoutRewrite&Enable the new HomeAdCard flexbox layout rewrite",default:\K!.(?=})&false&s&xpuiJs&1.2.92.0'
 'enableHptoLocationRefactor&Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})&false&s&xpuiJs&1.2.1.958&1.2.20.1218'
 'enableInAppMessaging&Enables quicksilver in-app messaging modal",default:\K!.(?=})&false&s&xpuiJs&1.1.70.610'
 'enableInteractionLogger&Enables the old interaction logger",default:\K!.(?=})&false&s&xpuiJs&1.2.41.434&1.2.64.408'
