@@ -626,15 +626,16 @@ check_write_permission() {
         }
       }
       sudo chown -R "$(id -un)" "${appPath}"
+      sudo chmod -R u+rwX,go-w "${appPath}"
     }
   done
 }
 
 uninstall_spotx() {
-  rm "${appBinary}" 2>/dev/null
-  mv "${appBak}" "${appBinary}"
-  rm "${xpuiSpa}" 2>/dev/null
-  mv "${xpuiBak}" "${xpuiSpa}"
+  rm -f "${appBinary}" 2>/dev/null
+  mv -f "${appBak}" "${appBinary}"
+  rm -f "${xpuiSpa}" 2>/dev/null
+  mv -f "${xpuiBak}" "${xpuiSpa}"
   rm -rf "${xpuiDir}" 2>/dev/null
 }
 
@@ -647,8 +648,8 @@ run_uninstall_check() {
     check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
     [[ "${cleanAB}" ]] && {
       echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
-      rm "${appBak}" 2>/dev/null
-      rm "${xpuiBak}" 2>/dev/null
+      rm -f "${appBak}" 2>/dev/null
+      rm -f "${xpuiBak}" 2>/dev/null
     } || {
       uninstall_spotx
     }
@@ -859,14 +860,14 @@ perlVar() {
 
 xpui_detect() {
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${cleanAB}" ]] && {
-    rm "${appBak}" 2>/dev/null; rm "${xpuiBak}" 2>/dev/null 
+    rm -f "${appBak}" 2>/dev/null; rm -f "${xpuiBak}" 2>/dev/null
     cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"
     ok "Created backup"
     return
   }
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${forceSpotx}" ]] && {
-    [[ -f "${appBak}" ]] && { rm "${appBinary}"; cp "${appBak}" "${appBinary}"; }
-    [[ -f "${xpuiBak}" ]] && { rm "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
+    [[ -f "${appBak}" ]] && { rm -f "${appBinary}"; cp "${appBak}" "${appBinary}"; }
+    [[ -f "${xpuiBak}" ]] && { rm -f "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
     ok "Detected & restored backup"
     return
   }
