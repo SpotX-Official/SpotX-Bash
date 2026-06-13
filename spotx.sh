@@ -8,17 +8,17 @@ latestB_A="55"
 rollbackB_X="262"
 rollbackB_A="262"
 
+clr='\033[0m'
+green='\033[0;32m'
+red='\033[0;31m'
+yellow='\033[0;33m'
+
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
         *) platformType='Linux' ;;
 esac
-
-clr='\033[0m'
-green='\033[0;32m'
-red='\033[0;31m'
-yellow='\033[0;33m'
 
 show_help() {
   echo -e \
@@ -42,6 +42,7 @@ show_help() {
 -S, --skipcodesign     : skip codesigning [macOS]
 --stable               : use with '--installdeb' for stable branch [Linux]
 --uninstall            : uninstall SpotX-Bash
+--verbose              : show detailed patch diagnostics
 -v, --version          : print SpotX-Bash version
 "
 }
@@ -111,6 +112,7 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
         skipcodesign) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
         stable) [[ "${platformType}" == "Linux" ]] && stableVar='true' ;;
         uninstall) uninstallSpotx='true' ;;
+        verbose) verbose='true' ;;
         version) verPrint='true' ;;
         $(date +"%y%d%m%H:%M")) t='true' ;;
         *) echo -e "${red}Error:${clr} '--""${OPTARG}""' not supported\n\n$(show_help)\n" >&2; exit 1 ;;
@@ -192,6 +194,23 @@ macos_set_version() {
   [[ "${rollback}" ]] && versionVar="${rollbackVer}" || versionVar="${buildVer}"
 }
 
+macos_token_check() {
+  local exp now
+  exp=$(perl -MMIME::Base64 -ne '
+    s/\s+//g;
+    my ($p) = split /\./;
+    $p =~ tr{-_}{+/};
+    $p .= "=" x ((4 - length($p) % 4) % 4);
+    my $j = decode_base64($p);
+    print "$1" if $j =~ /"exp"\s*:\s*(\d+)/;
+  ' <<< "${tbzFauth}")
+  now=$(date +%s)
+  [[ -n "${exp}" && "${now}" -ge "${exp}" ]] && {
+    echo -e "\n${red}Error:${clr} The macOS client installer token has expired.\nUpdate SpotX-Bash to the latest version, then try again:\n\n${green} -> is.gd/spotxbash${clr}\n" >&2
+    exit 1
+  }
+}
+
 macos_legacy_notice() {
   local reason="${1}" dGrab
   local d1112=$(echo "=k2YXJ2a1kWT4BzUNhHND1EewMVZtx2RkZnQzUld4ITW1RzRapmTux0aGJjYzVjMkZnUywkdvR0YwIFShlWQ5J2bOdlW" | rev | base64 --decode | base64 --decode)
@@ -262,6 +281,7 @@ macos_prepare() {
   }
   [[ "${installMac}" && "${legacyMac}" ]] && macos_legacy_notice
   [[ "${installMac}" ]] && installClient='true' && downloadVer=$(echo "${fileVar}" | perl -ne '/-(\d+\.\d+\.\d+\.\d+)/ && print "$1"')
+  [[ "${installMac}" && -z "${legacyMac+x}" ]] && macos_token_check
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   macos_set_path
   [[ "${notInstalled}" && "${legacyMac}" ]] && macos_legacy_notice
@@ -293,7 +313,7 @@ linux_client_variant() {
 }
 
 linux_deb_prepare() {
-  command -v apt >/dev/null || { echo -e "${red}Error:${clear} Debian-based Linux distro with APT support is required." >&2; exit 1; }
+  command -v apt >/dev/null || { echo -e "${red}Error:${clr} Debian-based Linux distro with APT support is required.\n" >&2; exit 1; }
   installPath=/usr/share/spotify
   installOutput="${installPath}"
   linux_client_variant
@@ -327,17 +347,10 @@ linux_no_client() {
 }
 
 linux_search_path() {
-  local timeout=6
   local paths=("/opt" "/usr/share" "/var/lib/flatpak" "$HOME/.local/share" "/")
   for path in "${paths[@]}"; do
-    local path="${path}"
-    local timeLimit=$(($(date +%s) + timeout))
-    while (( $(date +%s) < "${timeLimit}" )); do
-      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-      [[ -n "${installPath}" ]] && return 0
-      pgrep -x find > /dev/null || break
-      sleep 1
-    done
+    installPath=$(timeout 6 find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+    [[ -n "${installPath}" ]] && return 0
   done
   return 1
 }
@@ -445,7 +458,8 @@ run_prepare() {
     (($(ver "${clientVer}") > $(ver "${legacyMaxVer}"))) && macos_legacy_notice "toohigh"
   client_version_output
   ver_check
-  command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
+  spotifyPids=$(command pgrep '[sS]potify' 2>/dev/null)
+  [[ -n "${spotifyPids}" ]] && kill -9 ${spotifyPids} 2>/dev/null
   [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
 }
 
@@ -461,7 +475,7 @@ check_write_permission() {
           exit 1
         }
       }
-      sudo chmod -R a+wr "${appPath}"
+      sudo chown -R "$(id -un)" "${appPath}"
     }
   done
 }
@@ -498,9 +512,9 @@ perlvar() {
     local s="$?"
     local m=$(echo "${e}" | cut -d',' -f1)
     local c=$(echo "${e}" | cut -d',' -f2)
-    { { [[ "${s}" != 0 && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${red}Error:${clr} ${a[0]} invalid entry"; } ||
-      { [[ "${m}" == 0 && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${yellow}Warning:${clr} ${a[0]} missing"; } ||
-      { [[ "${a[9]}" && "${c}" != "${a[9]}" && "${debug}" && "${devMode}" && "${t}" ]] && echo -e "${yellow}Warning:${clr} ${a[0]} ${a[9]}, ${c}"; }
+    { { [[ "${s}" != 0 && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && echo -e "${red}Error:${clr} ${a[0]} invalid entry"; } ||
+      { [[ "${m}" == 0 && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && echo -e "${yellow}Warning:${clr} ${a[0]} missing"; } ||
+      { [[ "${a[9]}" && "${c}" != "${a[9]}" && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && echo -e "${yellow}Warning:${clr} ${a[0]} ${a[9]}, ${c}"; }
     }
   }
 }
@@ -508,7 +522,7 @@ perlvar() {
 read_yn() {
   local yn
   while : ; do
-    read -rp "$*" yn
+    read -rp "$*" yn || { echo; return 1; }
     case "$yn" in
       [Yy]* ) return 0 ;;
       [Nn]* ) return 1 ;;
@@ -524,7 +538,7 @@ run_interactive_check() {
     [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
     [[ "${platformType}" == "macOS" && -z "${legacyMac+x}" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
     [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
-    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
+    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || unset installClient; }
     [[ -d "${cachePath}" ]] && read_yn "Clear client app cache? " && clearCache='true'
     (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
     (($(ver "${clientVer}") > $(ver "1.1.99.878"))) && { read_yn "Enable developer mode? " && devMode='true'; }
@@ -567,6 +581,11 @@ linux_deb_install() {
     "0F0UjRXQDJWeWNTW" \
     | rev | base64 --decode | base64 --decode)
   eval "${lc01}"; eval "${lc02}"
+  dpkg-deb --info "${workDir}/${fileVar}" &>/dev/null || {
+    rm "${workDir}/${fileVar}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Downloaded client package is corrupt or incomplete. Exiting...\n" >&2
+    exit 1
+  }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
   [[ -f "${xpuiBak}" ]] && sudo rm "${xpuiBak}" 2>/dev/null
@@ -607,9 +626,14 @@ macos_client_install() {
     "alHZyIWeChFT0F0UjRXQDJWeWNTW" \
     | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
+  tar -tf "$HOME/Downloads/${fileVar}" >/dev/null 2>&1 || {
+    rm "$HOME/Downloads/${fileVar}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Downloaded client archive is corrupt or incomplete. Exiting...\n" >&2
+    exit 1
+  }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   rm -rf "${appPath}" 2>/dev/null
-  mkdir "${appPath}"
+  mkdir -p "${appPath}"
   tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled versionFailed || {
     rm "$HOME/Downloads/${fileVar}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
@@ -629,12 +653,14 @@ run_install_check() {
 
 run_cache_check() {
   [[ "${clearCache}" ]] && {
-    rm -rf "${cachePath}/Browser" 2>/dev/null
-    rm -rf "${cachePath}/Data" 2>/dev/null
-    rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
-    rm -rf "${cachePath}/public.ldb" 2>/dev/null
-    rm "${cachePath}/LocalPrefs.json" 2>/dev/null
-    printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
+    [[ -n "${cachePath}" && -d "${cachePath}" ]] && {
+      rm -rf "${cachePath}/Browser" 2>/dev/null
+      rm -rf "${cachePath}/Data" 2>/dev/null
+      rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
+      rm -rf "${cachePath}/public.ldb" 2>/dev/null
+      rm "${cachePath}/LocalPrefs.json" 2>/dev/null
+      printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
+    } || echo -e "${yellow}Warning:${clr} Cache directory not found, skipping cache clear.\n" >&2
   }
 }
 
@@ -650,7 +676,7 @@ perlVar() {
     IFS='&' read -r -a a <<< "${cmd}"
     local f="${a[4]}"
     local p="${!f}"
-    [[ ! -f "${p}" && "${debug}" && "${devMode}" && "${t}" ]] && {
+    [[ ! -f "${p}" && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && {
       echo -e "${red}Error:${clr} ${a[0]} invalid entry"
       continue
     }
@@ -741,11 +767,15 @@ snapshot_check() {
 
 xpui_open() {
   mkdir -p "${xpuiDir}"
-  unzip -qq "${xpuiSpa}" -d "${xpuiDir}"
+  unzip -qq "${xpuiSpa}" -d "${xpuiDir}" || {
+    rm -rf "${xpuiDir}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Failed to unpack xpui.spa (archive may be corrupt). Exiting...\n" >&2
+    exit 1
+  }
   snapshot_check
-  [[ "${versionFailed}" && -z "${forceVer+x}" || -z "${forceVer+x}" && "${debug}" && "${devMode}" && "${t}" ]] && {
+  [[ "${versionFailed}" && -z "${forceVer+x}" || -z "${forceVer+x}" && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && {
     clientVer=$(perl -ne '/[Vv]ersion[:=,\x22]{1,3}(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"' "${xpuiJs}")
-    [[ -z "${clientVer}" && "${debug}" && "${devMode}" && "${t}" ]] && {
+    [[ -z "${clientVer}" && ( "${debug}" && "${devMode}" && "${t}" || "${verbose}" ) ]] && {
       uninstall_spotx
       echo -e "${red}Error:${clr} Empty client version\n" >&2
       exit 1
@@ -775,7 +805,7 @@ run_core_start() {
   final_setup_check
   check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
   xpui_detect
-  [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 1; }
+  [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 0; }
   xpui_open
   (($(ver "${clientVer}") > $(ver "1.2.56.9999"))) && vendorXpuiJs="${xpuiJs}"
 }
@@ -831,8 +861,15 @@ run_patches() {
 
 run_finish() {
   echo -e "\n//# SpotX was here" >> "${xpuiJs}"
-  rm "${xpuiSpa}"
-  (cd "${xpuiDir}" || exit; zip -qq -r ../xpui.spa .)
+  rm -f "${xpuiPath}/xpui.spa.tmp" 2>/dev/null
+  ( cd "${xpuiDir}" && zip -qq -r "${xpuiPath}/xpui.spa.tmp" . )
+  [[ $? -ne 0 || ! -f "${xpuiPath}/xpui.spa.tmp" ]] && {
+    rm -f "${xpuiPath}/xpui.spa.tmp" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Failed to repackage xpui.spa. Original left intact; restore from backup if needed.\n" >&2
+    exit 1
+  }
+  rm -f "${xpuiSpa}"
+  mv -f "${xpuiPath}/xpui.spa.tmp" "${xpuiSpa}"
   rm -rf "${xpuiDir}"
   [[ "${platformType}" == "macOS" ]] && {
     [[ "${skipCodesign}" ]] && /usr/bin/xattr -cr "${appPath}" 2>/dev/null || { 
@@ -924,10 +961,10 @@ aoEx=(
 'enableAgeAssuranceSettings&Enables the age assurance section in account settings",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442'
 'enableConnectedStateObserver&observer that logs errors related to connected state and ad info",default:\K!.(?=})&false&s&xpuiJs&1.2.53.437'
-'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
+'enableCulturalMoments&Cultural Moment pagess?",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
 'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
-'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210&1.2.52.442'
-'enableDSASetting&Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
+'enableDsaAds&Enable showing DSA .Digital Services? Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210&1.2.52.442'
+'enableDSASetting&Enable DSA .Digital Services? Act. features for desktop and web",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
 'enableEnhancedAdsClientDeconfliction&Enable refactored version of ads orchestrator middleware",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460&1.2.61.443'
 'enableEmbeddedAdsCarousel&embedded ads carousel for the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.73.451'
 'enableEmbeddedAdsFetchingOverCanvas&embedded ads fetching when canvas track is playing. Defaults to true since this is currently existing behavior",default:\K!.(?=})&false&s&xpuiJs&1.2.72.435&1.2.77.358'
@@ -936,7 +973,7 @@ aoEx=(
 'enableEsperantoMigration&Enable esperanto Migration for (HPTO\s)?Ad Formats?",default:\K!.(?=})&false&s&xpuiJs&1.2.6.861&1.2.50.335'
 'enableEsperantoMigrationLeaderboard&Enable esperanto Migration for Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.91.9999'
 'enableFraudLoadSignals&Enable user fraud signals emitted on page load",default:\K!.(?=})&false&s&xpuiJs&1.2.22.975&1.2.62.580'
-'enableHomeAds&Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})&false&s&xpuiJs&1.2.31.1205&1.2.84.477'
+'enableHomeAds&Enable Fi(?:r)?st Impression Takeover ads on Home Page",default:\K!.(?=})&false&s&xpuiJs&1.2.31.1205&1.2.84.477'
 'enableHomeAdStaticBanner&Enables temporary home banner, static version",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.53.440'
 'enableHpto&Hpto announcements on Home",default:\K!.(?=})&false&s&xpuiJs&1.2.65.255'
 'enableHptoLayoutRewrite&Enable the new HomeAdCard flexbox layout rewrite",default:\K!.(?=})&false&s&xpuiJs&1.2.92.0'
@@ -1028,7 +1065,7 @@ expEx=(
 'enableContextMenuShortcuts&inline keyboard shortcuts for common context menu items",default:\K!1&true&s&xpuiJs&1.2.69.448'
 'enableContextualTrackBans&ability to ban.hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442&1.2.83.461'
 'enableCreateButton&create button either in the global navbar or in YLX",values:.{1,3},default:.{1,3}.\KNONE&YOUR_LIBRARY&s&xpuiJs&1.2.57.460&1.2.81.264'
-'enableDiscographyShelf&condensed disography shelf on artist pages",default:\K!.(?=})&true&s&xpuiJs&1.1.79.763&1.2.50.335'
+'enableDiscographyShelf&condensed disc?ography shelf on artist pages",default:\K!.(?=})&true&s&xpuiJs&1.1.79.763&1.2.50.335'
 'enableDynamicNormalizer&dynamic normalizer.compressor",default:\K!1&true&s&xpuiJs&1.2.14.1141&1.2.60.564'
 'enableEightShortcuts&Increase max number of shortcuts on home to 8",default:\K!1&true&s&xpuiJs&1.2.26.1180&1.2.45.454'
 'enableEncoreCards&all cards throughout app to be Encore Cards",default:\K!1&true&s&xpuiJs&1.2.21.1104&1.2.33.1042'
@@ -1108,7 +1145,7 @@ expEx=(
 'enableSearchBox&filter playlists when trying to add songs to a playlist using the contextmenu",default:\K!1&true&s&xpuiJs&1.1.86.857&1.1.93.896'
 'enableSearchSuggestions&the search suggestions dropdown",default:\K!1&true&s&xpuiJs&1.2.72.435'
 'enableSearchV3&new Search experience",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.34.783'
-'enableScrollDrivenAnimations&croll driven animations for cards and shelved",default:\K!1&true&s&xpuiJs&1.2.39.578'
+'enableScrollDrivenAnimations&croll driven animations for cards and shel\w+",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableShareActionBarButton&Shows a share button in entity page action bars that opens the share dialog",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504'
 'enableShareDialog&the share dialog modal instead of the share submenu",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504'
 'enableSharingButtonOnMiniPlayer&sharing button on MiniPlayer .this also moves the ... icon close to the title.",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.43.420'
@@ -1134,7 +1171,7 @@ expEx=(
 'enableUserCreatedArtwork&user created artworks for playlists",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.40.599'
 'enableUserProfileEdit&editing of user.s own profile in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.25.1011'
 'enableUserVideoSettings&Show video preference settings for users to control video playback types",default:\K!1&true&s&xpuiJs&1.2.86.502'
-'enableVenuePages&Enables venus pages",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.74.477'
+'enableVenuePages&Enables ven\w+ pages",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.74.477'
 'enableVideoLabelForSearchResults&video label for search results",default:\K!1&true&s&xpuiJs&1.2.23.1114&1.2.29.605'
 'enableVideoPip&desktop picture-in-picture surface using betamax SDK.",default:\K!1&true&s&xpuiJs&1.2.13.656'
 'enableViewMode&list . compact mode in entity pages",default:\K!1&true&s&xpuiJs&1.2.24.754'

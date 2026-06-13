@@ -1,0 +1,20 @@
+# ShellCheck configuration for spotx.sh
+#
+# spotx.sh deliberately uses several idioms that ShellCheck flags but that are
+# correct for this script. The codes below are disabled project-wide so CI stays
+# green while still catching genuinely new problem classes (parse errors,
+# unhandled cd, dangerous redirects, etc.).
+#
+# SC2015 - "A && B || C": the script's pervasive conditional idiom (intentional).
+# SC2016 - "$ in single quotes": Perl regex/one-liner payloads must NOT expand in shell.
+# SC2034 - "appears unused": many vars are referenced indirectly via ${!name} or
+#          inside eval'd (obfuscated) command strings ShellCheck cannot see.
+# SC2059 - "variables in printf format": format args are color codes / versions /
+#          paths with no '%' — benign here.
+# SC2086 - "quote to prevent splitting": intentional where word-splitting is wanted
+#          (e.g. `kill -9 ${spotifyPids}`); remaining hits are space-free paths.
+# SC2155 - "declare and assign": return values of those command substitutions are
+#          intentionally not inspected.
+# SC2254 - unquoted $(...) in a case pattern (the date-gated developer flag).
+# SC2027 - the `'"${var}"'` quoting idiom inside printf strings (intentional concat).
+disable=SC2015,SC2016,SC2034,SC2059,SC2086,SC2155,SC2254,SC2027

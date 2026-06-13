@@ -1,0 +1,28 @@
+name: ShellCheck
+
+on:
+  push:
+    paths:
+      - 'spotx.sh'
+      - '.shellcheckrc'
+      - '.github/workflows/shellcheck.yml'
+  pull_request:
+    paths:
+      - 'spotx.sh'
+      - '.shellcheckrc'
+      - '.github/workflows/shellcheck.yml'
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate syntax
+        run: bash -n spotx.sh
+
+      - name: Run ShellCheck
+        # Honours .shellcheckrc in the repo root.
+        run: shellcheck spotx.sh
