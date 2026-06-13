@@ -17,4 +17,6 @@
 #          intentionally not inspected.
 # SC2254 - unquoted $(...) in a case pattern (the date-gated developer flag).
 # SC2027 - the `'"${var}"'` quoting idiom inside printf strings (intentional concat).
-disable=SC2015,SC2016,SC2034,SC2059,SC2086,SC2155,SC2254,SC2027
+# SC2317 - "unreachable": false-positive for helper functions invoked later/indirectly.
+# SC2012 - `ls -1t` is intentional for time-sorting timestamp-suffixed backup files.
+disable=SC2015,SC2016,SC2034,SC2059,SC2086,SC2155,SC2254,SC2027,SC2317,SC2012
