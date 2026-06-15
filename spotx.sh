@@ -8,17 +8,17 @@ latestB_A="55"
 rollbackB_X="262"
 rollbackB_A="262"
 
+clr='\033[0m'
+green='\033[0;32m'
+red='\033[0;31m'
+yellow='\033[0;33m'
+
 command -v perl >/dev/null || { echo -e "\n${red}Error:${clr} perl command not found.\nInstall perl on your system then try again.\n" >&2; exit 1; }
 
 case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) platformType='macOS' ;;
         *) platformType='Linux' ;;
 esac
-
-clr='\033[0m'
-green='\033[0;32m'
-red='\033[0;31m'
-yellow='\033[0;33m'
 
 show_help() {
   echo -e \
@@ -208,7 +208,7 @@ macos_legacy_notice() {
 macos_set_path() {
   [[ -z "${installPath+x}" ]] && {
     appPath="/Applications/Spotify.app"
-    [[ -d "${HOME}${appPath}" ]] && { 
+    [[ -d "${HOME}${appPath}" ]] && {
       installPath="${HOME}/Applications"
       installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|')
       return
@@ -293,7 +293,7 @@ linux_client_variant() {
 }
 
 linux_deb_prepare() {
-  command -v apt >/dev/null || { echo -e "${red}Error:${clear} Debian-based Linux distro with APT support is required." >&2; exit 1; }
+  command -v apt >/dev/null || { echo -e "${red}Error:${clr} Debian-based Linux distro with APT support is required.\n" >&2; exit 1; }
   installPath=/usr/share/spotify
   installOutput="${installPath}"
   linux_client_variant
@@ -315,7 +315,7 @@ linux_no_client() {
     echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\nIf another Spotify package is installed, set directory path with '-P' flag.\n" >&2
     exit 1
   }
-  command -v apt >/dev/null && { 
+  command -v apt >/dev/null && {
     interactiveMode='true'
     linux_deb_prepare
     echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
@@ -327,17 +327,10 @@ linux_no_client() {
 }
 
 linux_search_path() {
-  local timeout=6
   local paths=("/opt" "/usr/share" "/var/lib/flatpak" "$HOME/.local/share" "/")
   for path in "${paths[@]}"; do
-    local path="${path}"
-    local timeLimit=$(($(date +%s) + timeout))
-    while (( $(date +%s) < "${timeLimit}" )); do
-      installPath=$(find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-      [[ -n "${installPath}" ]] && return 0
-      pgrep -x find > /dev/null || break
-      sleep 1
-    done
+    installPath=$(timeout 6 find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
+    [[ -n "${installPath}" ]] && return 0
   done
   return 1
 }
@@ -445,15 +438,14 @@ run_prepare() {
     (($(ver "${clientVer}") > $(ver "${legacyMaxVer}"))) && macos_legacy_notice "toohigh"
   client_version_output
   ver_check
-  command pgrep [sS]potify 2>/dev/null | xargs kill -9 2>/dev/null
+  command pkill -9 '[sS]potify' 2>/dev/null
   [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
 }
 
 check_write_permission() {
-  local paths=("$@")
-  for path in "${paths[@]}"; do
-    local path="${path}"
-    [[ ! -w "${path}" ]] && {
+  local target_user="${SUDO_USER:-$(id -un)}"
+  for path_to_check in "$@"; do
+    [[ ! -w "${path_to_check}" ]] && {
       sudo -n true 2>/dev/null || {
         echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in client directory.\nRequesting sudo permission..." >&2
         sudo -v || {
@@ -461,16 +453,17 @@ check_write_permission() {
           exit 1
         }
       }
-      sudo chmod -R a+wr "${appPath}"
+      sudo chown -R "${target_user}" "${path_to_check}"
+      sudo chmod -R u+rwX,go-w "${path_to_check}"
     }
   done
 }
 
 uninstall_spotx() {
-  rm "${appBinary}" 2>/dev/null
-  mv "${appBak}" "${appBinary}"
-  rm "${xpuiSpa}" 2>/dev/null
-  mv "${xpuiBak}" "${xpuiSpa}"
+  rm -f "${appBinary}" 2>/dev/null
+  mv -f "${appBak}" "${appBinary}"
+  rm -f "${xpuiSpa}" 2>/dev/null
+  mv -f "${xpuiBak}" "${xpuiSpa}"
   rm -rf "${xpuiDir}" 2>/dev/null
 }
 
@@ -483,8 +476,8 @@ run_uninstall_check() {
     check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
     [[ "${cleanAB}" ]] && {
       echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
-      rm "${appBak}" 2>/dev/null
-      rm "${xpuiBak}" 2>/dev/null
+      rm -f "${appBak}" 2>/dev/null
+      rm -f "${xpuiBak}" 2>/dev/null
     } || {
       uninstall_spotx
     }
@@ -508,7 +501,7 @@ perlvar() {
 read_yn() {
   local yn
   while : ; do
-    read -rp "$*" yn
+    read -rp "$*" yn || { echo; return 1; }
     case "$yn" in
       [Yy]* ) return 0 ;;
       [Nn]* ) return 1 ;;
@@ -524,7 +517,7 @@ run_interactive_check() {
     [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
     [[ "${platformType}" == "macOS" && -z "${legacyMac+x}" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
     [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
-    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || installClient='false'; }
+    [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || unset installClient; }
     [[ -d "${cachePath}" ]] && read_yn "Clear client app cache? " && clearCache='true'
     (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && { read_yn "Enable new home screen UI? " || oldUi='true'; }
     (($(ver "${clientVer}") > $(ver "1.1.99.878"))) && { read_yn "Enable developer mode? " && devMode='true'; }
@@ -535,13 +528,13 @@ run_interactive_check() {
 }
 
 sudo_check() {
-  command -v sudo &> /dev/null || { 
+  command -v sudo &> /dev/null || {
     echo -e "\n${red}Error:${clr} sudo command not found. Install sudo or run this script as root.\n" >&2
     exit 1
   }
   sudo -n true &> /dev/null || {
     echo -e "This script requires sudo permission to install the client.\nPlease enter your sudo password..."
-    sudo -v || { 
+    sudo -v || {
       echo -e "\n${red}Error:${clr} Failed to obtain sudo permission. Exiting...\n" >&2
       exit 1
     }
@@ -567,6 +560,11 @@ linux_deb_install() {
     "0F0UjRXQDJWeWNTW" \
     | rev | base64 --decode | base64 --decode)
   eval "${lc01}"; eval "${lc02}"
+  dpkg-deb --info "${workDir}/${fileVar}" &>/dev/null || {
+    rm "${workDir}/${fileVar}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Downloaded client package is corrupt or incomplete. Exiting...\n" >&2
+    exit 1
+  }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
   [[ -f "${xpuiBak}" ]] && sudo rm "${xpuiBak}" 2>/dev/null
@@ -607,9 +605,14 @@ macos_client_install() {
     "alHZyIWeChFT0F0UjRXQDJWeWNTW" \
     | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
+  tar -tf "$HOME/Downloads/${fileVar}" >/dev/null 2>&1 || {
+    rm "$HOME/Downloads/${fileVar}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Downloaded client archive is corrupt or incomplete. Exiting...\n" >&2
+    exit 1
+  }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   rm -rf "${appPath}" 2>/dev/null
-  mkdir "${appPath}"
+  mkdir -p "${appPath}"
   tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled versionFailed || {
     rm "$HOME/Downloads/${fileVar}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
@@ -629,12 +632,14 @@ run_install_check() {
 
 run_cache_check() {
   [[ "${clearCache}" ]] && {
-    rm -rf "${cachePath}/Browser" 2>/dev/null
-    rm -rf "${cachePath}/Data" 2>/dev/null
-    rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
-    rm -rf "${cachePath}/public.ldb" 2>/dev/null
-    rm "${cachePath}/LocalPrefs.json" 2>/dev/null
-    printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
+    [[ -n "${cachePath}" && -d "${cachePath}" ]] && {
+      rm -rf "${cachePath}/Browser" 2>/dev/null
+      rm -rf "${cachePath}/Data" 2>/dev/null
+      rm -rf "${cachePath}/Default/Local Storage/leveldb" 2>/dev/null
+      rm -rf "${cachePath}/public.ldb" 2>/dev/null
+      rm "${cachePath}/LocalPrefs.json" 2>/dev/null
+      printf "\xE2\x9C\x94\x20\x43\x6C\x65\x61\x72\x65\x64\x20\x61\x70\x70\x20\x63\x61\x63\x68\x65\n"
+    } || echo -e "${yellow}Warning:${clr} Cache directory not found, skipping cache clear.\n" >&2
   }
 }
 
@@ -646,7 +651,7 @@ final_setup_check() {
 
 perlVar() {
   local A=("$@")
-  for cmd in "${A[@]}"; do 
+  for cmd in "${A[@]}"; do
     IFS='&' read -r -a a <<< "${cmd}"
     local f="${a[4]}"
     local p="${!f}"
@@ -664,14 +669,14 @@ perlVar() {
 
 xpui_detect() {
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${cleanAB}" ]] && {
-    rm "${appBak}" 2>/dev/null; rm "${xpuiBak}" 2>/dev/null 
+    rm -f "${appBak}" 2>/dev/null; rm -f "${xpuiBak}" 2>/dev/null 
     cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"
     printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
     return
   }
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${forceSpotx}" ]] && {
-    [[ -f "${appBak}" ]] && { rm "${appBinary}"; cp "${appBak}" "${appBinary}"; }
-    [[ -f "${xpuiBak}" ]] && { rm "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
+    [[ -f "${appBak}" ]] && { rm -f "${appBinary}"; cp "${appBak}" "${appBinary}"; }
+    [[ -f "${xpuiBak}" ]] && { rm -f "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
     return
   }
@@ -728,7 +733,7 @@ snapshot_check() {
       print $out_fh $decoded, "\n", $existing_content; 
       truncate $out_fh, tell($out_fh); 
       close $out_fh;
-    ' "${snapshotBinary}" "${START_XM}" "${END_XM}" "${xpuiSnapshotJs}" || { 
+    ' "${snapshotBinary}" "${START_XM}" "${END_XM}" "${xpuiSnapshotJs}" || {
       uninstall_spotx
       echo -e "\n${red}Error:${clr} Snapshot processing failed\n" >&2
       exit 1
@@ -741,7 +746,11 @@ snapshot_check() {
 
 xpui_open() {
   mkdir -p "${xpuiDir}"
-  unzip -qq "${xpuiSpa}" -d "${xpuiDir}"
+  unzip -qq "${xpuiSpa}" -d "${xpuiDir}" || {
+    rm -rf "${xpuiDir}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Failed to unpack xpui.spa. Reinstall client. Exiting...\n" >&2
+    exit 1
+  }
   snapshot_check
   [[ "${versionFailed}" && -z "${forceVer+x}" || -z "${forceVer+x}" && "${debug}" && "${devMode}" && "${t}" ]] && {
     clientVer=$(perl -ne '/[Vv]ersion[:=,\x22]{1,3}(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"' "${xpuiJs}")
@@ -775,7 +784,7 @@ run_core_start() {
   final_setup_check
   check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
   xpui_detect
-  [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 1; }
+  [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 0; }
   xpui_open
   (($(ver "${clientVer}") > $(ver "1.2.56.9999"))) && vendorXpuiJs="${xpuiJs}"
 }
@@ -800,7 +809,7 @@ run_patches() {
   [[ "${oldUi}" ]] && {
     perlVar "${oldUiEx[@]}"
     (($(ver "${clientVer}") >= $(ver "1.1.93.896") && $(ver "${clientVer}") <= $(ver "1.2.13.661"))) && printf "\xE2\x9C\x94\x20\x45\x6E\x61\x62\x6C\x65\x64\x20\x6F\x6C\x64\x20\x55\x49\n"
-    (($(ver "${clientVer}") > $(ver "1.2.13.661"))) && { 
+    (($(ver "${clientVer}") > $(ver "1.2.13.661"))) && {
       unset oldUi
       echo -e "\n${yellow}Warning:${clr} Old UI not supported in clients after v1.2.13.661...\n" >&2
     }
@@ -831,11 +840,15 @@ run_patches() {
 
 run_finish() {
   echo -e "\n//# SpotX was here" >> "${xpuiJs}"
-  rm "${xpuiSpa}"
-  (cd "${xpuiDir}" || exit; zip -qq -r ../xpui.spa .)
+  rm -f "${xpuiSpa}"
+  (cd "${xpuiDir}" && zip -qq -r ../xpui.spa .) || {
+    echo -e "\n${red}Error:${clr} Failed to repackage client." >&2
+    echo -e "Spotify is now in a broken state. Please reinstall client.\n" >&2
+    exit 1
+  }
   rm -rf "${xpuiDir}"
   [[ "${platformType}" == "macOS" ]] && {
-    [[ "${skipCodesign}" ]] && /usr/bin/xattr -cr "${appPath}" 2>/dev/null || { 
+    [[ "${skipCodesign}" ]] && /usr/bin/xattr -cr "${appPath}" 2>/dev/null || {
       /usr/bin/xattr -cr "${appPath}" 2>/dev/null
       codesign -f --deep -s - "${appPath}" 2>/dev/null
       printf "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"
