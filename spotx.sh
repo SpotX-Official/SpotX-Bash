@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.92.148.g882cc571"
-rollbackVer="1.2.90.451.gb094aab0"
+buildVer="1.2.93.667.g7b5cc0ce"
+rollbackVer="1.2.92.148.g882cc571"
 
-latestB_X="26"
-latestB_A="26"
-rollbackB_X="262"
-rollbackB_A="262"
+latestB_X="2388"
+latestB_A="2385"
+rollbackB_X="26"
+rollbackB_A="26"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -47,45 +47,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODQxMjIwODMsIm5iZiI6" \
-  "MTc4MTUzMDA4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTIuMTQ4Lmc4ODJjYzU3MS0yNi50YnoifQ.M" \
-  "ta9Rmj9yBGP4bzxhosjAxvIE5wAjbkE4ucADbQ6roW1HzSTGn2-HHWuPHClBu5sd" \
-  "zsa2yooHIa0YNCP5V4pRf5a1iK-AU3CYZO1m8NKbu-6HPXBWESQURH7liagxLQz8" \
-  "d57yVZi2nmlsZx8rHJBartOF_FX_zRjJuBOZc-r3WGBWHI-9espylCarDPEvDa89" \
-  "sePHkoMKZER30CmgLaUZMI7tsApk9ITgEUD6Q54hUvF8MYngIXOFAZ1-FnJP4bRC" \
-  "Gq-9l590fYDXuKQn51z1cls94tc-_J3vH_FdSHOiG1bnuy7WLvSPrdk7tZuPsm7Y" \
-  "KoEssZMDNzRi_4x77hipw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NzE4OTAsIm5iZiI6" \
+  "MTc4MzA3OTg5MCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTMuNjY3Lmc3YjVjYzBjZS0yMzg4LnRieiJ9" \
+  ".Ms9wZE1ISP7F3VkbBj5W4aCB4OhuG-TW9Crd99p0ruuzr9KQ38V-8JxntTZ_5YJ" \
+  "-uVvhomfiR-ZiSHe2VLP1HEbrnfGqPiU7UN-SLw5IV6pHRp2uRU28VX__Bw06OBT" \
+  "VUptwrVuaCKxooHkhrSFM49px0dWJPg3QwS0oNNK-lcVmchEvw4Dh9Jm9Gd8EpWq" \
+  "3_lCDmZKKyoBPJE2PGkQAjCl1J2YJNcppsNaebWbYF0WDdlH627tu-v07O2rVmxJ" \
+  "OyHUslFvpITv1CwDNg7plxFEbdbDeZM1XKjlGeggpkJy-3pV4DzzPfBe1E1dTGUc" \
+  "y_8YZEw6uil72fLs653LqQA")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODQxMjIwODIsIm5iZiI6" \
-  "MTc4MTUzMDA4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Mi4xNDguZzg4MmNjNTcxLTI2LnRieiJ9.i7u" \
-  "jCl0wCBb9IZDIjdc5E9B-7oqFtDucJQBNla2drF2f9dhzgCKz8gwWgC2BeN4c2wY" \
-  "ytRwvu3sjHyeOphO0po5KBUmdyFAILXmUwZLJn-Fgy6dIrWofNlmofI2tGeVm9ST" \
-  "VcCK7-eVhzLZf_FdrVxFcS5NRFzD2ILXqY0SupmlxIEFVDtpRC5uqdjN2zRXp1wL" \
-  "lMQsB4bi7g6hMWdTtbPrI_fn5RWUwFEd2mAjGZoOOywyI9FXf1wMpDtoeL8Y_tCH" \
-  "tZig-dTHcFat8wcB1BQyBHoV0hFrsOTHYliu3C_X4QH9rORzjvRexd4P3A5eAvXG" \
-  "e3UJlPUJ2ayKzhIb-pg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NzE4ODksIm5iZiI6" \
+  "MTc4MzA3OTg4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45My42NjcuZzdiNWNjMGNlLTIzODUudGJ6In0." \
+  "VEKJVarKFhm6__4P0LCuu8zma7NcFGu__Gwqsb97WG3phWkE9G6Bk1EvyOGxZRu0" \
+  "GAkqh0UZQm2OCTOio6kUbrmzudYYN5nd6bHht8yCh0U7u9y5YngS9zb7k8eh6yaN" \
+  "Z1UjtULj4YKaekRDk90Nqzukf88U6PSoKuVvLywpymjMb10tLGKCvpC84sZyKyAm" \
+  "08C0tOxB4lW2ci5nrvcRDcCV4sRMM_FXs3WSS4Byst0_4XpCbCs5Zu0QGpcTd_xv" \
+  "n6T7nqOl4JCQoaDcbNLpqbAmPyKana2CNJc4l-iaqNp4QDcS_48dTOoF5rPbAcOU" \
+  "0ca-VIBUueYh1NEeSLV-jw")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3NTQ4ODMsIm5iZiI6" \
-  "MTc4MTE2Mjg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTAuNDUxLmdiMDk0YWFiMC0yNjIudGJ6In0." \
-  "l47Ko06VUsa-c_ewiMz-qy4O-4KIKoP6tYXWK5HlAA3f1kwLx6_soevM5xwJu7Gp" \
-  "1U4RLVRRGcDhkqU5jf_GuKSKVqa57HATNOnRficgafGxE5ZR37xwtV9PqvEfXjC9" \
-  "7lIlJz5yGJDEWjxep5Q4ygsHAtlZiFsgMJWHJ0BnLqSQmlQlUwJvEQrXjDPpkJvN" \
-  "gPhYzuUt4A44rvOd_aTSWVPCygO4mZe0ttDff1Mwfyi_f7y_0ItYLTkC3VaxjN--" \
-  "2dOMkL1J7vveF2SnItxaDwQTzT-cQntJwvQ7ldMU90N5RbNLjfnyFwSCCcufnukq" \
-  "xWtbh25WFXg2mib3Gzm0qw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NjQ2ODQsIm5iZiI6" \
+  "MTc4MzA3MjY4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTIuMTQ4Lmc4ODJjYzU3MS0yNi50YnoifQ.X" \
+  "NWUbG3S_HJnu8qGgny--Qax5UThn-FqjBR9fQ_MjTsahJcs1It7Vp34QMlhuO7ny" \
+  "qOpql68OpvYdILcsJZgZeSqub0SV4VcTH1uY1d5yfDG8YDVF5kHgR0Nl3oKqCHSm" \
+  "EASEuwnhTONspAwKdyr6PhrWR5IpznUWtYsQe_OMwGNb3ycS6eJVuBOOQT-q-m6x" \
+  "XV5aQEcWXbB0D_eR9MCYvQnWJ0qsPRKT-fPj8pVc1arF0GsUx73dszYvqKGItsWl" \
+  "PXMakY48wkhSidqji8FnhAxJIA0OPXkscsjPz5Mk3li6QeiRNxNi_ZUqloGJzhZH" \
+  "RjFeEXP_PVoQqJlSg5bFQ")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODM3NTQ4ODIsIm5iZiI6" \
-  "MTc4MTE2Mjg4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45MC40NTEuZ2IwOTRhYWIwLTI2Mi50YnoifQ.t" \
-  "WmL3dZaukWz18eCr7y1RSPcersdy2hi89RiOtqAbzKZPm17VvOMUbAUFSNUMuuln" \
-  "PBflChHTjoYoKmR67srf81HoYFlYMD8bwuK8cVSL61S5-robA8wU014z4GGG1d-m" \
-  "1H2ljHmF5AErrIJfR8ddrUVs4ftFm45UQczkMYzvVhao2YkI5qpMuCkqTdn7ZuI2" \
-  "E4A8AuaRd5EYzGEkOVMthhZRGLjt7QX1am-aHh747ZSpAeaCry8wfXakhV4V22o6" \
-  "JMPClnf7SSe-asDDcdgDkcPMnMvCgA13KvqN6uKCytyzgOYALCXaopHtLD49pfCq" \
-  "_LMhcloi_cK7cv1v5YTRw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NjQ2ODMsIm5iZiI6" \
+  "MTc4MzA3MjY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Mi4xNDguZzg4MmNjNTcxLTI2LnRieiJ9.tbq" \
+  "9qTZDPSDOUnK19LOAM87WNg-_48dLplrgwllprPNdZSP47bG0KZ0BSZHEbrR9v5O" \
+  "rV9RWJZLinVA4hYQ2N5eH0wUPXz7JnIBL7hiAzg032vfZ4SGIn0xPtKSRwzQxJXJ" \
+  "Wc9aaVM63i2WRelRlet7U12asFyjNg4JAoQs_azaKQHjVIPPzfaUgNt929CiX2kn" \
+  "EPvrDe0OxZT7vjfqm9MRHZaAl0hllOOZ-dD1UPR49Q6P_Wwi7gJjMmEIzfDD1ZHI" \
+  "iiLod5-N-ez5MpCX2rWt1LAq8zLPR-jAnUw2ERIblcmp_ROgrpTc5po1mkKz1L_g" \
+  "GQCFP7QJzhYBeiAyJUQ")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -931,11 +931,14 @@ aoEx=(
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&g&appBinary&1.1.70.610'
 'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578'
 'embeddedAdImpressionDoesNotIgnoreVisilibility&If enabled, we do consider percent visibility when logging the display ad impression.{0,49}",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397&1.2.84.477'
+'enable_ad_feedback_home_free&Kill switch for ad feedback on home ad format for free users",default:\K!.(?=})&false&s&xpuiJs&1.2.93.650'
+'enable_ad_feedback_home_premium&Kill switch for ad feedback on home ad format for premium users",default:\K!.(?=})&false&s&xpuiJs&1.2.93.650'
+'enable_ad_feedback_milestone_3&Enable ad feedback milestone 3 feature",default:\K!.(?=})&false&s&xpuiJs&1.2.93.650'
 'enableAgeAssuranceComments&Enables the age assurance gating for comments feature",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceFriendActivity&Enables the age assurance gating for friend activity feed",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceProfileMenu&Enables the age assurance entry point in the profile menu .{0,43}",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
 'enableAgeAssuranceSettings&Enables the age assurance section in account settings",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
-'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442'
+'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442&1.2.92.148'
 'enableConnectedStateObserver&observer that logs errors related to connected state and ad info",default:\K!.(?=})&false&s&xpuiJs&1.2.53.437'
 'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
 'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
