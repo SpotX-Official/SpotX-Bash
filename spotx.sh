@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.93.667.g7b5cc0ce"
-rollbackVer="1.2.92.148.g882cc571"
+buildVer="1.2.94.583.g60394bd5"
+rollbackVer="1.2.93.667.g7b5cc0ce"
 
-latestB_X="2388"
-latestB_A="2385"
-rollbackB_X="26"
-rollbackB_A="26"
+latestB_X="4881"
+latestB_A="4872"
+rollbackB_X="2388"
+rollbackB_A="2385"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -47,45 +47,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NzE4OTAsIm5iZiI6" \
-  "MTc4MzA3OTg5MCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTMuNjY3Lmc3YjVjYzBjZS0yMzg4LnRieiJ9" \
-  ".Ms9wZE1ISP7F3VkbBj5W4aCB4OhuG-TW9Crd99p0ruuzr9KQ38V-8JxntTZ_5YJ" \
-  "-uVvhomfiR-ZiSHe2VLP1HEbrnfGqPiU7UN-SLw5IV6pHRp2uRU28VX__Bw06OBT" \
-  "VUptwrVuaCKxooHkhrSFM49px0dWJPg3QwS0oNNK-lcVmchEvw4Dh9Jm9Gd8EpWq" \
-  "3_lCDmZKKyoBPJE2PGkQAjCl1J2YJNcppsNaebWbYF0WDdlH627tu-v07O2rVmxJ" \
-  "OyHUslFvpITv1CwDNg7plxFEbdbDeZM1XKjlGeggpkJy-3pV4DzzPfBe1E1dTGUc" \
-  "y_8YZEw6uil72fLs653LqQA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODY4MDk0ODgsIm5iZiI6" \
+  "MTc4NDIxNzQ4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTQuNTgzLmc2MDM5NGJkNS00ODgxLnRieiJ9" \
+  ".kxtysiyM75Sk0uZ2wZjnWnDrf40Hhjw8qUkW_Ott7-aa-Z3BEmRO7px-QDf25Of" \
+  "fox48sICQGMnbTdw-ysa0G3XRqeHqfwnvH_LI4Y2kB2hG-Lv3DHAnVQMY7W9vZR1" \
+  "syDeM94UOe6M6SGNDMquAh0LbbPg-TwNhiXWgGBdCK5BxPTirN0ABK3XYKTfkreK" \
+  "UYVC7MsODGWRRypMmJuO36dUvY8UCmptQ0r_cJVuXTZWmS2FiB1mouKYMXxRBh4v" \
+  "eJvXV8v-gCKePxFTV5wIBBVaioNjlNSUnphKlwoibRswnWVE1tmxDjVsYcl3Wpn-" \
+  "GsP5spgl8Q6hDnWljPFEz1w")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NzE4ODksIm5iZiI6" \
-  "MTc4MzA3OTg4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45My42NjcuZzdiNWNjMGNlLTIzODUudGJ6In0." \
-  "VEKJVarKFhm6__4P0LCuu8zma7NcFGu__Gwqsb97WG3phWkE9G6Bk1EvyOGxZRu0" \
-  "GAkqh0UZQm2OCTOio6kUbrmzudYYN5nd6bHht8yCh0U7u9y5YngS9zb7k8eh6yaN" \
-  "Z1UjtULj4YKaekRDk90Nqzukf88U6PSoKuVvLywpymjMb10tLGKCvpC84sZyKyAm" \
-  "08C0tOxB4lW2ci5nrvcRDcCV4sRMM_FXs3WSS4Byst0_4XpCbCs5Zu0QGpcTd_xv" \
-  "n6T7nqOl4JCQoaDcbNLpqbAmPyKana2CNJc4l-iaqNp4QDcS_48dTOoF5rPbAcOU" \
-  "0ca-VIBUueYh1NEeSLV-jw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODY4MDk0ODgsIm5iZiI6" \
+  "MTc4NDIxNzQ4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45NC41ODMuZzYwMzk0YmQ1LTQ4NzIudGJ6In0." \
+  "dgikJbvCtP540BHTmB-PCnZR7bagMsocETWW64nGYaJiz_dOxNqszB2MkBDPaboQ" \
+  "LJpPtyocB92z-gVpbZeQNTkaK0jYBp4yIzF5RBk6AUMQNmnKkmTaggELxtit0euc" \
+  "bT0_ieDyqTl3tskBo68rrw1ifNnwZVRPsy07dL_RYQrY3meXuQqf8r0KxhqTysgj" \
+  "1pN7OQwO_sAS8WpNpZZ1vIeTMVf9ZQGmqh19Bx6dbCcDgrzTPgG7BrRHtcOa6tXG" \
+  "WbfqVVyKVYSwDNVazIRR4NAjK4n0mfy_7t5r3eVfe04JTITNo0yX_kbybLMReRCh" \
+  "lACVioAhwrvZWfirYjK8jw")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NjQ2ODQsIm5iZiI6" \
-  "MTc4MzA3MjY4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTIuMTQ4Lmc4ODJjYzU3MS0yNi50YnoifQ.X" \
-  "NWUbG3S_HJnu8qGgny--Qax5UThn-FqjBR9fQ_MjTsahJcs1It7Vp34QMlhuO7ny" \
-  "qOpql68OpvYdILcsJZgZeSqub0SV4VcTH1uY1d5yfDG8YDVF5kHgR0Nl3oKqCHSm" \
-  "EASEuwnhTONspAwKdyr6PhrWR5IpznUWtYsQe_OMwGNb3ycS6eJVuBOOQT-q-m6x" \
-  "XV5aQEcWXbB0D_eR9MCYvQnWJ0qsPRKT-fPj8pVc1arF0GsUx73dszYvqKGItsWl" \
-  "PXMakY48wkhSidqji8FnhAxJIA0OPXkscsjPz5Mk3li6QeiRNxNi_ZUqloGJzhZH" \
-  "RjFeEXP_PVoQqJlSg5bFQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODY4MDU4ODQsIm5iZiI6" \
+  "MTc4NDIxMzg4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTMuNjY3Lmc3YjVjYzBjZS0yMzg4LnRieiJ9" \
+  ".TImdHMAe0XIJldwwf_pHsz4K-C-dcaYg2cJqrXZovmmB8WRxRCPvYwSJnduwGi8" \
+  "Y-aiEMTqnLul0DF0AquzXFRpu8u1aX9lET64wv9PYdUZ7ijBCskNWIZKL8uyf5WN" \
+  "eJeA2qNMXxdwQtwX2bYwCCcwpq13Fi6iIjSHo5tnexz1vgmujHd-4PW4nfqE6SPV" \
+  "I2gLbvTAmtlgpvFkO8dSPbDEzMb-mGSD2H_qRdfmAbD6bdhyljwHG3ZJeMwGsdc3" \
+  "Vffh-GSjMG5viu3nbEXo6KXj2yzAUg1GOhpNefTPTTXkaGFUqeqi7KtNMQVLkyz7" \
+  "n49X1xTa1tK-50c2Gyv5HPw")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODU2NjQ2ODMsIm5iZiI6" \
-  "MTc4MzA3MjY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Mi4xNDguZzg4MmNjNTcxLTI2LnRieiJ9.tbq" \
-  "9qTZDPSDOUnK19LOAM87WNg-_48dLplrgwllprPNdZSP47bG0KZ0BSZHEbrR9v5O" \
-  "rV9RWJZLinVA4hYQ2N5eH0wUPXz7JnIBL7hiAzg032vfZ4SGIn0xPtKSRwzQxJXJ" \
-  "Wc9aaVM63i2WRelRlet7U12asFyjNg4JAoQs_azaKQHjVIPPzfaUgNt929CiX2kn" \
-  "EPvrDe0OxZT7vjfqm9MRHZaAl0hllOOZ-dD1UPR49Q6P_Wwi7gJjMmEIzfDD1ZHI" \
-  "iiLod5-N-ez5MpCX2rWt1LAq8zLPR-jAnUw2ERIblcmp_ROgrpTc5po1mkKz1L_g" \
-  "GQCFP7QJzhYBeiAyJUQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODY4MDU4ODMsIm5iZiI6" \
+  "MTc4NDIxMzg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45My42NjcuZzdiNWNjMGNlLTIzODUudGJ6In0." \
+  "gzHERnomKyNB7L2bZjz3wOt_W6NoDPk-bHvNQRsWecdinnv1mXchC92ICK8dBJeh" \
+  "W2yfoFb-GaANn1Ky48Eie5FeO_rE0C8Y1u6FJnPbz9qgvFEx_2ebVF3c6cPF5hag" \
+  "i3b3pCjsvWbYVsi4tPIJaJ3S7WX_mmg-KiVeseUFDvEOvdT_Rf_H0YM2hNwGdjhw" \
+  "74y0O2H_a-4jgG2qSSMBByI5ldfdypm_S-GiH7uIajNtHEmxt-XpoeHbbnunKoMy" \
+  "XCpCq1x1j1FYrMfNaWFkJtf7LEY2STMa33lXoIEnkxmW1VwwKkywoLBlsfxFE0a0" \
+  "0wFx8b66ioOoAGY07D8wFg")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -887,7 +887,7 @@ freeEx=(
 'hptoEnabled&hptoEnabled:!\K0&1&s&xpuiJs'
 'hptoShown&isHptoShown:!\K0&1&gs&homeHptoJs&1.1.85.884&1.2.20.1218'
 'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104'
-'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&gs&appBinary&1.2.53.437'
+'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&gs&appBinary&1.2.53.437&1.2.93.667'
 'stateS1&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.53.437&1.2.55.235&macOS'
 'stateS2&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.53.437&1.2.84.476&Linux'
 'stateS3&[\x00\x0A\x1A]\K\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x73\x74\x61\x74\x65\x00)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235&&macOS'
@@ -907,7 +907,7 @@ newUiEx=(
 'enableNavAltExperiment&Enable the new home structure and navigation",values:.,default:\K..DISABLED&true&&xpuiJs&1.1.94.864&1.1.96.785'
 'enableNavAltExperiment2&Enable the new home structure and navigation",values:.,default:.\K.DISABLED&.ENABLED_CENTER&&xpuiJs&1.1.97.956&1.2.2.582'
 'enablePanelSizeCoordination&Enable Panel Size Coordination between the left sidebar, the main view and the right sidebar",default:\K!.(?=})&true&s&xpuiJs&1.2.7.1264&1.2.50.335'
-'enableRightSidebar&Enable the view on the right sidebar",default:\K!1&true&s&xpuiJs&1.1.98.683&1.2.23.1125'
+'enableRightSidebar&Enable the view on the right sidebar",default:\K!1&true&s&xpuiJs&1.1.98.683&1.2.23.1125&1.2.93.667'
 'enableRightSidebarLyrics&Show lyrics in the right sidebar",default:\K!1&true&s&xpuiJs&1.2.0.1165'
 'enableYLXSidebar&Enable Your Library X view of the left sidebar",default:\K!1&true&s&xpuiJs&1.1.97.962&1.2.13.661'
 )
@@ -925,7 +925,7 @@ lyricsBgEx=(
 aoEx=(
 'aboutSpotX&((..createElement|children:\(.{1,7}\))\(.{1,7},\{source:).{1,7}get\("about.copyright",.\),paragraphClassName:("[^"]+"|.)(?=\}\))&$1"<h3>About SpotX / SpotX-Bash</h3><br><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'\'' fill='\''#fff'\''/></svg> Github</summary><a href='\''https://github.com/SpotX-Official/SpotX'\''>SpotX \(Windows\)</a><br><a href='\''https://github.com/SpotX-Official/SpotX-Bash'\''>SpotX-Bash \(Linux/macOS\)</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path id='\''telegram-1'\'' d='\''M18.384,22.779c0.322,0.228 0.737,0.285 1.107,0.145c0.37,-0.141 0.642,-0.457 0.724,-0.84c0.869,-4.084 2.977,-14.421 3.768,-18.136c0.06,-0.28 -0.04,-0.571 -0.26,-0.758c-0.22,-0.187 -0.525,-0.241 -0.797,-0.14c-4.193,1.552 -17.106,6.397 -22.384,8.35c-0.335,0.124 -0.553,0.446 -0.542,0.799c0.012,0.354 0.25,0.661 0.593,0.764c2.367,0.708 5.474,1.693 5.474,1.693c0,0 1.452,4.385 2.209,6.615c0.095,0.28 0.314,0.5 0.603,0.576c0.288,0.075 0.596,-0.004 0.811,-0.207c1.216,-1.148 3.096,-2.923 3.096,-2.923c0,0 3.572,2.619 5.598,4.062Zm-11.01,-8.677l1.679,5.538l0.373,-3.507c0,0 6.487,-5.851 10.185,-9.186c0.108,-0.098 0.123,-0.262 0.033,-0.377c-0.089,-0.115 -0.253,-0.142 -0.376,-0.064c-4.286,2.737 -11.894,7.596 -11.894,7.596Z'\'' fill='\''#fff'\''/></svg> Telegram</summary><a href='\''https://t.me/spotify_windows_mod'\''>SpotX Channel</a><br><a href='\''https://t.me/SpotxCommunity'\''>SpotX Community</a><br><br/></details><details><summary><svg xmlns='\''http://www.w3.org/2000/svg'\'' width='\''20'\'' height='\''20'\'' viewBox='\''0 0 24 24'\''><path d='\''M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1.25 17c0 .69-.559 1.25-1.25 1.25-.689 0-1.25-.56-1.25-1.25s.561-1.25 1.25-1.25c.691 0 1.25.56 1.25 1.25zm1.393-9.998c-.608-.616-1.515-.955-2.551-.955-2.18 0-3.59 1.55-3.59 3.95h2.011c0-1.486.829-2.013 1.538-2.013.634 0 1.307.421 1.364 1.226.062.847-.39 1.277-.962 1.821-1.412 1.343-1.438 1.993-1.432 3.468h2.005c-.013-.664.03-1.203.935-2.178.677-.73 1.519-1.638 1.536-3.022.011-.924-.284-1.719-.854-2.297z'\'' fill='\''#fff'\''/></svg> FAQ</summary><a href='\''https://te.legra.ph/SpotX-FAQ-09-19'\''>Windows</a><br><a href='\''https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ'\''>Linux/macOS</a></details><br><h4>DISCLAIMER</h4>SpotX is a modified version of the official Spotify\x26reg; client, provided \x26quot;as is\x26quot; for the purpose of evaluation at user'\''s own risk. Source code for SpotX is available separately and free of charge under open source software license agreements. SpotX is not affiliated with Spotify\x26reg;, Spotify AB or Spotify Group.<br><br>Spotify\x26reg; is a registered trademark of Spotify Group."&&xpuiDesktopModalsJs&1.1.79.763'
 'allowSwitchingBetweenHomeAdsAndHpto&opposed to only showing the legacy HPTO format.",default:\K!.(?=})&false&s&xpuiJs&1.2.34.783'
-'betamaxFilterNegativeDuration&for duration that is negative",default:\K!.(?=})&false&s&xpuiJs'
+'betamaxFilterNegativeDuration&for duration that is negative",default:\K!.(?=})&false&s&xpuiJs&1.1.59.001&1.2.93.667'
 'bGabo&\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65\x2F\x70)&\x00&g&appBinary&1.1.84.716'
 'bLogic&\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)&\x00&&appBinary&1.1.70.610&1.2.28.581'
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&g&appBinary&1.1.70.610'
@@ -941,12 +941,13 @@ aoEx=(
 'enableCanvasAds&Enable Canvas for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.52.442&1.2.92.148'
 'enableConnectedStateObserver&observer that logs errors related to connected state and ad info",default:\K!.(?=})&false&s&xpuiJs&1.2.53.437'
 'enableCulturalMoments&Cultural Moment pagess",default:\K!.(?=})&false&s&xpuiJs&1.2.7.1264&1.2.50.335'
-'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751'
+'enableDesktopMusicLeavebehinds&Enable music leavebehinds on eligible playlists for desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751&1.2.93.667'
 'enableDsaAds&Enable showing DSA .Digital Services Act. context menu and modal for ads",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210&1.2.52.442'
 'enableDSASetting&Enable DSA .Digital Service Act. features for desktop and web",default:\K!.(?=})&false&s&xpuiJs&1.2.20.1210'
 'enableEnhancedAdsClientDeconfliction&Enable refactored version of ads orchestrator middleware",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460&1.2.61.443'
 'enableEmbeddedAdsCarousel&embedded ads carousel for the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.73.451'
 'enableEmbeddedAdsFetchingOverCanvas&embedded ads fetching when canvas track is playing. Defaults to true since this is currently existing behavior",default:\K!.(?=})&false&s&xpuiJs&1.2.72.435&1.2.77.358'
+'enableEmbeddedAdHtmlDisplay&Enable HTML display ads in the embedded NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.94.0'
 'enableEmbeddedAdVisibilityLogging&When enabled, enhanced visibility logs will be sent for embedded ads",default:\K!.(?=})&false&s&xpuiJs&1.2.64.407&1.2.77.358'
 'enableEmbeddedNpvAds&Enable embedded display ads on NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.57.460&1.2.77.358'
 'enableEsperantoMigration&Enable esperanto Migration for (HPTO\s)?Ad Formats?",default:\K!.(?=})&false&s&xpuiJs&1.2.6.861&1.2.50.335'
@@ -971,7 +972,7 @@ aoEx=(
 'enablePodcastSponsoredContent&Enable sponsored content information for podcasts",default:\K!.(?=})&false&s&xpuiJs&1.2.30.1135&1.2.50.335'
 'enablePromotions&Enables promotions on home",default:\K!.(?=})&false&s&xpuiJs&1.2.38.720&1.2.45.454'
 'enableSaxLeaderboardAds&Enable SAX Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.62.575&1.2.82.428'
-'enableShowLeavebehindConsolidation&Enable show leavebehinds consolidated experience",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114'
+'enableShowLeavebehindConsolidation&Enable show leavebehinds consolidated experience",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114&1.2.93.667'
 'enableSponsoredPlaylistEsperantoMigration&Enable esperanto Migration for Sponsored Playlist Ad Formats",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.50.335'
 'enableSurveyAds&Enable Spotify Brand Lift .SBL. Surveys in the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.43.420&1.2.63.394'
 'enableUnderAgeBlockingModal&Enables the underage blocking modal for accounts in blocked/pending disabled state",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397'
@@ -1017,7 +1018,7 @@ expEx=(
 'enableAttackOnTitanEasterEgg&Titan Easter egg turning progress bar red when playing official soundtrack",default:\K!.(?=})&true&s&xpuiJs&1.2.6.861&1.2.50.335'
 'enableAudiobookPrerelease&audiobook prerelease pages",default:\K!1&true&s&xpuiJs&1.2.33.1039&1.2.47.366'
 'enableAudiobooks&Audiobooks feature on ClientX",default:\K!1&true&s&xpuiJs&1.1.74.631&1.2.46.462'
-'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205'
+'enableAutoSeekToVideoBufferedStartPosition&avoid initial seek if the initial position is not buffered",default:\K!1&true&s&xpuiJs&1.2.31.1205&1.2.93.667'
 'enableBackendSearchHistory&Enable backend search history",default:\K!1&true&s&xpuiJs&1.2.60.564&1.2.85.519'
 'enableBanArtistAction&context menu action to ban/unban artists",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.42.290'
 'enableBetamaxSdkSubtitlesDesktopX&rendering subtitles on the betamax SDK on DesktopX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610'
@@ -1061,7 +1062,7 @@ expEx=(
 'enableHomePin&pinning of home shelves",default:\K!1&true&s&xpuiJs&1.2.45.451'
 'enableIgnoreInRecommendations&Ignore In Recommendations for desktop and web",default:\K!.(?=})&true&s&xpuiJs&1.1.87.612&1.2.50.335'
 'enableInlineCuration&new inline playlist curation tools",default:\K!1&true&s&xpuiJs&1.1.70.610&1.2.25.1011'
-'enableLikedSongsAsPlaylist&Liked Songs on list platform with playlist uri",default:\K!1&true&s&xpuiJs&1.2.75.499'
+'enableLikedSongsAsPlaylist&Liked Songs on list platform with playlist uri",default:\K!1&true&s&xpuiJs&1.2.75.499&1.2.93.667'
 'enableLikedSongsFilterTags&Show filter tags on the Liked Songs entity view",default:\K!1&true&s&xpuiJs&1.2.32.985'
 #'enableLikedSongsListPlatform&Liked Songs on list platform",default:\K!1&true&s&xpuiJs&1.2.41.434'
 'enableListPrivateByDefaultSetting&List Private By Default setting in Desktop Social Settings",default:\K!1&true&s&xpuiJs&1.2.78.397'
@@ -1101,7 +1102,7 @@ expEx=(
 'enablePlaylistCreationFlow&new playlist creation flow in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.93.896'
 'enablePlaylistPermissionsProd&Playlist Permissions flows for Prod",default:\K!.(?=})&true&s&xpuiJs&1.1.75.572&1.2.50.335'
 'enablePodcastChaptersInNpv&showing podcast chapters in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.22.975&1.2.50.335'
-'enablePodcastChapterPage&the podcast chapter entity page",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504'
+'enablePodcastChapterPage&the podcast chapter entity page",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504&1.2.93.667'
 'enablePodcastDescriptionAutomaticLinkification&Linkifies anything looking like a url in a podcast description.",default:\K!1&true&s&xpuiJs&1.2.19.937'
 'enablePremiumUserForMiniPlayer&premium user flag for mini player",default:\K!1&true&s&xpuiJs&1.2.32.985'
 'enablePrereleaseRadar&Show a curated list of upcoming albums to a user",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.45.454'
@@ -1126,14 +1127,14 @@ expEx=(
 'enableSearchV3&new Search experience",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.34.783'
 'enableScrollDrivenAnimations&croll driven animations for cards and shelved",default:\K!1&true&s&xpuiJs&1.2.39.578'
 'enableShareActionBarButton&Shows a share button in entity page action bars that opens the share dialog",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504'
-'enableShareDialog&the share dialog modal instead of the share submenu",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504'
+'enableShareDialog&the share dialog modal instead of the share submenu",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504&1.2.93.667'
 'enableSharingButtonOnMiniPlayer&sharing button on MiniPlayer .this also moves the ... icon close to the title.",default:\K!1&true&s&xpuiJs&1.2.39.578&1.2.43.420'
 'enableShortLinks&short links for sharing",default:\K!1&true&s&xpuiJs&1.2.34.783'
 'enableShowFollowsSetting&control if followers and following lists are shown on profile",default:\K!.(?=})&true&s&xpuiJs&1.2.1.958&1.2.50.335'
 'enableShowRating&new UI for rating books and podcasts",default:\K!1&true&s&xpuiJs&1.2.32.985&1.2.62.580'
 'enableShuffleSettings&shuffle settings section in advanced settings",default:\K!1&true&s&xpuiJs&1.2.75.499'
 'enableSidebarAnimations&animations on the left and right on the sidebars and makes the right sidebar collapsible",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.37.701'
-'enableSilenceTrimmer&silence trimming in podcasts",default:\K!1&true&s&xpuiJs&1.1.99.871'
+'enableSilenceTrimmer&silence trimming in podcasts",default:\K!1&true&s&xpuiJs&1.1.99.871&1.2.93.667'
 'enableSkipNextTooltip&tooltip that shows a preview of the next item in queue.",values:.{1,3},default:.{1,4}\KDisabled&Expanded&s&xpuiJs&1.2.65.255&1.2.85.519'
 'enableSocialConnectOnDesktop&the Social Connect API that powers group listening sessions for Desktop",values:.{1,3},default:.{1,4}\KDISABLED&ENABLED&s&xpuiJs&1.2.21.1104&1.2.45.454'
 'enableSmallerLineHeight&line height 1.5 on the .body ..",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.23.1125'
