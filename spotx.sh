@@ -142,7 +142,7 @@ sxbLiveVer=$(printf "%s" \
   "kcwwmW0V0VPRXQ6dlb1MEWyF1RYV3dxs0a4xGTjR3QaNWNDhlcRdEWvhTeKdWVtJGd" \
   "BNkY5Z1Rjd2dIlUaw42YspVMadjUpl0Z3BzY0F0UjRXQDJWeWNTW" \
   | rev | base64 --decode | base64 --decode)
-sxbLive=$(eval "${sxbLiveVer}")
+[[ "${SPOTX_BUILD_MODE}" ]] && sxbLive="${buildVer}" || sxbLive=$(eval "${sxbLiveVer}")
 sxbVer=$(echo ${buildVer} | perl -ne '/(.*)\./ && print "$1"')
 verCk=$(printf "%s" \
   "9QzRYNGayMGaKdUZwkzRjpXODplb1k3YwJ0QRdWVHJWaGdkYwZUbkhmQ5NGcCNl" \
@@ -481,7 +481,7 @@ run_prepare() {
     (($(ver "${clientVer}") > $(ver "${legacyMaxVer}"))) && macos_legacy_notice "toohigh"
   client_version_output
   ver_check
-  command pkill -9 '[sS]potify' 2>/dev/null
+  [[ -z "${SPOTX_BUILD_MODE}" ]] && command pkill -9 '[sS]potify' 2>/dev/null
   [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
 }
 
