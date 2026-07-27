@@ -277,16 +277,18 @@ macos_prepare() {
 }
 
 linux_client_variant() {
-  [[ "${installPath}" == *"flatpak"* ]] && {
-    command -v flatpak >/dev/null && flatpak list | grep spotify >/dev/null && {
-      flatpakVer=$(LANG=C.UTF-8 flatpak info com.spotify.Client | grep Version: | perl -ne '/Version: (1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"')
-      [[ -z "${flatpakVer+x}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
-      cachePath=$(timeout 10 find /var/lib/flatpak/ $HOME/.var/app -type d -path "*com.spotify.Client/cache/spotify*" -name "spotify" -print -quit 2>/dev/null)
+  [[ "${clientVariant}" == "flatpak" || "${installPath}" == *"flatpak"* ]] && {
+    command -v flatpak >/dev/null && flatpak info com.spotify.Client >/dev/null 2>&1 && {
+      flatpakVer=$(LC_ALL=C flatpak info com.spotify.Client 2>/dev/null | perl -ne '/Version: (1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"')
+      [[ -z "${flatpakVer}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
+      cachePath="${HOME}/.var/app/com.spotify.Client/cache/spotify"
+      [[ -d "${cachePath}" ]] || unset cachePath
     }
     return 0
   }
   [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* ]] && {
-    cachePath=$(timeout 10 find $HOME/.cache/ -type d -path "*.cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
+    cachePath="${HOME}/.cache/spotify"
+    [[ -d "${cachePath}" ]] || unset cachePath
     return 0
   }
   return 0
@@ -326,16 +328,56 @@ linux_no_client() {
   exit 1
 }
 
+linux_resolve_client_path() {
+  local base="${1%/}" candidate
+  [[ -n "${base}" ]] || return 1
+  for candidate in \
+    "${base}" \
+    "${base}/extra/share/spotify" \
+    "${base}/share/spotify" \
+    "${base}/files/extra/share/spotify" \
+    "${base}/files/share/spotify"; do
+    [[ -f "${candidate}/Apps/xpui.spa" ]] && {
+      installPath="${candidate}"
+      return 0
+    }
+  done
+  return 1
+}
+
 linux_search_path() {
-  local paths=("/opt" "/usr/share" "/var/lib/flatpak" "$HOME/.local/share" "/")
+  local paths=("/opt" "/usr/share" "/usr/lib" "$HOME/.local/share" "/var/lib/flatpak/app/com.spotify.Client")
+  local flatpakPath spotifyBinary xpuiFile path
+  linux_resolve_client_path "/opt/spotify" && return 0
+  linux_resolve_client_path "/usr/share/spotify" && return 0
+  linux_resolve_client_path "$HOME/.local/share/spotify-launcher/install/usr/share/spotify" && return 0
+  spotifyBinary=$(command -v spotify 2>/dev/null)
+  [[ -n "${spotifyBinary}" ]] && {
+    spotifyBinary=$(readlink -f "${spotifyBinary}" 2>/dev/null || printf '%s' "${spotifyBinary}")
+    linux_resolve_client_path "${spotifyBinary%/*}" && return 0
+  }
+  command -v flatpak >/dev/null && {
+    flatpakPath=$(flatpak info --show-location com.spotify.Client 2>/dev/null)
+    [[ -n "${flatpakPath}" ]] && linux_resolve_client_path "${flatpakPath}" && {
+      clientVariant='flatpak'
+      return 0
+    }
+  }
   for path in "${paths[@]}"; do
-    installPath=$(timeout 6 find "${path}" -type f -path "*/spotify*Apps/*" -not -path "*snapd/snap*" -not -path "*snap/spotify*" -not -path "*snap/bin*" -not -path "*flatpak/.removed*" -name "xpui.spa" -size -20M -size +3M -print -quit 2>/dev/null | rev | cut -d/ -f3- | rev)
-    [[ -n "${installPath}" ]] && return 0
+    [[ -d "${path}" ]] || continue
+    xpuiFile=$(timeout 6 find "${path}" \
+      \( -path "*/flatpak/.removed" -o -path "*/snap" -o -path "*/snapd/snap" \) -prune -o \
+      -type f -path "*/Apps/xpui.spa" -print -quit 2>/dev/null)
+    [[ -n "${xpuiFile}" ]] && {
+      installPath="${xpuiFile%/Apps/xpui.spa}"
+      return 0
+    }
   done
   return 1
 }
 
 linux_set_path() {
+  local requestedPath
   [[ "${installDeb}" ]] && { linux_deb_prepare; return; }
   [[ -z "${installPath+x}" ]] && {
     echo -e "Searching for client directory...\n"
@@ -347,11 +389,13 @@ linux_set_path() {
     } || linux_no_client
     return
   }
-  [[ "${installPath}" == *"snapd/snap"* || "${installPath}" == *"snap/spotify"* || "${installPath}" == *"snap/bin"* ]] && {
+  requestedPath="${installPath%/}"
+  [[ "${requestedPath}" == *"snapd/snap"* || "${requestedPath}" == *"snap/spotify"* || "${requestedPath}" == *"snap/bin"* ]] && {
     echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\n" >&2
     exit 1
   }
-  [[ -f "${installPath}/Apps/xpui.spa" ]] && {
+  linux_resolve_client_path "${requestedPath}" && {
+    installOutput=$(echo "${installPath}" | perl -pe 's|^$ENV{HOME}|~|')
     echo -e "Using client Directory: ${installOutput}\n"
     linux_client_variant
   } || {
@@ -368,7 +412,6 @@ linux_prepare() {
   appBak="${appBinary}.bak"
   snapshotBinary="${appPath}/v8_context_snapshot.bin"
   xpuiPath="${appPath}/Apps"
-  [[ -z "${cachePath}" ]] && cachePath=$(timeout 10 find / -type d -path "*cache/spotify*" -not -path "*snap/spotify*" -name "spotify" -print -quit 2>/dev/null)
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(cat /etc/*release | grep PRETTY_NAME | cut -d '"' -f2)"
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} $(uname -m) detected"
   [[ "${debug}" ]] && command -v apt >/dev/null && echo -e "${green}Debug:${clr} APT detected"
