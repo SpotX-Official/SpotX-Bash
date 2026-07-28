@@ -314,7 +314,7 @@ linux_deb_prepare() {
 
 linux_no_client() {
   command -v snap >/dev/null && snap list spotify &>/dev/null && {
-    echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\nIf another Spotify package is installed, set directory path with '-P' flag.\n" >&2
+    echo -e "${red}Error:${clr} Snap client requires spotx-snap.sh. See FAQ for more info.\nIf another Spotify package is installed, set directory path with '-P' flag.\n" >&2
     exit 1
   }
   command -v apt >/dev/null && {
@@ -391,7 +391,7 @@ linux_set_path() {
   }
   requestedPath="${installPath%/}"
   [[ "${requestedPath}" == *"snapd/snap"* || "${requestedPath}" == *"snap/spotify"* || "${requestedPath}" == *"snap/bin"* ]] && {
-    echo -e "${red}Error:${clr} Snap client not supported. See FAQ for more info.\n" >&2
+    echo -e "${red}Error:${clr} Snap client requires spotx-snap.sh. See FAQ for more info.\n" >&2
     exit 1
   }
   linux_resolve_client_path "${requestedPath}" && {
