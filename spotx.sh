@@ -107,7 +107,7 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
         noexp) excludeExp='true' ;;
         oldui) oldUi='true' ;;
         premium) paidPremium='true' ;;
-        rollback) [[ "${platformType}" == "macOS" ]] && rollback='true'; installMac='true' ;;
+        rollback) [[ "${platformType}" == "macOS" ]] && { rollback='true'; installMac='true'; } ;;
         skipcodesign) [[ "${platformType}" == "macOS" ]] && skipCodesign='true' ;;
         stable) [[ "${platformType}" == "Linux" ]] && stableVar='true' ;;
         uninstall) uninstallSpotx='true' ;;
