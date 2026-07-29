@@ -764,6 +764,13 @@ sudo_check() {
 }
 
 cleanup_temp_dirs() {
+  [[ -n "${macInstallOld:-}" && -d "${macInstallOld}" && "${macInstallOld%/*}" == "${installPath:-}" && "${macInstallOld##*/}" == .spotx-previous.* ]] && {
+    [[ "${macInstallOldMoved:-}" && -z "${macInstallCommitted:-}" && ! -e "${appPath:-}" ]] && mv -- "${macInstallOld}" "${appPath}"
+    [[ -z "${macInstallOldMoved:-}" && -d "${macInstallOld}" ]] && rm -rf -- "${macInstallOld}"
+    [[ "${macInstallCommitted:-}" && -d "${macInstallOld}" ]] && rm -rf -- "${macInstallOld}"
+  }
+  [[ -n "${macInstallTemp:-}" && -d "${macInstallTemp}" && "${macInstallTemp%/*}" == "${installPath:-}" && "${macInstallTemp##*/}" == .spotx-install.* ]] && rm -rf -- "${macInstallTemp}"
+  [[ -n "${macDownloadPath:-}" && -f "${macDownloadPath}" && "${macDownloadPath%/*}" == "${HOME}/Downloads" && "${macDownloadPath##*/}" == "${fileVar:-}" ]] && rm -f -- "${macDownloadPath}"
   [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && rm -rf -- "${workDir}"
   [[ -n "${copyTempDir:-}" && -d "${copyTempDir}" && "${copyTempDir##*/}" == *.spotx.* ]] && rm -rf -- "${copyTempDir}"
   [[ -n "${spaTempDir:-}" && -d "${spaTempDir}" && "${spaTempDir##*/}" == .spotx-spa.* ]] && rm -rf -- "${spaTempDir}"
@@ -828,6 +835,7 @@ linux_deb_install() {
 }
 
 macos_client_install() {
+  local downloadPath="${HOME}/Downloads/${fileVar}" stagedApp
   [[ ! -w "${installPath}" ]] && {
     echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
     exit 1
@@ -846,22 +854,54 @@ macos_client_install() {
     "alHZyIWeChFT0F0UjRXQDJWeWNTW" \
     | rev | base64 --decode | base64 --decode)
   eval "${mc01}"; eval "${mc02}"
-  tar -tf "$HOME/Downloads/${fileVar}" >/dev/null 2>&1 || {
-    rm "$HOME/Downloads/${fileVar}" 2>/dev/null
+  tar -tf "${downloadPath}" >/dev/null 2>&1 || {
+    rm "${downloadPath}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Downloaded client archive is corrupt or incomplete. Exiting...\n" >&2
     exit 1
   }
+  macDownloadPath="${downloadPath}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
-  rm -rf "${appPath}" 2>/dev/null
-  mkdir -p "${appPath}"
-  tar -xpf "$HOME/Downloads/${fileVar}" -C "${appPath}" && unset notInstalled versionFailed || {
-    rm "$HOME/Downloads/${fileVar}" 2>/dev/null
+  macInstallTemp=$(mktemp -d "${installPath}/.spotx-install.XXXXXXXX") || {
+    rm "${downloadPath}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
     exit 1
   }
+  stagedApp="${macInstallTemp}/Spotify.app"
+  mkdir -p "${stagedApp}" &&
+    tar -xpf "${downloadPath}" -C "${stagedApp}" &&
+    [[ -x "${stagedApp}/Contents/MacOS/Spotify" ]] &&
+    [[ -f "${stagedApp}/Contents/Info.plist" ]] &&
+    [[ -f "${stagedApp}/Contents/Resources/Apps/xpui.spa" ]] || {
+    rm "${downloadPath}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
+    exit 1
+  }
+  [[ -e "${appPath}" ]] && {
+    macInstallOld=$(mktemp -d "${installPath}/.spotx-previous.XXXXXXXX") || {
+      rm "${downloadPath}" 2>/dev/null
+      echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
+      exit 1
+    }
+    rmdir "${macInstallOld}" && macInstallOldMoved='true' && mv "${appPath}" "${macInstallOld}" || {
+      rm "${downloadPath}" 2>/dev/null
+      echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
+      exit 1
+    }
+  }
+  mv "${stagedApp}" "${appPath}" && macInstallCommitted='true' || {
+    [[ -n "${macInstallOld:-}" && -d "${macInstallOld}" && ! -e "${appPath}" ]] && mv "${macInstallOld}" "${appPath}"
+    rm "${downloadPath}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
+    exit 1
+  }
+  rm -rf "${macInstallTemp}"
+  [[ ! -d "${macInstallTemp}" ]] && unset macInstallTemp
+  [[ -n "${macInstallOld:-}" ]] && rm -rf "${macInstallOld}"
+  [[ -z "${macInstallOld:-}" || ! -d "${macInstallOld}" ]] && unset macInstallOld macInstallOldMoved macInstallCommitted
   printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
-  rm "$HOME/Downloads/${fileVar}"
+  rm "${downloadPath}" && unset macDownloadPath
   clientVer=$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')
+  unset notInstalled versionFailed
 }
 
 run_install_check() {
@@ -869,6 +909,20 @@ run_install_check() {
     [[ "${installDeb}" ]] && linux_deb_install
     [[ "${installMac}" ]] && macos_client_install
   }
+}
+
+macos_codesign() {
+  /usr/bin/xattr -cr "${appPath}" 2>/dev/null || {
+    echo -e "\n${red}Error:${clr} Failed to clear Spotify security attributes. Exiting...\n" >&2
+    exit 1
+  }
+  [[ "${skipCodesign}" ]] && return
+  codesign -f --deep -s - "${appPath}" >/dev/null 2>&1 &&
+    codesign --verify --deep --strict "${appPath}" >/dev/null 2>&1 || {
+    echo -e "\n${red}Error:${clr} Failed to codesign Spotify. Exiting...\n" >&2
+    exit 1
+  }
+  printf "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"
 }
 
 run_cache_check() {
@@ -1124,11 +1178,7 @@ run_finish() {
     }
   }
   [[ "${platformType}" == "macOS" ]] && {
-    [[ "${skipCodesign}" ]] && /usr/bin/xattr -cr "${appPath}" 2>/dev/null || {
-      /usr/bin/xattr -cr "${appPath}" 2>/dev/null
-      codesign -f --deep -s - "${appPath}" 2>/dev/null
-      printf "\xE2\x9C\x94\x20\x43\x6F\x64\x65\x73\x69\x67\x6E\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\n"
-    }
+    macos_codesign
   }
 }
 
