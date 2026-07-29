@@ -940,6 +940,7 @@ run_cache_check() {
 
 final_setup_check() {
   [[ "${notInstalled}" ]] && { echo -e "${red}Error:${clr} Client not found\n" >&2; exit 1; }
+  [[ ! -f "${appBinary}" || ! -s "${appBinary}" || ! -r "${appBinary}" || ! -x "${appBinary}" ]] && { echo -e "${red}Error:${clr} Client executable not found or invalid.\nReinstall client then try again.\n" >&2; exit 1; }
   [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified client installation!\nReinstall client then try again.\n" >&2; exit 1; }
   [[ "${clientVer}" ]] && (($(ver "${clientVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${clientVer} not supported by SpotX-Bash\n" >&2; exit 1; }
 }
