@@ -655,11 +655,26 @@ protected_commit() {
   return 0
 }
 
+atomic_copy() {
+  local source="${1}" destination="${2}" tempFile result
+  copyTempDir=$(mktemp -d "${destination}.spotx.XXXXXXXX") || return 1
+  tempFile="${copyTempDir}/${destination##*/}"
+  cp "${source}" "${tempFile}" && mv -f "${tempFile}" "${destination}"
+  result=$?
+  rm -rf "${copyTempDir}" 2>/dev/null
+  [[ ! -d "${copyTempDir}" ]] && unset copyTempDir
+  return "${result}"
+}
+
+backup_spotx() {
+  atomic_copy "${xpuiSpa}" "${xpuiBak}" && atomic_copy "${appBinary}" "${appBak}" && return 0
+  rm -f "${appBak}" "${xpuiBak}" 2>/dev/null
+  return 1
+}
+
 uninstall_spotx() {
-  rm -f "${appBinary}" 2>/dev/null
-  mv -f "${appBak}" "${appBinary}"
-  rm -f "${xpuiSpa}" 2>/dev/null
-  mv -f "${xpuiBak}" "${xpuiSpa}"
+  atomic_copy "${appBak}" "${appBinary}" && atomic_copy "${xpuiBak}" "${xpuiSpa}" || return 1
+  rm -f "${appBak}" "${xpuiBak}" 2>/dev/null
   rm -rf "${xpuiDir}" 2>/dev/null
 }
 
@@ -677,7 +692,10 @@ run_uninstall_check() {
       rm -f "${xpuiBak}" 2>/dev/null
       [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}"
     } || {
-      uninstall_spotx
+      uninstall_spotx || {
+        echo -e "\n${red}Error:${clr} Failed to restore client. Backups were preserved.\n" >&2
+        exit 1
+      }
       [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
         protected_commit 'true' || {
           echo -e "\n${red}Error:${clr} Failed to restore client. Original files restored.\n" >&2
@@ -745,8 +763,11 @@ sudo_check() {
   }
 }
 
-cleanup_work_dir() {
+cleanup_temp_dirs() {
   [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && rm -rf -- "${workDir}"
+  [[ -n "${copyTempDir:-}" && -d "${copyTempDir}" && "${copyTempDir##*/}" == *.spotx.* ]] && rm -rf -- "${copyTempDir}"
+  [[ -n "${spaTempDir:-}" && -d "${spaTempDir}" && "${spaTempDir##*/}" == .spotx-spa.* ]] && rm -rf -- "${spaTempDir}"
+  [[ "${xpuiTempCreated:-}" && -n "${xpuiDir:-}" && -d "${xpuiDir}" && "${xpuiDir##*/}" == "xpui" ]] && rm -rf -- "${xpuiDir}"
 }
 
 linux_working_dir() {
@@ -757,8 +778,6 @@ linux_working_dir() {
     echo -e "${red}Error:${clr} Failed to create temporary working directory.\n" >&2
     exit 1
   }
-  trap cleanup_work_dir EXIT
-  trap 'exit 130' HUP INT TERM
   chmod 700 "${workDir}" || {
     echo -e "${red}Error:${clr} Failed to secure temporary working directory.\n" >&2
     exit 1
@@ -891,26 +910,34 @@ perlVar() {
 
 xpui_detect() {
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${cleanAB}" ]] && {
-    rm -f "${appBak}" 2>/dev/null; rm -f "${xpuiBak}" 2>/dev/null 
-    cp "${xpuiSpa}" "${xpuiBak}"; cp "${appBinary}" "${appBak}"
+    backup_spotx || {
+      echo -e "\n${red}Error:${clr} Failed to create client backup. Exiting...\n" >&2
+      exit 1
+    }
     printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
     return
   }
   [[ (-f "${appBak}" || -f "${xpuiBak}") && "${forceSpotx}" ]] && {
-    [[ -f "${appBak}" ]] && { rm -f "${appBinary}"; cp "${appBak}" "${appBinary}"; }
-    [[ -f "${xpuiBak}" ]] && { rm -f "${xpuiSpa}"; cp "${xpuiBak}" "${xpuiSpa}"; }
+    { [[ ! -f "${appBak}" ]] || atomic_copy "${appBak}" "${appBinary}"; } &&
+      { [[ ! -f "${xpuiBak}" ]] || atomic_copy "${xpuiBak}" "${xpuiSpa}"; } || {
+      echo -e "\n${red}Error:${clr} Failed to restore client backup. Exiting...\n" >&2
+      exit 1
+    }
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
     return
   }
   [[ (-f "${appBak}" || -f "${xpuiBak}") && -z "${forceSpotx+x}" ]] && {
+    rm -rf "${xpuiDir}" 2>/dev/null
     xpuiSkip='true'
     printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
     echo -e "\n${yellow}Warning:${clr} SpotX-Bash has already been installed." >&2
     echo -e "Use the '-f' flag to force SpotX-Bash to run.\n" >&2
     return
   }
-  cp "${xpuiSpa}" "${xpuiBak}"
-  cp "${appBinary}" "${appBak}"
+  backup_spotx || {
+    echo -e "\n${red}Error:${clr} Failed to create client backup. Exiting...\n" >&2
+    exit 1
+  }
   printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
 }
 
@@ -967,7 +994,9 @@ snapshot_check() {
 }
 
 xpui_open() {
+  rm -rf "${xpuiDir}" 2>/dev/null
   mkdir -p "${xpuiDir}"
+  xpuiTempCreated='true'
   unzip -qq "${xpuiSpa}" -d "${xpuiDir}" || {
     rm -rf "${xpuiDir}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Failed to unpack xpui.spa. Reinstall client. Exiting...\n" >&2
@@ -1062,14 +1091,32 @@ run_patches() {
 }
 
 run_finish() {
+  local spaTemp
   echo -e "\n//# SpotX was here" >> "${xpuiJs}"
-  rm -f "${xpuiSpa}"
-  (cd "${xpuiDir}" && zip -qq -r ../xpui.spa .) || {
-    echo -e "\n${red}Error:${clr} Failed to repackage client." >&2
-    echo -e "Spotify is now in a broken state. Please reinstall client.\n" >&2
+  spaTempDir=$(mktemp -d "${xpuiPath}/.spotx-spa.XXXXXXXX") || {
+    uninstall_spotx && \
+      echo -e "\n${red}Error:${clr} Failed to create temporary SPA directory. Original client restored.\n" >&2 || \
+      echo -e "\n${red}Error:${clr} Failed to create temporary SPA directory or restore client. Backups were preserved.\n" >&2
     exit 1
   }
+  spaTemp="${spaTempDir}/xpui.spa"
+  (cd "${xpuiDir}" && zip -qq -r "${spaTemp}" .) &&
+    unzip -tqq "${spaTemp}" &&
+    mv -f "${spaTemp}" "${xpuiSpa}" || {
+    rm -rf "${spaTempDir}" 2>/dev/null
+    uninstall_spotx && {
+      echo -e "\n${red}Error:${clr} Failed to repackage client." >&2
+      echo -e "Original client restored.\n" >&2
+    } || {
+      echo -e "\n${red}Error:${clr} Failed to repackage or restore client." >&2
+      echo -e "Backups were preserved.\n" >&2
+    }
+    exit 1
+  }
+  rm -rf "${spaTempDir}" 2>/dev/null
+  [[ ! -d "${spaTempDir}" ]] && unset spaTempDir
   rm -rf "${xpuiDir}"
+  unset xpuiTempCreated
   [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_commit || {
     [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
       echo -e "\n${red}Error:${clr} Failed to install patched client. Original files restored.\n" >&2
@@ -1410,6 +1457,9 @@ premiumExpEx=(
 'enableYourDJ&the .Your DJ. feature.,default:\K!1&true&s&xpuiJs&1.2.6.861'
 'enableYourSoundCapsuleModal&showing a modal on desktop to users who have clicked on a Your Sound Capsule share link",default:\K!1&true&s&xpuiJs&1.2.38.720'
 )
+
+trap cleanup_temp_dirs EXIT
+trap 'exit 130' HUP INT TERM
 
 run_prepare
 run_uninstall_check
