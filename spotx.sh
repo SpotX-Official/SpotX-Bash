@@ -486,9 +486,22 @@ run_prepare() {
 }
 
 check_write_permission() {
-  local target_user="${SUDO_USER:-$(id -un)}"
+  local writePath
+  [[ "${platformType}" == "Linux" && -z "${SPOTX_BUILD_MODE}" ]] && ((EUID == 0)) && {
+    stagedInstall='true'
+    protectedInstall='true'
+  }
   for path_to_check in "$@"; do
-    [[ ! -w "${path_to_check}" ]] && {
+    [[ -d "${path_to_check}" ]] && writePath="${path_to_check}" || writePath="${path_to_check%/*}"
+    [[ ! -w "${path_to_check}" ]] && stagedInstall='true'
+    [[ ! -w "${writePath}" ]] && {
+      stagedInstall='true'
+      protectedInstall='true'
+      ((EUID == 0)) && continue
+      command -v sudo >/dev/null || {
+        echo -e "\n${red}Error:${clr} sudo command not found. Install sudo or run this script as root.\n" >&2
+        exit 1
+      }
       sudo -n true 2>/dev/null || {
         echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in client directory.\nRequesting sudo permission..." >&2
         sudo -v || {
@@ -496,10 +509,150 @@ check_write_permission() {
           exit 1
         }
       }
-      sudo chown -R "${target_user}" "${path_to_check}"
-      sudo chmod -R u+rwX,go-w "${path_to_check}"
     }
   done
+}
+
+sudo_run() {
+  if ((EUID == 0)) || [[ -z "${protectedInstall+x}" ]]; then
+    command "$@"
+  else
+    sudo "$@"
+  fi
+}
+
+protected_stage_copy() {
+  local source="${1}" destination="${2}"
+  sudo_run cat -- "${source}" > "${destination}" || {
+    rm -f -- "${destination}"
+    return 1
+  }
+  chmod 600 "${destination}"
+}
+
+protected_stage_prepare() {
+  targetAppBinary="${appBinary}"
+  targetAppBak="${appBak}"
+  targetXpuiPath="${xpuiPath}"
+  targetXpuiSpa="${xpuiSpa}"
+  targetXpuiBak="${xpuiBak}"
+  linux_working_dir
+  appPath="${workDir}/client"
+  appBinary="${appPath}/spotify"
+  appBak="${appBinary}.bak"
+  xpuiPath="${appPath}/Apps"
+  xpuiBak="${xpuiPath}/xpui.bak"
+  xpuiDir="${xpuiPath}/xpui"
+  xpuiSpa="${xpuiPath}/xpui.spa"
+  dwpPanelSectionJs="${xpuiDir}/dwp-panel-section.js"
+  homeHptoJs="${xpuiDir}/home-hpto.js"
+  homeV2Js="${xpuiDir}/home-v2.js"
+  indexHtml="${xpuiDir}/index.html"
+  vendorXpuiJs="${xpuiDir}/vendor~xpui.js"
+  xpuiCss="${xpuiDir}/xpui.css"
+  xpuiDesktopModalsJs="${xpuiDir}/xpui-desktop-modals.js"
+  xpuiJs="${xpuiDir}/xpui.js"
+  xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
+  mkdir -p "${xpuiPath}" || exit 1
+  protected_stage_copy "${targetAppBinary}" "${appBinary}" || exit 1
+  protected_stage_copy "${targetXpuiSpa}" "${xpuiSpa}" || exit 1
+  [[ -f "${targetAppBak}" ]] && protected_stage_copy "${targetAppBak}" "${appBak}"
+  [[ -f "${targetXpuiBak}" ]] && protected_stage_copy "${targetXpuiBak}" "${xpuiBak}"
+}
+
+protected_prepare_file() {
+  local source="${1}" destination="${2}" reference="${3}" tempFile
+  tempFile=$(sudo_run mktemp "${destination}.spotx.XXXXXXXX") || return 1
+  sudo_run cp -a -- "${reference}" "${tempFile}" &&
+    sudo_run cp -- "${source}" "${tempFile}" &&
+    sudo_run chown --reference="${reference}" "${tempFile}" &&
+    sudo_run chmod --reference="${reference}" "${tempFile}" &&
+    sudo_run touch -r "${reference}" "${tempFile}" || {
+      sudo_run rm -f -- "${tempFile}"
+      return 1
+    }
+  printf '%s\n' "${tempFile}"
+}
+
+protected_save_destination() {
+  local destination="${1}" tempFile
+  [[ -e "${destination}" ]] || return 0
+  tempFile=$(sudo_run mktemp "${destination}.spotx-rollback.XXXXXXXX") || return 1
+  sudo_run cp -a -- "${destination}" "${tempFile}" || {
+    sudo_run rm -f -- "${tempFile}"
+    return 1
+  }
+  printf '%s\n' "${tempFile}"
+}
+
+protected_restore_destination() {
+  local backup="${1}" destination="${2}" existed="${3}"
+  [[ "${existed}" ]] && sudo_run mv -f -- "${backup}" "${destination}" || sudo_run rm -f -- "${destination}"
+}
+
+protected_remove_files() {
+  local file
+  for file in "$@"; do
+    [[ -n "${file}" ]] && sudo_run rm -f -- "${file}"
+  done
+}
+
+protected_commit() {
+  local uninstall="${1:-}" appFile spaFile appBakFile='' xpuiBakFile=''
+  local appRollback='' spaRollback='' appBakRollback='' xpuiBakRollback=''
+  local appExisted='' spaExisted='' appBakExisted='' xpuiBakExisted=''
+  local appBakReference="${targetAppBinary}" xpuiBakReference="${targetXpuiSpa}"
+  [[ -f "${appBinary}" && -f "${xpuiSpa}" ]] || return 1
+  unzip -tqq "${xpuiSpa}" || return 1
+  appFile=$(protected_prepare_file "${appBinary}" "${targetAppBinary}" "${targetAppBinary}") || return 1
+  spaFile=$(protected_prepare_file "${xpuiSpa}" "${targetXpuiSpa}" "${targetXpuiSpa}") || {
+    sudo_run rm -f -- "${appFile}"
+    return 1
+  }
+  [[ -z "${uninstall}" ]] && {
+    [[ -e "${targetAppBak}" ]] && appBakReference="${targetAppBak}"
+    [[ -e "${targetXpuiBak}" ]] && xpuiBakReference="${targetXpuiBak}"
+    appBakFile=$(protected_prepare_file "${appBak}" "${targetAppBak}" "${appBakReference}") || {
+      sudo_run rm -f -- "${appFile}" "${spaFile}"
+      return 1
+    }
+    xpuiBakFile=$(protected_prepare_file "${xpuiBak}" "${targetXpuiBak}" "${xpuiBakReference}") || {
+      sudo_run rm -f -- "${appFile}" "${spaFile}" "${appBakFile}"
+      return 1
+    }
+  }
+  [[ -e "${targetAppBinary}" ]] && appExisted='true'
+  [[ -e "${targetXpuiSpa}" ]] && spaExisted='true'
+  [[ -e "${targetAppBak}" ]] && appBakExisted='true'
+  [[ -e "${targetXpuiBak}" ]] && xpuiBakExisted='true'
+  {
+    appRollback=$(protected_save_destination "${targetAppBinary}") &&
+      spaRollback=$(protected_save_destination "${targetXpuiSpa}")
+    [[ "${uninstall}" ]] || {
+      appBakRollback=$(protected_save_destination "${targetAppBak}") &&
+        xpuiBakRollback=$(protected_save_destination "${targetXpuiBak}")
+    }
+  } || {
+    protected_remove_files "${appFile}" "${spaFile}" "${appBakFile}" "${xpuiBakFile}"
+    protected_remove_files "${appRollback}" "${spaRollback}" "${appBakRollback}" "${xpuiBakRollback}"
+    return 1
+  }
+  {
+    { [[ "${uninstall}" ]] || sudo_run mv -f -- "${appBakFile}" "${targetAppBak}"; } &&
+      { [[ "${uninstall}" ]] || sudo_run mv -f -- "${xpuiBakFile}" "${targetXpuiBak}"; } &&
+      sudo_run mv -f -- "${appFile}" "${targetAppBinary}" &&
+      sudo_run mv -f -- "${spaFile}" "${targetXpuiSpa}"
+  } || {
+    protected_restore_destination "${appRollback}" "${targetAppBinary}" "${appExisted}"
+    protected_restore_destination "${spaRollback}" "${targetXpuiSpa}" "${spaExisted}"
+    [[ "${uninstall}" ]] || protected_restore_destination "${appBakRollback}" "${targetAppBak}" "${appBakExisted}"
+    [[ "${uninstall}" ]] || protected_restore_destination "${xpuiBakRollback}" "${targetXpuiBak}" "${xpuiBakExisted}"
+    protected_remove_files "${appFile}" "${spaFile}" "${appBakFile}" "${xpuiBakFile}"
+    return 1
+  }
+  protected_remove_files "${appRollback}" "${spaRollback}" "${appBakRollback}" "${xpuiBakRollback}"
+  [[ "${uninstall}" ]] && sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}"
+  return 0
 }
 
 uninstall_spotx() {
@@ -517,12 +670,20 @@ run_uninstall_check() {
       exit 1
     }
     check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
+    [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_stage_prepare
     [[ "${cleanAB}" ]] && {
       echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
       rm -f "${appBak}" 2>/dev/null
       rm -f "${xpuiBak}" 2>/dev/null
+      [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}"
     } || {
       uninstall_spotx
+      [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
+        protected_commit 'true' || {
+          echo -e "\n${red}Error:${clr} Failed to restore client. Original files restored.\n" >&2
+          exit 1
+        }
+      }
     }
     printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n\n"
     exit 0
@@ -584,7 +745,25 @@ sudo_check() {
   }
 }
 
-linux_working_dir() { [[ -d "/tmp" ]] && workDir="/tmp" || workDir="$HOME"; }
+cleanup_work_dir() {
+  [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && rm -rf -- "${workDir}"
+}
+
+linux_working_dir() {
+  local tempBase="${TMPDIR:-/tmp}"
+  [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && return
+  [[ "${tempBase}" == /* && -d "${tempBase}" && -w "${tempBase}" ]] || tempBase="/tmp"
+  workDir=$(mktemp -d "${tempBase%/}/spotx-bash.XXXXXXXX") || {
+    echo -e "${red}Error:${clr} Failed to create temporary working directory.\n" >&2
+    exit 1
+  }
+  trap cleanup_work_dir EXIT
+  trap 'exit 130' HUP INT TERM
+  chmod 700 "${workDir}" || {
+    echo -e "${red}Error:${clr} Failed to secure temporary working directory.\n" >&2
+    exit 1
+  }
+}
 
 linux_deb_install() {
   sudo_check
@@ -826,6 +1005,7 @@ xpui_open() {
 run_core_start() {
   final_setup_check
   check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
+  [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_stage_prepare
   xpui_detect
   [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 0; }
   xpui_open
@@ -890,6 +1070,12 @@ run_finish() {
     exit 1
   }
   rm -rf "${xpuiDir}"
+  [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_commit || {
+    [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
+      echo -e "\n${red}Error:${clr} Failed to install patched client. Original files restored.\n" >&2
+      exit 1
+    }
+  }
   [[ "${platformType}" == "macOS" ]] && {
     [[ "${skipCodesign}" ]] && /usr/bin/xattr -cr "${appPath}" 2>/dev/null || {
       /usr/bin/xattr -cr "${appPath}" 2>/dev/null
