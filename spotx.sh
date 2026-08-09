@@ -494,7 +494,7 @@ check_write_permission() {
   for path_to_check in "$@"; do
     [[ -d "${path_to_check}" ]] && writePath="${path_to_check}" || writePath="${path_to_check%/*}"
     [[ ! -w "${path_to_check}" ]] && stagedInstall='true'
-    [[ ! -w "${writePath}" ]] && {
+    [[ ! -w "${writePath}" || ( "${platformType}" == "Linux" && -f "${path_to_check}" && ! -O "${path_to_check}" ) ]] && {
       stagedInstall='true'
       protectedInstall='true'
       ((EUID == 0)) && continue
@@ -564,6 +564,7 @@ protected_prepare_file() {
   local source="${1}" destination="${2}" reference="${3}" tempFile
   tempFile=$(sudo_run mktemp "${destination}.spotx.XXXXXXXX") || return 1
   sudo_run cp -a -- "${reference}" "${tempFile}" &&
+    sudo_run chmod u+w -- "${tempFile}" &&
     sudo_run cp -- "${source}" "${tempFile}" &&
     sudo_run chown --reference="${reference}" "${tempFile}" &&
     sudo_run chmod --reference="${reference}" "${tempFile}" &&
