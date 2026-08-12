@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.95.453.g0eeebbed"
-rollbackVer="1.2.94.583.g60394bd5"
+buildVer="1.2.96.518.g366879e1"
+rollbackVer="1.2.95.453.g0eeebbed"
 
-latestB_X="3672"
-latestB_A="3672"
-rollbackB_X="4881"
-rollbackB_A="4872"
+latestB_X="3884"
+latestB_A="3884"
+rollbackB_X="3672"
+rollbackB_A="3672"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -47,45 +47,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODg1NjYyOTMsIm5iZiI6" \
-  "MTc4NTk3NDI5MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTUuNDUzLmcwZWVlYmJlZC0zNjcyLnRieiJ9" \
-  ".FQBMTRH3659zzbVTZn-IqCqpqBJwyd7h3l33pZ8gYrO-ko8cmdS0w2bxzO46h9n" \
-  "7lV-ES8-aVXyzt0S57c8T3eNGkgz049amd-AgMJrtMSnhpGkmxnrzNwPUtvwWZUd" \
-  "HqH4edpN2WYHqSmclz8Xt82FY2FeKkfzF-pE0RzJEBVdW3ZXqvQcPNtO_0az4LGW" \
-  "qjbA7ZKd404-AGzBqrvJ7G_48XttT8xndYkVT2dTuNypZPoYzFCQ5Oh4I5XudlLB" \
-  "uztQkf9kweo3LLwgfy1k2wlj012Iqiz7WUDofHLzYSTjR_1FA4JDGCAH5E_Uoaa6" \
-  "Nnq-EChcnipD5WLpUon6AWQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxNTQ4ODgsIm5iZiI6" \
+  "MTc4NjU2Mjg4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTYuNTE4LmczNjY4NzllMS0zODg0LnRieiJ9" \
+  ".eyHQuv1kPam99WV-VEvzHnmtj4UTwJA0VU9LVG2kn9VL3dyU199ntaXX0qs-59C" \
+  "L0bfAiSO_yhrkyt4U9zVNwZXQW4I6DHdnePsb0senM3oi0rbfeYzLBbK7sXKn3x4" \
+  "w-Cuy3QmolawEiX4TvDpoGqak2UuoqqJ0QL4jkjHKJGiX5quFlGjj3MRp7FgjANn" \
+  "ycjmBI0q9MG8DoQyhsAagKcI26GKfRvz66M7keFXsDjMZcT_U9GY1zSGWux7mo0D" \
+  "8_O2WrpZbBNZpBE9tEXzy4dIgcOmxUjW53cvJhkey3GDul2STbMs0cjD9cnM0U4p" \
+  "hadtxhcZCVuc-87wUdOLmfQ")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODg1NjYyOTMsIm5iZiI6" \
-  "MTc4NTk3NDI5MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45NS40NTMuZzBlZWViYmVkLTM2NzIudGJ6In0." \
-  "fRBIOAjThS9W-m_0EEw7oxd2tpIViU26gBsVdScwrnaT1XtJxhLp28bP26kd6pF4" \
-  "DsFxz5lmb5UogRCMhjdLMVvwUrJlMYR_IDKOkWxiOzFXG-CBEBCbylkm-hT5JG85" \
-  "fy7u5ZtXq-fUiyl5VEchP1vYH8JMZiHHC4i2V1SM9O1ExOeqxNccu_4m29Hh4gFK" \
-  "5qPIMnlD8egTqy_wstsZa7M5sHkmdjsJ4-SXxGy87ONtnbO9UxPOEQYemNOf9Zqq" \
-  "iGRs10px09Mb4Mk-ZnBiLl9jhLrTsVHSnBHr4Alet1D7kcMmxRnFxkBAeUHCaTw3" \
-  "xUtqn8T49yF538bgsKK5kw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxNTQ4ODgsIm5iZiI6" \
+  "MTc4NjU2Mjg4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Ni41MTguZzM2Njg3OWUxLTM4ODQudGJ6In0." \
+  "dJJJ2Us3kdB8NgwxtGcVhAwsbbidGHnP0DDA2tDM8BxxJ-FKd1TQwklOd7UBVoq9" \
+  "StAYnZdRnFwtqSGuMXbU0ES9OCni92UlLaLrAQ4gf3-2TFlLdngkNG6LlcgCIjsc" \
+  "prDQ9eskuugf9BcsOLTWbzoZfMJsYVefXy3V2NYrMlgd8m7I3OTcmRrSHaaiVWQk" \
+  "vh9R7ig9pRJrsewQ54BxpT9OO9CsRMHKtb1i0nVI1y1G8GBJAS17rk9Tkthy0kpE" \
+  "5TP6OExUcD0n_X236mhxD_6yWmM0fOTbnHHrE89SY34tQklbdDTT94OHdRU04sKi" \
+  "u-CtsfUCT7lkOLEOZl4Q7g")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODg0Mzg0ODksIm5iZiI6" \
-  "MTc4NTg0NjQ4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTQuNTgzLmc2MDM5NGJkNS00ODgxLnRieiJ9" \
-  ".VjPA-sh1Tjg72unZXmb-Mn-NRL64czXwOMkQzy0IN6gsRaYrwqsIXAMPldiJHgo" \
-  "SSp6HtSBkepcI9bagoM6US0rT9FEDkrjUn03kp4wl0tHxyahfDVFCbAMskc5VCVf" \
-  "yb1LK_GhNX2bvzTz9lLq1tSlNXclQNQB-NH21IfnvUViNF6-eXoTkvPSMNsLNg-n" \
-  "t8kOePUNm1ypOZ4SgJxxUyz4QaIftyvIH-7PEeyrbgIyKYukEB8RbtjjPlH3DfUi" \
-  "lmYMaJKOuDz2dww_r-4nPMIdCABdwyPj7RzZ1Yx5wMGVpAVpbNYg5nqRrTOs2PxO" \
-  "lmmjgMDdLBfx6PKz1eww6Xw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxMTUyODgsIm5iZiI6" \
+  "MTc4NjUyMzI4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTUuNDUzLmcwZWVlYmJlZC0zNjcyLnRieiJ9" \
+  ".hMEGYNLGQ_1zJ1uTnGh3bzpFNAbBp3agN7gZy4CcbFDGv8V_oWt_fmn9FFTtwUG" \
+  "vuq23saS3W4KYsFBPNRJ5VKRBM3P6H_usggCEd8KqjONrRbuAtEAwp7fgCIYiVCZ" \
+  "rHoUDkAtbcMa2_uShZm8MbGnimIVr_FsoZa9yhLWqOkr4sMrL2xZP7jJyv-UhdRv" \
+  "GWNuSaTlSlBDcIXCr45Rid2MypiYuVzS0C8gvWtW648puN31W-XEWwQuFwdwajY7" \
+  "1Av0E8-WFjEo91fKwPAn1TCEUG_xjeZCfFjE34xaW-sef-KFLBGA6Wtp-kld3CX3" \
+  "BC5iMkIFFNlARoQvMAM0ASw")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODg0Mzg0ODksIm5iZiI6" \
-  "MTc4NTg0NjQ4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45NC41ODMuZzYwMzk0YmQ1LTQ4NzIudGJ6In0." \
-  "Ch1itbFNAno5o7YDJ_Eh2ZjHuA12PIvkWrBIJmbHAH6AqdUXC2gbD4znygHVWtPn" \
-  "wc74tChZKO_-a79N0v3d26P6_rjPUir3hbtRn09YFzd4Tz4IZXHKY_bGg8YZI4rO" \
-  "0pijbtgVQ1dnLOG90aTROC8jCSpwj4dBmzEBwKgE68J_n5sEJJMxNNHCzpV5P-mC" \
-  "MHQiardZdR1zShvBy6d4CSzcaIiTZFTfeCnnyc8eyV9cY2wf18f4uEDgaZs90KKd" \
-  "J-MpU41Anjpa5yk2SUVsTSHJsKbR4s4vbW25jw2Z5rlfBJsegbxLuNAu00t9Y14R" \
-  "8eXZeGV3NgCrQCddw1sIzA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxMTUyODgsIm5iZiI6" \
+  "MTc4NjUyMzI4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45NS40NTMuZzBlZWViYmVkLTM2NzIudGJ6In0." \
+  "r5oTTJleh5eJZQ_oaLeWJcjqm3VRq9_Mg-_PXiF8IO2KEDS1a_yC5Z-F_XR2x2sO" \
+  "peCjmzX31jRXD-CNFdhN0G1J_xvRT7Bn5UF9_UYa69IGY8yhSWxwLVTjyqut1YJL" \
+  "ifgD6od229DG4cQL76g75OwsrW-GTNvC8MjG4irq_Wc513WnzNzZHLVlgLSkGPcm" \
+  "zDRtnqxwk0ZM_JrXKlDlAYBCwsVaPCGsPeI24G4ztkz4DdAuXsVNefIecJ1WOS4f" \
+  "VRQid6luh-XuNR93599ehN1B0DLEy-cHSE9wvGdnJKDXt85ins9uzM9XEUl6cUPq" \
+  "WIlPWfunS0faGV9UqvhTmg")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1258,7 +1258,7 @@ aoEx=(
 'bGabo&\x00\K\x67(?=\x61\x62\x6F\x2D\x72\x65\x63\x65\x69\x76\x65\x72\x2D\x73\x65\x72\x76\x69\x63\x65\x2F\x70)&\x00&g&appBinary&1.1.84.716'
 'bLogic&\x00\K\x61(?=\x64\x2D\x6C\x6F\x67\x69\x63\x2F\x73)&\x00&&appBinary&1.1.70.610&1.2.28.581'
 'bSlot&\x00\K\x73(?=\x6C\x6F\x74\x73\x00)&\x00&g&appBinary&1.1.70.610'
-'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578'
+'disablePremiumOnlyModal&Disable the Premium Only Modal",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578&1.2.95.453'
 'embeddedAdImpressionDoesNotIgnoreVisilibility&If enabled, we do consider percent visibility when logging the display ad impression.{0,49}",default:\K!.(?=})&false&s&xpuiJs&1.2.78.397&1.2.84.477'
 'enable_ad_feedback_home_free&Kill switch for ad feedback on home ad format for free users",default:\K!.(?=})&false&s&xpuiJs&1.2.93.656'
 'enable_ad_feedback_home_premium&Kill switch for ad feedback on home ad format for premium users",default:\K!.(?=})&false&s&xpuiJs&1.2.93.656'
@@ -1285,6 +1285,7 @@ aoEx=(
 'enableHomeAds&Enable Fist Impression Takeover ads on Home Page",default:\K!.(?=})&false&s&xpuiJs&1.2.31.1205&1.2.84.477'
 'enableHomeAdStaticBanner&Enables temporary home banner, static version",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.53.440'
 'enableHpto&Hpto announcements on Home",default:\K!.(?=})&false&s&xpuiJs&1.2.65.255&1.2.94.583'
+'enableHptoHarmonyVideoPlayer&Harmony-based video player for HPTO home video ads. replacing the Betamax player",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200'
 'enableHptoLayoutRewrite&Enable the new HomeAdCard flexbox layout rewrite",default:\K!.(?=})&false&s&xpuiJs&1.2.92.0'
 'enableHptoLocationRefactor&Enable new permanent location for HPTO iframe to HptoHtml.js",default:\K!.(?=})&false&s&xpuiJs&1.2.1.958&1.2.20.1218'
 'enableImageOptimizationSentrySpanMeasurement&Sentry image resource span attributes for image optimization rollout measurement",default:\K!.(?=})&false&s&xpuiJs&1.2.94.0'
@@ -1305,6 +1306,7 @@ aoEx=(
 'enableSaxLeaderboardAds&Enable SAX Leaderboard Ad Format",default:\K!.(?=})&false&s&xpuiJs&1.2.62.575&1.2.82.428'
 'enableSentryReactRouterV6Routing&Sentry React Router v6 route instrumentation for Web Player SPA transactions",default:\K!.(?=})&false&s&xpuiJs&1.2.94.0'
 'enableShowLeavebehindConsolidation&Enable show leavebehinds consolidated experience",default:\K!.(?=})&false&s&xpuiJs&1.2.23.1114&1.2.93.667'
+'enableSidekickFeedbackBanner&Show the feedback banner in the Sidekick chat",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200'
 'enableSponsoredPlaylistEsperantoMigration&Enable esperanto Migration for Sponsored Playlist Ad Formats",default:\K!.(?=})&false&s&xpuiJs&1.2.32.985&1.2.50.335'
 'enableSponsoredPlaylistHorizontalVideo&horizontal video layout for sponsored playlist headers on desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.95.200'
 'enableSurveyAds&Enable Spotify Brand Lift .SBL. Surveys in the NPV",default:\K!.(?=})&false&s&xpuiJs&1.2.43.420&1.2.63.394'
@@ -1334,6 +1336,7 @@ aoEx=(
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
 'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
+'useAdsSurfaceStateForAdOrchestration&Use ads-owned NPV and cinema surface state for ad orchestration",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200'
 'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 )
@@ -1359,9 +1362,11 @@ expEx=(
 'enableBLEJamBroadcasting&Jam Broadcasting for Bluetooth",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableBlockUsers&block users feature in clientX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableBrowseViaPathfinder&Fetch Browse data from Pathfinder",default:\K!1&true&s&xpuiJs&1.1.88.595&1.2.24.756'
+'enableCanvasContextMenuToggle&Canvas context menu toggle",default:\K!1&true&s&xpuiJs&1.2.96.200'
 'enableCanvasNpv&short, looping visuals on tracks.",default:..\.\KCONTROL&CANVAS_PLAY_LOOP&s&xpuiJs&1.2.33.1039&1.2.62.580'
 'enableCarouselsOnHome&Use carousels on Home",default:\K!1&true&s&xpuiJs&1.1.93.896&1.2.25.1011'
 'enableCenteredLayout&Enable centered layout",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578&1.2.50.335'
+'enableChapteredMusicExperience&client support for the chaptered music content experience",default:\K!1&true&s&xpuiJs&1.2.96.200'
 'enableClearAllDownloads&option in settings to clear all downloads",default:\K!1&true&s&xpuiJs&1.1.92.644&1.1.98.691'
 'enableCommentThreadsReactionsForEpisodes&users to react and reply to comments.",default:\K!1&true&s&xpuiJs&1.2.71.421&1.2.81.264'
 'enableConcertCampaignPage&concert campaign page",default:\K!1&true&s&xpuiJs&1.2.78.397'
@@ -1375,6 +1380,7 @@ expEx=(
 'enableConcertsNearYouFeedPromoDWP&Show the promo card for Concerts Near You playlist on Concert Feed",default:\K!1&true&s&xpuiJs&1.2.23.1114&1.2.57.463'
 'enableConcertsNotInterested&ser to set not interested on concerts",default:\K!1&true&s&xpuiJs&1.2.53.437'
 'enableConcertsTicketPrice&Display ticket price on Event page",default:\K!1&true&s&xpuiJs&1.2.15.826&1.2.62.580'
+'enableContextMenuLayoutV2&the Context Menu 2.0 layout",default:\K!1&true&s&xpuiJs&1.2.96.200'
 'enableContextMenuShortcuts&inline keyboard shortcuts for common context menu items",default:\K!1&true&s&xpuiJs&1.2.69.448'
 'enableContextualTrackBans&ability to ban.hide tracks from eligible contexts",default:\K!1&true&s&xpuiJs&1.2.52.442&1.2.83.461'
 'enableCreateButton&create button either in the global navbar or in YLX",values:.{1,3},default:.{1,3}.\KNONE&YOUR_LIBRARY&s&xpuiJs&1.2.57.460&1.2.81.264'
@@ -1410,6 +1416,7 @@ expEx=(
 'enableMarkBookAsFinished&ability to mark a book as finished",default:\K!1&true&s&xpuiJs&1.2.44.405'
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985&1.2.73.474'
+'enableMusicVideos&available for the current user. Override to true for supported products and markets.",default:\K!1&true&s&xpuiJs&1.2.96.200'
 'enableNearbyJams&support for Nearby Jams feature in the Device Picker",default:\K!1&true&s&xpuiJs&1.2.52.442'
 'enableNewArtistEventsPage&Display the new Artist events page",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.32.997'
 'enableNewConcertFeed&Enables new concert feed experience",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.50.335'
@@ -1486,10 +1493,11 @@ expEx=(
 'enableUserCommentsForEpisodes&user comments for podcast episodes",default:\K!1&true&s&xpuiJs&1.2.49.439'
 'enableUserCreatedArtwork&user created artworks for playlists",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.40.599'
 'enableUserProfileEdit&editing of user.s own profile in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.87.612&1.2.25.1011'
-'enableUserVideoSettings&Show video preference settings for users to control video playback types",default:\K!1&true&s&xpuiJs&1.2.86.502'
+'enableUserVideoSettings&Show video preference settings for users to control video playback types",default:\K!1&true&s&xpuiJs&1.2.86.502&1.2.95.453'
 'enableVenuePages&Enables venus pages",default:\K!1&true&s&xpuiJs&1.2.37.701&1.2.74.477'
 'enableVideoLabelForSearchResults&video label for search results",default:\K!1&true&s&xpuiJs&1.2.23.1114&1.2.29.605'
 'enableVideoPip&desktop picture-in-picture surface using betamax SDK.",default:\K!1&true&s&xpuiJs&1.2.13.656'
+'enableVideoShelfPreviews&video previews on hover in video shelf cards",default:\K!1&true&s&xpuiJs&1.2.96.200'
 'enableViewMode&list . compact mode in entity pages",default:\K!1&true&s&xpuiJs&1.2.24.754'
 'enableWatchFeed&Enable Watch Feed feature",default:\K!1&true&s&xpuiJs&1.2.56.497'
 'enableWatchFeedEntityPages&Watch Feed feature on entity pages",default:\K!1&true&s&xpuiJs&1.2.56.497'
