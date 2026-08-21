@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.2.96.518.g366879e1"
-rollbackVer="1.2.95.453.g0eeebbed"
+buildVer="1.2.97.270.ge94a76a2"
+rollbackVer="1.2.96.518.g366879e1"
 
-latestB_X="3884"
-latestB_A="3884"
-rollbackB_X="3672"
-rollbackB_A="3672"
+latestB_X="4199"
+latestB_A="4199"
+rollbackB_X="3884"
+rollbackB_A="3884"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -47,45 +47,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxNTQ4ODgsIm5iZiI6" \
-  "MTc4NjU2Mjg4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTYuNTE4LmczNjY4NzllMS0zODg0LnRieiJ9" \
-  ".eyHQuv1kPam99WV-VEvzHnmtj4UTwJA0VU9LVG2kn9VL3dyU199ntaXX0qs-59C" \
-  "L0bfAiSO_yhrkyt4U9zVNwZXQW4I6DHdnePsb0senM3oi0rbfeYzLBbK7sXKn3x4" \
-  "w-Cuy3QmolawEiX4TvDpoGqak2UuoqqJ0QL4jkjHKJGiX5quFlGjj3MRp7FgjANn" \
-  "ycjmBI0q9MG8DoQyhsAagKcI26GKfRvz66M7keFXsDjMZcT_U9GY1zSGWux7mo0D" \
-  "8_O2WrpZbBNZpBE9tEXzy4dIgcOmxUjW53cvJhkey3GDul2STbMs0cjD9cnM0U4p" \
-  "hadtxhcZCVuc-87wUdOLmfQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODk5MTYyOTksIm5iZiI6" \
+  "MTc4NzMyNDI5OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTcuMjcwLmdlOTRhNzZhMi00MTk5LnRieiJ9" \
+  ".FwGs9cpMpIGFrV9czOJSoYN3kXyBknA97gP61beNmefHJEodnVL1e35sAIAXMwt" \
+  "mfa7L9j1RHEOJY0mDoa_oePhVcg7qxexUSwOp2kA7QcA44EoSGc4S--ClKtFjxAp" \
+  "kxVgSGtmvrjweYpU-hCNUNKLEbRH-quJ5EKHtNqoYOWwXyXa0rkZdoQFlmJzUvMT" \
+  "JiH_g7l6Vyjgb5fcjsAln7NoghRt37kPWf-mS3a5qhYv63ePikO3bDmjQEdehXWd" \
+  "i9odAaR1JXTcV--PE-NofBi068b3y13RcNfzWQwTMoycWFmivkMAOADsxg1f4NOW" \
+  "CogRVGtgUhzL1LgPjiBeqDw")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxNTQ4ODgsIm5iZiI6" \
-  "MTc4NjU2Mjg4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Ni41MTguZzM2Njg3OWUxLTM4ODQudGJ6In0." \
-  "dJJJ2Us3kdB8NgwxtGcVhAwsbbidGHnP0DDA2tDM8BxxJ-FKd1TQwklOd7UBVoq9" \
-  "StAYnZdRnFwtqSGuMXbU0ES9OCni92UlLaLrAQ4gf3-2TFlLdngkNG6LlcgCIjsc" \
-  "prDQ9eskuugf9BcsOLTWbzoZfMJsYVefXy3V2NYrMlgd8m7I3OTcmRrSHaaiVWQk" \
-  "vh9R7ig9pRJrsewQ54BxpT9OO9CsRMHKtb1i0nVI1y1G8GBJAS17rk9Tkthy0kpE" \
-  "5TP6OExUcD0n_X236mhxD_6yWmM0fOTbnHHrE89SY34tQklbdDTT94OHdRU04sKi" \
-  "u-CtsfUCT7lkOLEOZl4Q7g")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODk5MTYyODksIm5iZiI6" \
+  "MTc4NzMyNDI4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Ny4yNzAuZ2U5NGE3NmEyLTQxOTkudGJ6In0." \
+  "YAiuyXcCiAZYMCe-ZZYgRJt2jPok8h96L9HVH9YMq9AdtB3V45FISGMTCmx_HZwM" \
+  "wxGrZsW5Vz_7IKrA8TBih5mVLhf8SoqsmVW4U0ryQnWKOOnwkXUPYvzl42YUvY-B" \
+  "3_nIaGG2jrFi-c3A6QHrBqkA7fKpwh184Phlqw5AJpNP0gXyj184aLUQD02CiEx4" \
+  "31sRrigtz4aefK9cGpBznhc94AMxd8U391RC7We9AbcSOdDdCKbOjXhy9w3Rf3Z9" \
+  "d53GAfrH1ZJVvGlhp8-JCBJHReMqs8YBqt9MIoot6mksr9GZb0jlMm8BnWPI4AhW" \
+  "G0NJeBmo2Y1XrgtlL8nGzg")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxMTUyODgsIm5iZiI6" \
-  "MTc4NjUyMzI4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTUuNDUzLmcwZWVlYmJlZC0zNjcyLnRieiJ9" \
-  ".hMEGYNLGQ_1zJ1uTnGh3bzpFNAbBp3agN7gZy4CcbFDGv8V_oWt_fmn9FFTtwUG" \
-  "vuq23saS3W4KYsFBPNRJ5VKRBM3P6H_usggCEd8KqjONrRbuAtEAwp7fgCIYiVCZ" \
-  "rHoUDkAtbcMa2_uShZm8MbGnimIVr_FsoZa9yhLWqOkr4sMrL2xZP7jJyv-UhdRv" \
-  "GWNuSaTlSlBDcIXCr45Rid2MypiYuVzS0C8gvWtW648puN31W-XEWwQuFwdwajY7" \
-  "1Av0E8-WFjEo91fKwPAn1TCEUG_xjeZCfFjE34xaW-sef-KFLBGA6Wtp-kld3CX3" \
-  "BC5iMkIFFNlARoQvMAM0ASw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODk4ODkyODcsIm5iZiI6" \
+  "MTc4NzI5NzI4NywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjIuOTYuNTE4LmczNjY4NzllMS0zODg0LnRieiJ9" \
+  ".lFyBBig1M8ESievP2Pf3Rg56IbGC5ELPvV5SC9zc4vLvo4M5_2QJ9visT0MGJYU" \
+  "dt06ES7wcj8PPvP-vF6J8iA4rVXhWa8WXccTfUiYgxri1ADG3Rp5WiFI0SMSaxRB" \
+  "IpDfjXd3M5Aw6ZGkSVMzS1hdLQrNlXoLj4zHtqsdcME81P5IZxX7MC4AxO5YDjpf" \
+  "k8-DxVJgYSHjn5FVMMFcmePd37v4Kwu8iEDd_Mwbu_UqQEUqIW1t-83W1_9Eddt_" \
+  "6MA97Q1wvVbZW6QPzjlUY3rYg6ukgje_f5D1eLGiIROj-SHk-1qbG2vS6V27C0DF" \
+  "nUlL7HATaKQJKdT_Jp4J0fA")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODkxMTUyODgsIm5iZiI6" \
-  "MTc4NjUyMzI4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMi45NS40NTMuZzBlZWViYmVkLTM2NzIudGJ6In0." \
-  "r5oTTJleh5eJZQ_oaLeWJcjqm3VRq9_Mg-_PXiF8IO2KEDS1a_yC5Z-F_XR2x2sO" \
-  "peCjmzX31jRXD-CNFdhN0G1J_xvRT7Bn5UF9_UYa69IGY8yhSWxwLVTjyqut1YJL" \
-  "ifgD6od229DG4cQL76g75OwsrW-GTNvC8MjG4irq_Wc513WnzNzZHLVlgLSkGPcm" \
-  "zDRtnqxwk0ZM_JrXKlDlAYBCwsVaPCGsPeI24G4ztkz4DdAuXsVNefIecJ1WOS4f" \
-  "VRQid6luh-XuNR93599ehN1B0DLEy-cHSE9wvGdnJKDXt85ins9uzM9XEUl6cUPq" \
-  "WIlPWfunS0faGV9UqvhTmg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3ODk4ODkyODcsIm5iZiI6" \
+  "MTc4NzI5NzI4NywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMi45Ni41MTguZzM2Njg3OWUxLTM4ODQudGJ6In0." \
+  "d1YxocNlarKTQVaS0XaKKUmbJDp4Q7N3JklLFQGkRdYdzq_L4Oq0UFcYlfC7BX2T" \
+  "HqNJQ4Gdc9CG8YiDQaqLrmbxkhRzTEQZElRrg57XS_gP3_IjVbiOiScqTV_PYU8K" \
+  "rJhnJK-DJjGO5tk7enM5sRKm5wH4CgzlmoMyEsZg2ZCymIlJlQhla2-vkO9Y_62U" \
+  "ZF_HiQF4YtAiFAstZiPBT6AprQgHPESh8M-p1-kG1xVuwUOIeXY9vu3v2XamSIvp" \
+  "9SbxIp4jauNty0_1piDanOKJiRS7hL9nr3ag47wQ2MDOGrHh5y2GaAol4q4Fl1QG" \
+  "nF8tLWz2DsVLOpokBVuOwQ")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1398,6 +1398,7 @@ expEx=(
 'enableFullscreenMode&Enable fullscreen mode",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableGlobalCreateButton&plus button for creating different types of playlists from global nav bar",default:\K!1&true&s&xpuiJs&1.2.53.437&1.2.56.502'
 'enableGlobalNavBar&Show global nav bar with home button, search input and user avatar",default:..\.\KCONTROL&HOME_NEXT_TO_SEARCH&s&xpuiJs&1.2.30.1135&1.2.45.454'
+'enableHideListeningActivityFromProfile&hiding another user.s listening activity from their profile menu",default:\K!1&true&s&xpuiJs&1.2.97.250'
 'enableHomeCarousels&carousels on home",default:\K!1&true&s&xpuiJs&1.2.44.405&1.2.62.580'
 'enableHomePin&pinning of home shelves",default:\K!1&true&s&xpuiJs&1.2.45.451'
 'enableIgnoreInRecommendations&Ignore In Recommendations for desktop and web",default:\K!.(?=})&true&s&xpuiJs&1.1.87.612&1.2.50.335'
@@ -1431,10 +1432,10 @@ expEx=(
 'enableNowPlayingBarVideo&showing video in Now Playing Bar when all other video elements are closed",default:\K!1&true&s&xpuiJs&1.2.22.975'
 'enableNowPlayingBarVideoSwitch&a switch to toggle video in the Now Playing Bar",default:\K!1&true&s&xpuiJs&1.2.28.581&1.2.29.605'
 'enableNPVCredits enableNPVCreditsWithLinkability&credits in the right sidebar",default:\K!.(?=})&true&gs&xpuiJs&1.2.26.1180&1.2.50.335'
-'enableNPVideosV2&NPV 2.0 Video experience for testing",default:\K!1&true&s&xpuiJs&1.2.19.937'
+'enableNPVideosV2&NPV 2.0 Video experience for testing",default:\K!1&true&s&xpuiJs&1.2.19.937&1.2.96.518'
 'enableOtfn&On-The-Fly-Normalization",default:\K!1&true&s&xpuiJs&1.2.31.1205'
 'enableOverlaySidebarAnimations&Enable entry and exit animations for the overlay panels .queue, device picker, buddy feed.... in the side bar",default:\K!1&true&s&xpuiJs&1.2.38.720&1.2.45.454'
-'enablePeekNpv&the Peek NPV feature",default:\K!1&true&s&xpuiJs&1.2.53.437'
+'enablePeekNpv&the Peek NPV feature",default:\K!1&true&s&xpuiJs&1.2.53.437&1.2.96.518'
 'enablePiPMiniPlayer&the PiP Mini Player",default:\K!.(?=})&true&s&xpuiJs&1.2.32.985'
 'enablePiPMiniPlayerQueue&PiP Queue behind miniplayer settings",default:\K!1&true&s&xpuiJs&1.2.67.553'
 'enablePiPMiniPlayerSettings&PiP settings",default:\K!1&true&s&xpuiJs&1.2.65.255'
@@ -1481,14 +1482,16 @@ expEx=(
 'enableSocialConnectOnDesktop&the Social Connect API that powers group listening sessions for Desktop",values:.{1,3},default:.{1,4}\KDISABLED&ENABLED&s&xpuiJs&1.2.21.1104&1.2.45.454'
 'enableSmallerLineHeight&line height 1.5 on the .body ..",default:\K!1&true&s&xpuiJs&1.2.18.997&1.2.23.1125'
 'enableSmallPlaybackSpeedIncrements&playback speed range from 0.5-3.5 with every 0.1 increment",default:\K!1&true&s&xpuiJs&1.2.0.1155&1.2.14.1149'
-'enableSmartShuffle&Enable Smart Shuffle",default:\K!1&true&s&xpuiJs&1.2.26.1180'
+'enableSmartShuffle&Enable Smart Shuffle",default:\K!1&true&s&xpuiJs&1.2.26.1180&1.2.96.518'
 'enableStaticImage2Optimizer&static image2 optimizer to optimize image urls",default:\K!.(?=})&true&s&xpuiJs&1.2.20.1210&1.2.78.418'
 'enableStrangerThingsEasterEgg&Stranger Things upside down Easter Egg",default:\K!1&true&s&xpuiJs&1.1.91.824'
 'enableSubtitlesAutogeneratedLabel&label in the subtitle picker.,default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableSyncingSearchHistoryToBackend&syncing search history to the backend",default:\K!1&true&s&xpuiJs&1.2.75.499&1.2.85.519'
+'enableSystemAudioOutputsInDevicePicker&selecting currently connected system audio outputs, such as BT and wired devices, in the device picker",default:\K!1&true&s&xpuiJs&1.2.97.250'
 'enableTiltable3DArtwork&tiltable 3D parallax effect on artwork .Cinema Mode and Cover Art Modal.",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableTogglePlaylistColumns&ability to toggle playlist column visibility",default:\K!1&true&s&xpuiJs&1.2.17.832&1.2.66.447'
-'enableTracklistColumnsSorting&column reordering functionality in tracklists",default:\K!1&true&s&xpuiJs&1.2.69.448'
+'enableTracklistColumnsSorting&column reordering functionality in tracklists",default:\K!1&true&s&xpuiJs&1.2.69.448&1.2.96.518'
+'enableTracklistColumnsV2&identity-keyed tracklist columns, layout, and reordering",default:\K!1&true&s&xpuiJs&1.2.97.250'
 'enableTranscriptTextSelection&text selection and copy in episode transcripts on desktop",default:\K!.(?=})&true&s&xpuiJs&1.2.95.200'
 'enableUserCommentsForEpisodes&user comments for podcast episodes",default:\K!1&true&s&xpuiJs&1.2.49.439'
 'enableUserCreatedArtwork&user created artworks for playlists",default:\K!1&true&s&xpuiJs&1.2.34.783&1.2.40.599'
