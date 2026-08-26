@@ -4,31 +4,71 @@ labels: ❌ bug
 body:
 - type: checkboxes
   attributes:
-      label: 🧐 Have you fully read the README and viewed similar issues?
-      description: Please read the <a href="https://github.com/SpotX-Official/SpotX-Bash/blob/main/README.md">README</a>, <a href="https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ">FAQ</a>, <a href="https://github.com/SpotX-Official/SpotX-Bash/wiki/Troubleshooting">TROUBLESHOOTING</a> and check all previous <a href="https://github.com/SpotX-Official/SpotX-Bash/issues?q=is%3Aissue">ISSUES</a> because your "bug" may have already been discussed or reported.
-      options:
-        - label: I have read the README
-          required: true
-        - label: I have read the FAQ
-          required: true
-        - label: I have checked previous issues, open and closed
-          required: true
-        - label: I have completed all troubleshooting steps and the issue is not present on stock but returns after re-applying SpotX-Bash
-          required: true
+    label: 🧐 Before submitting
+    description: Please read the <a href="https://github.com/SpotX-Official/SpotX-Bash/blob/main/README.md">README</a>, <a href="https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ">FAQ</a>, <a href="https://github.com/SpotX-Official/SpotX-Bash/wiki/Troubleshooting">TROUBLESHOOTING</a> and check all previous <a href="https://github.com/SpotX-Official/SpotX-Bash/issues?q=is%3Aissue">ISSUES</a> because your bug may have already been discussed or reported.
+    options:
+      - label: I have read the README
+        required: true
+      - label: I have read the FAQ and Troubleshooting guide
+        required: true
+      - label: I have checked previous issues, open and closed
+        required: true
+      - label: I understand that a valid stock test means testing the exact same Spotify version immediately after a full cleanup/reinstall and before applying SpotX-Bash; testing an older/different version or remembering that Spotify worked previously does not count
+        required: true
 - type: markdown
   attributes:
-    value: "###"    
+    value: |
+      ### Clean stock testing
+      For bugs where Spotify behaves differently after applying SpotX-Bash, a valid comparison must use the **exact same Spotify version** before and after patching.
+
+      Run the automated cleanup from the [Troubleshooting guide](https://github.com/SpotX-Official/SpotX-Bash/wiki/Troubleshooting), reinstall Spotify, test the issue while Spotify is completely stock, then apply SpotX-Bash and test the same issue again.
+- type: textarea
+  id: cleanup_output
+  attributes:
+    label: 🧹 Cleanup script Input/Output
+    description: |
+      Paste the cleanup command and its complete Terminal output from start to finish. This confirms that Spotify, app data and cache data were removed before the fresh stock test.
+
+      If SpotX-Bash fails **before it can patch Spotify** (for example, client/path detection or an installer error), enter `N/A` and explain why a stock-vs-patched test is not applicable.
+
+      You may replace your username/home-directory portion of paths with `$HOME`. Do not remove Spotify paths, errors or other information relevant to the issue.
+    placeholder: |
+      bash <(curl -sSL https://gist.github.com/jetfir3/f620e44fc246c1bed45ed040bbfa2d68/raw/uninstallify.sh)
+      ...complete output...
+    render: shell
+  validations:
+    required: true
+- type: textarea
+  id: stock_spotx_test
+  attributes:
+    label: 🧪 Fresh stock vs SpotX-Bash test
+    description: |
+      Report what happened on the freshly reinstalled, unpatched Spotify client and what happened after applying SpotX-Bash to that **same Spotify version**.
+
+      "It worked on stock before," testing a different Spotify version, or testing before the cleanup/reinstall does not establish a stock baseline.
+
+      If SpotX-Bash fails before it can patch Spotify, enter `N/A` where appropriate and explain the failure.
+    value: |
+      - Fresh stock Spotify version:
+      - Result on fresh stock:
+      - Spotify version after applying SpotX-Bash:
+      - Result after applying SpotX-Bash:
+  validations:
+    required: true
+- type: markdown
+  attributes:
+    value: "###"
 - type: input
   id: lang_spoti
   attributes:
-    label: Сountry of your account
+    label: Country of your account
     description: You can view your country on your account page, under <a href="https://www.spotify.com/account/">Profile</a>.
     placeholder: "e.g. Ukraine"
   validations:
-    required: true 
+    required: true
 - type: markdown
   attributes:
-    value: "###"     
+    value: "###"
 - type: dropdown
   id: plan
   attributes:
@@ -41,7 +81,7 @@ body:
     required: true
 - type: markdown
   attributes:
-    value: "###"        
+    value: "###"
 - type: dropdown
   id: spicetify
   attributes:
@@ -54,27 +94,27 @@ body:
     required: true
 - type: markdown
   attributes:
-    value: "###"       
+    value: "###"
 - type: textarea
   attributes:
     label: ℹ Computer information
     description: |
-      - Spotify version: e.g. <kbd>Spotify for macOS (Apple Silicon) 1.1.98.683</kbd>
-      - OS: e.g. <kbd>macOS Ventura 13.1</kbd> or <kbd>Ubuntu 22.04.1 LTS</kbd>
+      - Spotify version: e.g. <kbd>Spotify for macOS (Apple Silicon) 1.2.98.301</kbd>
+      - OS: e.g. <kbd>macOS 15.7</kbd> or <kbd>Ubuntu 24.04 LTS</kbd>
       - Shell: e.g. <kbd>bash</kbd>
         - macOS: View the top bar in the Terminal window -- it should display bash, zsh, etc
         - Linux: Enter the following command in your terminal window: `echo $0` -- it should display bash, zsh, etc
     placeholder: |
-        - Spotify version: 
-        - OS: 
-        - Shell:  
+      - Spotify version:
+      - OS:
+      - Shell:
     value: |
-        - Spotify version: 
-        - OS: 
-        - Shell: 
-    render: markdown   
+      - Spotify version:
+      - OS:
+      - Shell:
+    render: markdown
   validations:
-    required: true    
+    required: true
 - type: textarea
   attributes:
     label: 📝 Description
@@ -87,15 +127,16 @@ body:
   validations:
     required: true
 - type: textarea
+  id: spotx_output
   attributes:
-    label: 🖥️ Terminal Input/Output
-    description: Copy input/output from Terminal -- the SpotX-Bash command you entered and everything that followed.
+    label: 🖥️ SpotX-Bash Terminal Input/Output
+    description: Paste the exact SpotX-Bash command you entered and the complete Terminal output from start to finish. Do not summarize or omit warnings/errors.
+    render: shell
   validations:
     required: true
 - type: textarea
   attributes:
     label: 📸 Screenshots
-    description: Place any screenshots of the issue here if needed
+    description: Optional. Add screenshots or a screen recording if they help demonstrate the issue; they are not required when the behavior can be clearly described in the stock-vs-SpotX test above.
   validations:
-    required: false    
-    
+    required: false
