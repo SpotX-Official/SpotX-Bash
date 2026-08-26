@@ -286,7 +286,7 @@ linux_client_variant() {
     }
     return 0
   }
-  [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* ]] && {
+  [[ "${installPath}" == *"opt/spotify"* || "${installPath}" == *"spotify-launcher"* || "${installPath}" == *"usr/share/spotify"* || "${installPath}" == *"usr/lib64/spotify-client"* ]] && {
     cachePath="${HOME}/.cache/spotify"
     [[ -d "${cachePath}" ]] || unset cachePath
     return 0
@@ -350,6 +350,7 @@ linux_search_path() {
   local flatpakPath spotifyBinary xpuiFile path
   linux_resolve_client_path "/opt/spotify" && return 0
   linux_resolve_client_path "/usr/share/spotify" && return 0
+  linux_resolve_client_path "/usr/lib64/spotify-client" && return 0
   linux_resolve_client_path "$HOME/.local/share/spotify-launcher/install/usr/share/spotify" && return 0
   spotifyBinary=$(command -v spotify 2>/dev/null)
   [[ -n "${spotifyBinary}" ]] && {
