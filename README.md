@@ -37,6 +37,11 @@ or
 ```
 bash <(curl -sSL https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/main/spotx.sh)
 ```
+- If your shell does not support process substitution, use:
+```
+curl -sSL https://spotx-official.github.io/run.sh | bash
+```
+- See the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#why-does-the-recommended-command-fail-in-my-shell) for more information about shell compatibility and using options with the pipe command
 - By default...
   - all supported experimental features are enabled
   - free-tier user patches are applied, paid-premium users should use  `-p` / `--premium` flag
@@ -74,6 +79,7 @@ NixOS users should use [SpotX-Nix](https://github.com/SpotX-Official/SpotX-Nix),
 | `--installmac` | install latest supported client [macOS] |  
 | `-l` | [set lyrics background color to black](https://github.com/SpotX-Official/SpotX-Bash/issues/20#issuecomment-1762040019) |  
 | `--nocolor` | remove colors from SpotX-Bash output |  
+| `--noninteractive` | disable interactive prompts for automation |
 | `-o` | use [old home screen UI](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#what-is-the-old-and-new-ui) |  
 | `-p` | [paid premium-tier subscriber](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#can-spotx-bash-be-used-with-a-paid-premium-account) |  
 | `-P <path>` | set path to client |  
@@ -104,6 +110,10 @@ bash <(curl -sSL https://spotx-official.github.io/run.sh) --installdeb
 **Run SpotX-Bash, block auto-updates, install latest supported client version (macOS)** 
 ```
 bash <(curl -sSL https://spotx-official.github.io/run.sh) -B --installmac
+```
+**Install latest supported client version without interactive prompts (macOS)**
+```
+curl -sSL https://spotx-official.github.io/run.sh | bash -s -- --noninteractive --installmac
 ```
 </details>
 

@@ -35,6 +35,7 @@ show_help() {
 --installmac           : install latest supported client version [macOS]
 -l, --lyricsbg         : set lyrics background color to black
 --nocolor              : remove colors from SpotX-Bash output
+--noninteractive       : disable interactive prompts
 -o, --oldui            : use old home screen UI
 -p, --premium          : paid premium-tier subscriber
 -P <path>              : set path to client
@@ -100,10 +101,11 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
         hide) hideNonMusic='true' ;;
         installdeb) [[ "${platformType}" == "Linux" ]] && installDeb='true' ;;
         installmac) [[ "${platformType}" == "macOS" ]] && installMac='true' ;;
-        interactive) interactiveMode='true' ;;
+        interactive) interactiveMode='true'; interactiveRequested='true' ;;
         logo) logoVar='true' ;;
         lyricsbg) lyricsBg='true' ;;
         nocolor) unset clr green red yellow ;;
+        noninteractive) nonInteractive='true' ;;
         noexp) excludeExp='true' ;;
         oldui) oldUi='true' ;;
         premium) paidPremium='true' ;;
@@ -122,7 +124,7 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
     f) forceSpotx='true' ;;
     F) forceVer="${OPTARG}"; clientVer="${forceVer}" ;;
     h) hideNonMusic='true' ;;
-    i) interactiveMode='true' ;;
+    i) interactiveMode='true'; interactiveRequested='true' ;;
     l) lyricsBg='true' ;;
     o) oldUi='true' ;;
     p) paidPremium='true' ;;
@@ -134,6 +136,11 @@ while getopts ':BcdefF:hilopP:SvV:-:' flag; do
     :) echo -e "${red}Error:${clr} '-""${OPTARG}""' requires additional argument\n\n$(show_help)\n" >&2; exit 1 ;;
   esac
 done
+
+[[ "${interactiveRequested}" && "${nonInteractive}" ]] && {
+  echo -e "${red}Error:${clr} '--interactive' and '--noninteractive' cannot be used together.\n" >&2
+  exit 1
+}
 
 gVer=$(echo "==QP9EkW0VzUS5kUVFlRKFDT1x2VZRXOplld41WW2dmMjhmSVxUWSNjY35UMMNnRXFmas1mWtlTVMllUzI2dOFDT0ljMZVXSXR2bShVYulTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
 sxbLiveVer=$(printf "%s" \
@@ -722,10 +729,37 @@ perlvar() {
   }
 }
 
+prepare_interactive_input() {
+  interactiveInput='none'
+  [[ "${nonInteractive}" ]] && {
+    [[ "${notInstalled}" && -z "${installMac}" && -z "${installDeb}" ]] && {
+      echo -e "\n${red}Error:${clr} Client not found and interactive setup is disabled.\n" >&2
+      echo -e "Install Spotify first or use the appropriate '--installmac' or '--installdeb' option.\n" >&2
+      return 1
+    }
+    return 0
+  }
+  [[ -t 0 ]] && { interactiveInput='stdin'; return 0; }
+  { : </dev/tty; } 2>/dev/null && {
+    interactiveInput='tty'
+    return 0
+  }
+  [[ "${interactiveRequested}" || ( "${notInstalled}" && -z "${installMac}" && -z "${installDeb}" ) ]] && {
+    echo -e "\n${red}Error:${clr} Interactive setup requires a terminal.\n" >&2
+    echo -e "For automated environments, use '--noninteractive' with the required installation/options.\n" >&2
+    return 1
+  }
+  return 0
+}
+
 read_yn() {
   local yn
   while : ; do
-    read -rp "$*" yn || { echo; return 1; }
+    case "${interactiveInput}" in
+        tty) read -r -p "$*" yn </dev/tty || { echo; return 1; } ;;
+      stdin) read -r -p "$*" yn || { echo; return 1; } ;;
+          *) return 1 ;;
+    esac
     case "$yn" in
       [Yy]* ) return 0 ;;
       [Nn]* ) return 1 ;;
@@ -736,9 +770,11 @@ read_yn() {
 
 run_interactive_check() {
   [[ "${interactiveMode}" ]] && {
-    printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n\n"
+    prepare_interactive_input || exit 1
     [[ "${platformType}" == "macOS" && "${legacyMac}" && "${notInstalled}" ]] && macos_legacy_notice
     [[ "${platformType}" == "macOS" && -z "${clientVer+x}" ]] && clientVer="${versionVar}"
+    [[ "${interactiveInput}" == "none" ]] && return 0
+    printf "\xE2\x9C\x94\x20\x53\x74\x61\x72\x74\x65\x64\x20\x69\x6E\x74\x65\x72\x61\x63\x74\x69\x76\x65\x20\x6D\x6F\x64\x65\x20\x5B\x65\x6E\x74\x65\x72\x20\x79\x2F\x6E\x5D\n\n"
     [[ "${platformType}" == "macOS" && -z "${legacyMac+x}" && -z "${installMac+x}" ]] && { read_yn "Download & install client ${versionVar}? " && { installClient='true'; installMac='true'; }; }
     [[ "${platformType}" == "macOS" ]] && { read_yn "Block client auto-updates? " && blockUpdates='true'; }
     [[ "${platformType}" == "Linux" && -z "${installDeb+x}" && "${notInstalled}" ]] && { read_yn "Download & install client ${downloadVer} deb pkg? " && installDeb='true' clientVer="${downloadVer}" || unset installClient; }
