@@ -49,7 +49,7 @@ curl -sSL https://spotx-official.github.io/run.sh | bash
 - View additional flags/options and examples in the `Options` section below
 - For more information, see the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ)
 
-### Snap / NixOS:
+### Snap / Nix:
 
 Spotify installations using Snap require the included `spotx-snap.sh` helper. Download the repo so `spotx-snap.sh` and `spotx.sh` remain in the same directory:
 ```
@@ -59,7 +59,7 @@ bash spotx-snap.sh
 ```
 Run `bash spotx-snap.sh --help` for additional Snap options or see the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#is-the-snap-version-of-spotify-supported).
 
-NixOS users should use [SpotX-Nix](https://github.com/SpotX-Official/SpotX-Nix), which applies SpotX-Bash while building the Spotify package without modifying the Nix store.
+Nix users on x86_64 Linux or Apple Silicon macOS should use [SpotX-Nix](https://github.com/SpotX-Official/SpotX-Nix), which applies SpotX-Bash while building the Spotify package without modifying the Nix store. It supports NixOS, nix-darwin, Home Manager, and configurations with or without flakes. Intel macOS users should continue using regular SpotX-Bash.
 
 ### Options:
 <details>
