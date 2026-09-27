@@ -33,7 +33,7 @@ body:
 
       You may replace your username/home-directory portion of paths with `$HOME`. Do not remove Spotify paths, errors or other information relevant to the issue.
     placeholder: |
-      bash <(curl -sSL https://gist.github.com/jetfir3/f620e44fc246c1bed45ed040bbfa2d68/raw/uninstallify.sh)
+      curl -sSL https://gist.github.com/jetfir3/f620e44fc246c1bed45ed040bbfa2d68/raw/uninstallify.sh | bash
       ...complete output...
     render: shell
   validations:
@@ -85,11 +85,12 @@ body:
 - type: dropdown
   id: spicetify
   attributes:
-    label: Do you have Spicetify installed?
-    description: <a href="https://spicetify.app/">Spicetify</a> is a command line tool to customize Spotify client.
+    label: Was Spicetify applied during testing?
+    description: If you use <a href="https://spicetify.app/">Spicetify</a>, run <code>spicetify restore</code> before establishing the fresh stock baseline.
     options:
-      - "Yes"
       - "No"
+      - "No, I ran spicetify restore before testing"
+      - "Yes"
   validations:
     required: true
 - type: markdown
@@ -101,16 +102,22 @@ body:
     description: |
       - Spotify version: e.g. <kbd>Spotify for macOS (Apple Silicon) 1.2.98.301</kbd>
       - OS: e.g. <kbd>macOS 15.7</kbd> or <kbd>Ubuntu 24.04 LTS</kbd>
+      - Installation type: e.g. <kbd>official macOS app</kbd>, <kbd>DEB</kbd>, <kbd>Flatpak</kbd>, <kbd>Snap</kbd>, <kbd>Nix</kbd> or <kbd>spotify-launcher</kbd>
+      - CPU architecture: e.g. <kbd>Apple Silicon</kbd> or <kbd>x86_64</kbd>
       - Shell: e.g. <kbd>bash</kbd>
         - macOS: View the top bar in the Terminal window -- it should display bash, zsh, etc
         - Linux: Enter the following command in your terminal window: `echo $0` -- it should display bash, zsh, etc
     placeholder: |
       - Spotify version:
       - OS:
+      - Installation type:
+      - CPU architecture:
       - Shell:
     value: |
       - Spotify version:
       - OS:
+      - Installation type:
+      - CPU architecture:
       - Shell:
     render: markdown
   validations:
