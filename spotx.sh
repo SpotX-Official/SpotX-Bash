@@ -258,11 +258,11 @@ macos_client_arch() {
 
 macos_prepare() {
   local tbzTpl=$(printf "%s" \
-    "9k0Um9mUYRGaatWZpJ1MltGNT90SOtmVZJ0MhpkWUNFROdlTTVzVTpHbVF2TGR1U" \
-    "2YVMVtEbyQFcOJjUphWbTREeVFmVSZlVVxmehRFbzMmVax2UXBHWVh3YtVmUstWV" \
-    "FZlVOpGcIZ1QKxmVSJFVUVVOFJFMWtmVKVTRihlVW9kRWZkVLxmMUBnRxYFaK52U" \
-    "1Y1VQ9mUYRGaaJDU2o0RkVHMIp1csdFZDBnbZBDdIpEdw42YopFbiZHbyMWeW1GZ" \
-    "3I1UMxmUYl1aChFZ2JFWkhWMTVWbsdEZ2J0MjZHMuNGaaZUYqpEWZdjUTxENONjY" \
+    "pBDShBjVYl1Rw5WWwQHSKV3aqNFRaZ0V3R3VTJzawElaWpWV1xGMjpEbtRFertWZ" \
+    "W5EbTBXOVFmaktWWvBHMR1EbXZVVWZkV1MnMVVjTYZ1VwtmV2YkVN5GcYVlSKZkU" \
+    "WZleZZjUsF1UaZVVwATRWBlUFRmRaZ1UPhnMWZFbUJlVSx2UwlTVhJFZWlVewVVZ" \
+    "sFDRhBjVYlVb5oWZpJlbMljUHJGcW5WU2o0RkdjUTxUOKhVWXVjMiBnTuNGbaNTZ" \
+    "rBzUaBjRHp1dWNjYwYFWZR3aupFcSNjY350MMlDaykVeGVEZ6lzRhdjUTxENONjY" \
     "2FlbixGbHJma5MlWrZUbj5mQYRmd4ITW1RzRapmTuxEbSdVW5R2RjFTO5xkNNh0Y" \
     "wIFShlWQ5J2bOdlW" \
     | rev | base64 --decode | base64 --decode)
