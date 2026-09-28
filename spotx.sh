@@ -246,6 +246,16 @@ macos_autoupdate_check() {
   }
 }
 
+macos_client_arch() {
+  archVar=$(/usr/bin/lipo -archs "${appBinary}" 2>/dev/null)
+  [[ "${archVar}" == "arm64" || "${archVar}" == "x86_64" ]] || {
+    echo -e "${red}Error:${clr} Client architecture not supported or could not be detected.\nReinstall client then try again.\n" >&2
+    exit 1
+  }
+  snapshotBinary="${appPath}/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
+  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} client detected"
+}
+
 macos_prepare() {
   local tbzTpl=$(printf "%s" \
     "9k0Um9mUYRGaatWZpJ1MltGNT90SOtmVZJ0MhpkWUNFROdlTTVzVTpHbVF2TGR1U" \
@@ -258,13 +268,13 @@ macos_prepare() {
     | rev | base64 --decode | base64 --decode)
   macos_requirements_check
   macos_set_version
-  archVar=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
-  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${archVar} detected"
+  hostArch=$(sysctl -n machdep.cpu.brand_string | grep -q "Apple" && echo "arm64" || echo "x86_64")
+  [[ "${debug}" ]] && echo -e "${green}Debug:${clr} ${hostArch} host detected"
   [[ -z "${legacyMac+x}" ]] && {
-    [[ "${archVar}" == "arm64" && "${rollback}" ]] && { tbzBuild="${rollbackB_A}"; tbzFauth="${rollbackA_A}"; }
-    [[ "${archVar}" == "arm64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_A}"; tbzFauth="${latestA_A}"; }
-    [[ "${archVar}" == "x86_64" && "${rollback}" ]] && { tbzBuild="${rollbackB_X}"; tbzFauth="${rollbackA_X}"; }
-    [[ "${archVar}" == "x86_64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_X}"; tbzFauth="${latestA_X}"; }
+    [[ "${hostArch}" == "arm64" && "${rollback}" ]] && { tbzBuild="${rollbackB_A}"; tbzFauth="${rollbackA_A}"; }
+    [[ "${hostArch}" == "arm64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_A}"; tbzFauth="${latestA_A}"; }
+    [[ "${hostArch}" == "x86_64" && "${rollback}" ]] && { tbzBuild="${rollbackB_X}"; tbzFauth="${rollbackA_X}"; }
+    [[ "${hostArch}" == "x86_64" && -z "${rollback+x}" ]] && { tbzBuild="${latestB_X}"; tbzFauth="${latestA_X}"; }
     grab3=$(eval "${tbzTpl}"); fileVar="${grab3%%\?*}"; fileVar="${fileVar##*/}"
   }
   [[ "${installMac}" && "${legacyMac}" ]] && macos_legacy_notice
@@ -278,7 +288,6 @@ macos_prepare() {
   appBinary="${appPath}/Contents/MacOS/Spotify"
   appBak="${appBinary}.bak"
   cachePath="${HOME}/Library/Caches/com.spotify.client"
-  snapshotBinary="${appPath}/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
   xpuiPath="${appPath}/Contents/Resources/Apps"
   [[ "${skipCodesign}" ]] && echo -e "${yellow}Warning:${clr} Codesigning has been skipped.\n" >&2 || true
 }
@@ -979,6 +988,7 @@ run_cache_check() {
 final_setup_check() {
   [[ "${notInstalled}" ]] && { echo -e "${red}Error:${clr} Client not found\n" >&2; exit 1; }
   [[ ! -f "${appBinary}" || ! -s "${appBinary}" || ! -r "${appBinary}" || ! -x "${appBinary}" ]] && { echo -e "${red}Error:${clr} Client executable not found or invalid.\nReinstall client then try again.\n" >&2; exit 1; }
+  [[ "${platformType}" == "macOS" ]] && macos_client_arch
   [[ ! -f "${xpuiSpa}" ]] && { echo -e "${red}Error:${clr} Detected a modified client installation!\nReinstall client then try again.\n" >&2; exit 1; }
   [[ "${clientVer}" ]] && (($(ver "${clientVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${clientVer} not supported by SpotX-Bash\n" >&2; exit 1; }
 }
