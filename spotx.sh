@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.1.234.g59d6bf59"
-rollbackVer="1.3.0.277.g5441bb3e"
+buildVer="1.3.3.264.gdaf3b824"
+rollbackVer="1.3.1.234.g59d6bf59"
 
-latestB_X="5377"
-latestB_A="5377"
-rollbackB_X="5065"
-rollbackB_A="5065"
+latestB_X="5860"
+latestB_A="5860"
+rollbackB_X="5377"
+rollbackB_A="5377"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTIyNTk4ODQsIm5iZiI6" \
-  "MTc4OTY2Nzg4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMS4yMzQuZzU5ZDZiZjU5LTUzNzcudGJ6In0." \
-  "RcYRKYSl68_p9xaVtB2caQydmcjo_Txv1eRTetaKbQkdb3yqaWKU-xLuYXW0k6Xl" \
-  "CjiVlL3U9RkoIW8MdfBUJEBp1nGUYboSCHVnOfZaPEaZY_djRCWMaGVpa6n6lyjz" \
-  "1U-G1W-e7ifZdNphGw3LqCUzYPDNCxxJdUmAvWVMg2EphDU70uI4Go7Vgk3enFrt" \
-  "uPtSttfGaHgKaQxU0Nej10JYxEAjM2UJqoLZLd_fIjQA5OaDX8gQCo2Ao_ZTU5ul" \
-  "H1hf4Qq1RFfntrMTL1-RoOIk3tyKIy_AMsosxR44O0u1OpxtEdW55tj2qnc9uN0S" \
-  "8i6jxEzywCdyLDpW43-Arg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0NjU4ODQsIm5iZiI6" \
+  "MTc5MDg3Mzg4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMy4yNjQuZ2RhZjNiODI0LTU4NjAudGJ6In0." \
+  "lin8PUfNnO0-av-IBNFhkyZtadVk_cNoTgZpikcfblhUxR2OOgmyX2iriARdPFoe" \
+  "qrKJopTKuXulXZoPhoODdaf0veR6vlksIKdWiUQgx6b9UX6G2bUFYTQZoGiIfE9X" \
+  "ytl5LQEstdjSWe9byMAuxEQMyVTJgiz43U4vq51iFCOsONFmsLmZXPsxWUiNdsgg" \
+  "ckiGiMso6FPLcCB96jwDIWXg4kWeKj-5Ib4Sd46olOxCvce3MrB-8HisykEn9PJ8" \
+  "_ZqkaBZVRBoGj4-AdIIP7Qd3CWsHkuMLjiw7w28RCPePRUu1gSbCKBBREGUZM4zq" \
+  "krM19rOyooA2rVW5cRB31g")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTIyNTk4ODQsIm5iZiI6" \
-  "MTc4OTY2Nzg4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy4xLjIzNC5nNTlkNmJmNTktNTM3Ny50YnoifQ.a" \
-  "0_2t3xnqCryQNvCySY2CmHnfXuKrd6xfJZox7XWGlfIBvaP-hEPZFFPPfSbWPI7U" \
-  "T7keTkQowi66OH7n2mAUThQxndbR2HdFuOf2Q2zfLaMefHQo1wDrHPrXTb25uxYD" \
-  "7zhjc3BKnyg2CuPJokgZHvtBxRo8X4Q00KsCvFViszTsWXWF0kRUVxLwt_rMCo5_" \
-  "bjfltFPcetIc5uAZ7aV-MWRgvqlH0bHdjVcKiZH1Ku-f7n-RL6PGLd8i4pnw5gs_" \
-  "ETL8PKgYVSmTuwh39COpuwV9joUAI1iU9K4hXCCzcWWUoJr9vecyefffwfZC6k9Y" \
-  "mDphQu1eG51KU5NE-DDXA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0NjU4ODMsIm5iZiI6" \
+  "MTc5MDg3Mzg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy4zLjI2NC5nZGFmM2I4MjQtNTg2MC50YnoifQ.k" \
+  "996_vMOnNHbg2IoqZp0V3u5HigFxbN3iHkR3IA7RfOb336OFpFpqRHPca2NYy_6V" \
+  "51J9-LrnrvO0D0xOqVikWF1ceanUky9fRMUd4ijoE6ZxM2KV9puEl_QDWndrWE-S" \
+  "7t9sJFtX6iz22nTIRbd0lK5LerICQZyRJWAu1yV_-BmDYcFDH_atAW3U5d-cTPdk" \
+  "en2u7pCk2UJKmupGcoHUASwk5zFpKSkrpOMP8dExeptShxIFPK1699xKsduP9Nzw" \
+  "_RGVx-rlNZhqUtfmXjMYKgZHZ4mr-v5fICq0WXBwmrbUhPJlgU2L38pmcdiMA1VA" \
+  "XWdPa1V3BEVDl5ESQhJdg")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTIyNDkwODQsIm5iZiI6" \
-  "MTc4OTY1NzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMC4yNzcuZzU0NDFiYjNlLTUwNjUudGJ6In0." \
-  "q6MaKmmX76oFHP3-PnL2W0fMNVTp1XQ9GTM57DMPpu2sHIjdbkBHjdKNv_FQYoe_" \
-  "U_NrHJwViGmH7V4Y8_6_dA2ICvtjfG4jG0ZUSxFFlhNIldRelPEL2OxMluIdS3uH" \
-  "akJMGwVfs9vi75PpXckTUmcL1CDUgECSJhiqxq_dQMGgv7Vh7IF6Htrh3NVv2O0s" \
-  "I22hvOghWVTiDV_ufJmLvCqaYejmDcC8T3B09eeZj1hWA_Pz02M74W-9E0mdb5Av" \
-  "1cqMPHWRPaGzEMvboihbgpw6ctGzWkd1ELJlvxtgmtbitu-URLDanqMLT2TXVpyE" \
-  "8KhGaELk1emBFpBufM8M-w")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0MzE2ODMsIm5iZiI6" \
+  "MTc5MDgzOTY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMS4yMzQuZzU5ZDZiZjU5LTUzNzcudGJ6In0." \
+  "AZbMbTFdgyt_V6SwmN5IGyIt_NhNxZaBvANm2yi--8whmTbQxMLss-p-nFDSS2A5" \
+  "b5Pr2AawBa1iVw7DS9w7SpfhlScne-MyxEmujpDIcdd2yUiiTWCwfCX1J3bm9a5Y" \
+  "wZAsMdBS99HSIiJK0VdwfF3FDRX6-hAQZSncDOc4MFEl7gUv2cjhDi89EsNUDs7-" \
+  "VIIqrEk8q_GsQSOUBJzV0IVJAUQKBIomrrwIZZlItkTpHmuK2XmB4wqCwUZOLe1R" \
+  "riZEHncnX_tXD_uzyNoGRheXEqRQ8wZ_ikoGjwOR9ICeix168EdkAghXniEZ9Jda" \
+  "f1wadNA-qRNyQcja-u3brA")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTIyNDkwODQsIm5iZiI6" \
-  "MTc4OTY1NzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy4wLjI3Ny5nNTQ0MWJiM2UtNTA2NS50YnoifQ.c" \
-  "-oI-58aUa5MMUyJ9yk06IWAvG-3lqh0v7s2KLMROsE0Jmwk3PM_zQZsYMYSnaEww" \
-  "rr0TbHdKAIqa6gH0DLXo93j28TgRn_n4LvV1vlDiP_CTtfFzbxGga0I3iAeOuHVL" \
-  "FGxafwdz6oBwIs1C9aebAYa52jL0JNa9sBv-1dFySdWFY-7-VozKdSBw6D3oQwra" \
-  "G7Cv0EakxbeNS5Ef8wJMhPpwEsQY7GLp-RxnDOb7slSpCyEzhD6iHjJfFHnmqYa8" \
-  "57DTKq9rdRW1AWw91-FTr1Hi7ORjlYl4_8T2ecxOz6wyECJD5zhAfWJCqZSqi0wZ" \
-  "Sl_CW59WLbHF3nEHQVe2g")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0MzE2ODMsIm5iZiI6" \
+  "MTc5MDgzOTY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy4xLjIzNC5nNTlkNmJmNTktNTM3Ny50YnoifQ.A" \
+  "QRq06AJKAibeKXxp5lmpKI5p3TLQfPWuXDX4GN59pi-jt94c3cWHKK2r65RYjdRb" \
+  "oLD-EicXGhLzK5pmJVYnekvYPBmAN5y1OmXavYcvxr_0_CJZfV_xsW67dwOflXw6" \
+  "8PDn6S5MZpuq16IIXHnF7xe9CjDsbptz-hKFWeX0IORUVcohK16AQRJoH8WFHDEz" \
+  "xhXHbvVFZPnECARH-cayBIe97GNYn5EcbUqx3T7tGN8BG463fONWKWa4l7vj95lS" \
+  "DG9LHMTWJn9NFaci1ilF1Bsta7B4lI8rK1SJcOCp0zluaTBpzifa5Dv1eFeQrP6Z" \
+  "SZgbKvZiFkajA7PqOliJw")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1254,7 +1254,7 @@ freeEx=(
 'adsBillboard&.(?=\?\[.{1,6}[a-zA-Z].leaderboard,)&false&&xpuiJs&1.1.59.710&1.2.6.863'
 'adConfig&/\Kv2/config&config&gs&xpuiJs&1.2.55.235'
 'adsCosmos&(case .:|async enable\(.\)\{)(this.enabled=.+?\(.{1,3},"audio"\),|return this.enabled=...+?\(.{1,3},"audio"\))((;case 4:)?this.subscription=this.audioApi).+?this.onAdMessage\)&$1$3.cosmosConnector.increaseStreamTime(-100000000000)&&xpuiJs&1.1.59.710&1.1.92.647'
-'adsEmptyBlock&adsEnabled:!\K0&1&&xpuiJs'
+'adsEmptyBlock&(?:adsEnabled:!|setAdsEnabled:([\w\$]+)=>\{\1\.adsEnabled=!)\K0&1&&xpuiJs'
 'connectOld1& connect-device-list-item--disabled&&&xpuiJs&1.1.70.610&1.1.90.859'
 'connectOld2&connect-picker.unavailable-to-control&spotify-connect&&xpuiJs&1.1.70.610&1.1.90.859'
 'connectOld3&("button",\{className:.,disabled:)(..)&$1false&&xpuiJs&1.1.70.610&1.1.90.859'
@@ -1265,8 +1265,9 @@ freeEx=(
 'hideUpgradeButton&(return|.=.=>)"free"===(.+?)(return|.=.=>)"premium"===&$1"premium"===$2$3"free"===&g&xpuiJs&1.1.59.710&1.1.92.647'
 'hideUpgradeButton2&(?|(===")free(")|(")free("===))&$1premium$2&g&xpuiJs&1.2.55.235'
 'hptoEnabled&hptoEnabled:!\K0&1&s&xpuiJs&&1.2.94.583'
+'hptoFetch&(fetchAndSetHomeAd:\(0,[\w\$]+\.useMemo\)\(\(\)=>)[\w\$]+\x26\x26[\w\$]+\?\.hpto(?=\?async\(\)=>)&$1false&&xpuiJs&1.3.3.1'
 'hptoShown&isHptoShown:!\K0&1&gs&homeHptoJs&1.1.85.884&1.2.20.1218'
-'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104'
+'hptoShown2&(ADS_PREMIUM,isPremium:)\w(.*?ADS_HPTO_HIDDEN,isHptoHidden:)\w&$1true$2true&&xpuiJs&1.2.21.1104&1.3.1.234'
 'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&gs&appBinary&1.2.53.437&1.2.93.667'
 'sGate1&\x80\xBF.\x00\x00\x00\x01(?=\x75\x08\x0F\xB6\x87.\x00\x00\x00\xC3\x80\x7F.\x01\x75\x4B\x48\x83\xBF.\x00\x00\x00\x00\x74\x3C\x53\x48\x8B\x87.\x00\x00\x00\x48\x8B\x8F.\x00\x00\x00\x0F\xB6\xD1\x48\xC1\xE9\x08\x48\x8B\x04\xC8\xC1\xE2\x04\x48\x8B\x04\x10\x48\x8B\x08\x48\x89\xFB\x48\x89\xC7\xFF\x91..\x00\x00\x48\x89\xDF\x89\xC1\xB0\x01\x84\xC9\x5B\x75\x04\x0F\xB6\x47.\xC3\x31\xC0\xC3)&\xEB\x60\x0F\x1F\x44\x00\x00&s&appBinary&1.2.89.539&&Linux&x86_64&1'
 'sGate2&\x80\xBF.\x00\x00\x00\x01(?=\x75\x08\x0F\xB6\x87.\x00\x00\x00\xC3\x80\x7F.\x01\x75\x56\x48\x83\xBF.\x00\x00\x00\x00\x74\x47\x55\x48\x89\xE5\x53\x50\x48\x8B\x87.\x00\x00\x00\x48\x8B\x8F.\x00\x00\x00\x0F\xB6\xD1\x48\xC1\xE9\x08\x48\x8B\x04\xC8\xC1\xE2\x04\x48\x8B\x04\x10\x48\x8B\x08\x48\x89\xFB\x48\x89\xC7\xFF\x91..\x00\x00\x48\x89\xDF\x89\xC1\xB0\x01\x84\xC9\x48\x8D\x64\x24\x08\x5B\x5D\x75\x04\x0F\xB6\x47.\xC3\x31\xC0\xC3)&\xEB\x6B\x0F\x1F\x44\x00\x00&s&appBinary&1.2.87.415&&macOS&x86_64&1'
@@ -1391,7 +1392,7 @@ aoEx=(
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
 'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
-'useAdsSurfaceStateForAdOrchestration&Use ads-owned NPV and cinema surface state for ad orchestration",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200'
+'useAdsSurfaceStateForAdOrchestration&Use ads-owned NPV and cinema surface state for ad orchestration",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200&1.3.1.234'
 'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 )
@@ -1417,7 +1418,7 @@ expEx=(
 'enableBLEJamBroadcasting&Jam Broadcasting for Bluetooth",default:\K!1&true&s&xpuiJs&1.2.76.256'
 'enableBlockUsers&block users feature in clientX",default:\K!.(?=})&true&s&xpuiJs&1.1.70.610&1.2.50.335'
 'enableBrowseViaPathfinder&Fetch Browse data from Pathfinder",default:\K!1&true&s&xpuiJs&1.1.88.595&1.2.24.756'
-'enableCanvasContextMenuToggle&Canvas context menu toggle",default:\K!1&true&s&xpuiJs&1.2.96.200'
+'enableCanvasContextMenuToggle&Canvas context menu toggle",default:\K!1&true&s&xpuiJs&1.2.96.200&1.3.1.234'
 'enableCanvasNpv&short, looping visuals on tracks.",default:..\.\KCONTROL&CANVAS_PLAY_LOOP&s&xpuiJs&1.2.33.1039&1.2.62.580'
 'enableCarouselsOnHome&Use carousels on Home",default:\K!1&true&s&xpuiJs&1.1.93.896&1.2.25.1011'
 'enableCenteredLayout&Enable centered layout",default:\K!.(?=})&true&s&xpuiJs&1.2.39.578&1.2.50.335'
