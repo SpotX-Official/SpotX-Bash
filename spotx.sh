@@ -247,9 +247,13 @@ macos_autoupdate_check() {
 }
 
 macos_client_arch() {
-  archVar=$(/usr/bin/lipo -archs "${appBinary}" 2>/dev/null)
-  [[ "${archVar}" == "arm64" || "${archVar}" == "x86_64" ]] || {
-    echo -e "${red}Error:${clr} Client architecture not supported or could not be detected.\nReinstall client then try again.\n" >&2
+  case "$(LC_ALL=C /usr/bin/file -b "${appBinary}" 2>/dev/null | LC_ALL=C /usr/bin/tr '[:upper:]' '[:lower:]')" in
+    "mach-o 64-bit executable arm64") archVar="arm64" ;;
+    "mach-o 64-bit executable x86_64") archVar="x86_64" ;;
+    *) archVar="" ;;
+  esac
+  [[ "${archVar}" ]] || {
+    echo -e "${red}Error:${clr} Client architecture not supported or could not be detected.\nConfirm the selected client is a readable macOS ARM64 or Intel Spotify installation.\n" >&2
     exit 1
   }
   snapshotBinary="${appPath}/Contents/Frameworks/Chromium Embedded Framework.framework/Resources/v8_context_snapshot.${archVar}.bin"
