@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.3.264.gdaf3b824"
-rollbackVer="1.3.1.234.g59d6bf59"
+buildVer="1.3.4.258.gc60b10b0946a"
+rollbackVer="1.3.3.264.gdaf3b824"
 
-latestB_X="5860"
-latestB_A="5860"
-rollbackB_X="5377"
-rollbackB_A="5377"
+latestB_X="6182"
+latestB_A="6182"
+rollbackB_X="5860"
+rollbackB_A="5860"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0NjU4ODQsIm5iZiI6" \
-  "MTc5MDg3Mzg4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMy4yNjQuZ2RhZjNiODI0LTU4NjAudGJ6In0." \
-  "lin8PUfNnO0-av-IBNFhkyZtadVk_cNoTgZpikcfblhUxR2OOgmyX2iriARdPFoe" \
-  "qrKJopTKuXulXZoPhoODdaf0veR6vlksIKdWiUQgx6b9UX6G2bUFYTQZoGiIfE9X" \
-  "ytl5LQEstdjSWe9byMAuxEQMyVTJgiz43U4vq51iFCOsONFmsLmZXPsxWUiNdsgg" \
-  "ckiGiMso6FPLcCB96jwDIWXg4kWeKj-5Ib4Sd46olOxCvce3MrB-8HisykEn9PJ8" \
-  "_ZqkaBZVRBoGj4-AdIIP7Qd3CWsHkuMLjiw7w28RCPePRUu1gSbCKBBREGUZM4zq" \
-  "krM19rOyooA2rVW5cRB31g")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNzI0ODksIm5iZiI6" \
+  "MTc5MTQ4MDQ4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNC4yNTguZ2M2MGIxMGIwOTQ2YS02MTgyLnRi" \
+  "eiJ9.TkoqoiaLkZ4BFxsJKDo--SJ4bpg5HNXQy43GrZHJdb3QOibRIc5PxVhlbyV" \
+  "W8FyAiGpQrsMzRUFTMj5L1eTgXxvSkV_acbs25DtOnPkwbOajH9CdTeXFg1reKFh" \
+  "IZ2RBgizAz8xFTZgVFraxNjw8AOxmnzjfUcjuutwqvJKI-dfIj6RaYacVffozoxH" \
+  "L25ulr_sJMyzEXdlxFIkKtjBtbaPXdTJlGK2iUI7Rd6_8omFrluAZDWt3MkvBmfa" \
+  "15dL02hu3I6Z0l-7yGRHOM-5NE4UDnbY0rc3vOUzLVquPCf_BDBhSJeQPqLKH695" \
+  "nlaAFxa7rgZkqjd5K2J26DwWQcw")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0NjU4ODMsIm5iZiI6" \
-  "MTc5MDg3Mzg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy4zLjI2NC5nZGFmM2I4MjQtNTg2MC50YnoifQ.k" \
-  "996_vMOnNHbg2IoqZp0V3u5HigFxbN3iHkR3IA7RfOb336OFpFpqRHPca2NYy_6V" \
-  "51J9-LrnrvO0D0xOqVikWF1ceanUky9fRMUd4ijoE6ZxM2KV9puEl_QDWndrWE-S" \
-  "7t9sJFtX6iz22nTIRbd0lK5LerICQZyRJWAu1yV_-BmDYcFDH_atAW3U5d-cTPdk" \
-  "en2u7pCk2UJKmupGcoHUASwk5zFpKSkrpOMP8dExeptShxIFPK1699xKsduP9Nzw" \
-  "_RGVx-rlNZhqUtfmXjMYKgZHZ4mr-v5fICq0WXBwmrbUhPJlgU2L38pmcdiMA1VA" \
-  "XWdPa1V3BEVDl5ESQhJdg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNzI0ODgsIm5iZiI6" \
+  "MTc5MTQ4MDQ4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy40LjI1OC5nYzYwYjEwYjA5NDZhLTYxODIudGJ6" \
+  "In0.ZWg9hyzcsriFpkZGAjVB0TQoOrYTK1nyLqWUwzBevmeTr8K8QEZVn7YVa2-b" \
+  "o1Qeyuns6wh4LeCx9v_7BsNv7fzueXHdW0rg3PXpf4cF_b0aF6mXfTnW8V4OARpt" \
+  "pzorROaI0MwxUfK6FSX6rlC27iOokn3iiVFL4oV7ngNU7JQRFmwAtz4W-1nIIm8A" \
+  "lVx_DED2Abr6UunKnFuTsegroOIKImtue-jSXZu6AStjNwB3AQzaoqbp9u5QWa9S" \
+  "1LUt9dC4KO6qlsRSwAurcGXJCnU720h_8pcB7IpGhEfYLssR9VOOYzmp_e78JX_Q" \
+  "EjkGmjC1R-SrvttVGmsnDNYBJA")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0MzE2ODMsIm5iZiI6" \
-  "MTc5MDgzOTY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMS4yMzQuZzU5ZDZiZjU5LTUzNzcudGJ6In0." \
-  "AZbMbTFdgyt_V6SwmN5IGyIt_NhNxZaBvANm2yi--8whmTbQxMLss-p-nFDSS2A5" \
-  "b5Pr2AawBa1iVw7DS9w7SpfhlScne-MyxEmujpDIcdd2yUiiTWCwfCX1J3bm9a5Y" \
-  "wZAsMdBS99HSIiJK0VdwfF3FDRX6-hAQZSncDOc4MFEl7gUv2cjhDi89EsNUDs7-" \
-  "VIIqrEk8q_GsQSOUBJzV0IVJAUQKBIomrrwIZZlItkTpHmuK2XmB4wqCwUZOLe1R" \
-  "riZEHncnX_tXD_uzyNoGRheXEqRQ8wZ_ikoGjwOR9ICeix168EdkAghXniEZ9Jda" \
-  "f1wadNA-qRNyQcja-u3brA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNDkwODUsIm5iZiI6" \
+  "MTc5MTQ1NzA4NSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMy4yNjQuZ2RhZjNiODI0LTU4NjAudGJ6In0." \
+  "LKUbl9FuG7T4uEJQpKrSYLfvERrzPeTVhUio1UUT1o7ubB7dSuAtHXU9xVCECZpE" \
+  "uxjJZDO15HsT4TGR_P3ohbhfDmeugq4GEOdm-D6UL8Zf8cpnX7b17j_QjKB7WSMO" \
+  "cttdhkVreonxqu0ubhNsj8EQZd29kzZIU3QnkjGhd0LDAZIHGfdMBIFKGERFqe9L" \
+  "8H31KzYUOWKWZb1QS2G2YXQ31QyQ6bdvZ82vh9aTraumH3HrRhA7Z4rRT-v-evQj" \
+  "xYgjIgD476WfcYhkU5IlfB-aX4T1bwLXPgXzkDnF-quJ3EoRp0qPXiWW6CACa_bw" \
+  "xdi0yzf6XxmtOnuStISd0w")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTM0MzE2ODMsIm5iZiI6" \
-  "MTc5MDgzOTY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy4xLjIzNC5nNTlkNmJmNTktNTM3Ny50YnoifQ.A" \
-  "QRq06AJKAibeKXxp5lmpKI5p3TLQfPWuXDX4GN59pi-jt94c3cWHKK2r65RYjdRb" \
-  "oLD-EicXGhLzK5pmJVYnekvYPBmAN5y1OmXavYcvxr_0_CJZfV_xsW67dwOflXw6" \
-  "8PDn6S5MZpuq16IIXHnF7xe9CjDsbptz-hKFWeX0IORUVcohK16AQRJoH8WFHDEz" \
-  "xhXHbvVFZPnECARH-cayBIe97GNYn5EcbUqx3T7tGN8BG463fONWKWa4l7vj95lS" \
-  "DG9LHMTWJn9NFaci1ilF1Bsta7B4lI8rK1SJcOCp0zluaTBpzifa5Dv1eFeQrP6Z" \
-  "SZgbKvZiFkajA7PqOliJw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNDkwODQsIm5iZiI6" \
+  "MTc5MTQ1NzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy4zLjI2NC5nZGFmM2I4MjQtNTg2MC50YnoifQ.m" \
+  "6EnPRex1pFtwwMf2SAtbUvu6ax9WS7L4sRazX0aJbG87J9Zq9G0V7r89YLgYm9lf" \
+  "5ckVWPrPhgplixtmp2PCtE-Sz0mOLlWaspKmAQCyqL2P3FrHA8wDIY7w-pcSNb8j" \
+  "L1EteojjuMLhEQm2ayRwUrPA0_PfMo_uHb_rwtkbyoovfe9d19S9fPq3nAsVQ3XK" \
+  "GajfblfNBoCtP5Op3Q3P82e3bwh_PvilgGhWiWP1DCUoQkhc7b2JILCByH30w8Kq" \
+  "kjriDTvIA6kMSSi5tXfJJGI3EMif-A8C8O_L6XNy7PrSnRnSP2BWcdGcslsyNS0B" \
+  "KmRbO6wbDW7UHQVZJPTVQ")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1275,7 +1275,7 @@ freeEx=(
 'payloadS&\x3F\x70\x61\x79\x6C\x6F\x61\x64&\x00\x00\x00\x00\x00\x00\x00\x00&gs&appBinary&1.2.53.437&1.2.93.667'
 'sGate1&\x80\xBF.\x00\x00\x00\x01(?=\x75\x08\x0F\xB6\x87.\x00\x00\x00\xC3\x80\x7F.\x01\x75\x4B\x48\x83\xBF.\x00\x00\x00\x00\x74\x3C\x53\x48\x8B\x87.\x00\x00\x00\x48\x8B\x8F.\x00\x00\x00\x0F\xB6\xD1\x48\xC1\xE9\x08\x48\x8B\x04\xC8\xC1\xE2\x04\x48\x8B\x04\x10\x48\x8B\x08\x48\x89\xFB\x48\x89\xC7\xFF\x91..\x00\x00\x48\x89\xDF\x89\xC1\xB0\x01\x84\xC9\x5B\x75\x04\x0F\xB6\x47.\xC3\x31\xC0\xC3)&\xEB\x60\x0F\x1F\x44\x00\x00&s&appBinary&1.2.89.539&&Linux&x86_64&1'
 'sGate2&\x80\xBF.\x00\x00\x00\x01(?=\x75\x08\x0F\xB6\x87.\x00\x00\x00\xC3\x80\x7F.\x01\x75\x56\x48\x83\xBF.\x00\x00\x00\x00\x74\x47\x55\x48\x89\xE5\x53\x50\x48\x8B\x87.\x00\x00\x00\x48\x8B\x8F.\x00\x00\x00\x0F\xB6\xD1\x48\xC1\xE9\x08\x48\x8B\x04\xC8\xC1\xE2\x04\x48\x8B\x04\x10\x48\x8B\x08\x48\x89\xFB\x48\x89\xC7\xFF\x91..\x00\x00\x48\x89\xDF\x89\xC1\xB0\x01\x84\xC9\x48\x8D\x64\x24\x08\x5B\x5D\x75\x04\x0F\xB6\x47.\xC3\x31\xC0\xC3)&\xEB\x6B\x0F\x1F\x44\x00\x00&s&appBinary&1.2.87.415&&macOS&x86_64&1'
-'sGate3&\x08..\x39(?=\x1F\x05\x00\x71\x81\x00\x00\x54\x08..\x39\x00\x01\x00\x12\xC0\x03\x5F\xD6\x08..\x39\x1F\x05\x00\x71\x61\x03\x00\x54.{104}\xE0\x03\x00\x12\xC0\x03\x5F\xD6)&\x23\x00\x00\x14&s&appBinary&1.2.80.358&&macOS&arm64&1'
+'sGate3&\x08..\x39\x1F\x05\x00\x71(?=\x81\x00\x00\x54\x08..\x39\x00\x01\x00\x12\xC0\x03\x5F\xD6\x08..\x39\x1F\x05\x00\x71(?:\x61\x03\x00\x54.{104}|\x41\x03\x00\x54.{100})\xE0\x03\x00\x12\xC0\x03\x5F\xD6)&\x00\x00\x80\x52\xC0\x03\x5F\xD6&s&appBinary&1.2.80.358&&macOS&arm64&1'
 'stateS1&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.53.437&1.2.55.235&macOS'
 'stateS2&\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x48)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.53.437&1.2.84.476&Linux'
 'stateS3&[\x00\x0A\x1A]\K\x69\x6E\x69\x74\x69\x61\x6C\x5F(?=\x73\x74\x61\x74\x65\x00)&\x00\x00\x00\x00\x00\x00\x00\x00&s&appBinary&1.2.55.235&&macOS'
@@ -1375,7 +1375,7 @@ aoEx=(
 'enableUserFraudSignals&Enable user fraud signals",default:\K!.(?=})&false&s&xpuiJs&1.2.10.751&1.2.62.580'
 'enableUserFraudVerification&Enable user fraud verification",default:\K!.(?=})&false&s&xpuiJs&1.2.3.1107&1.2.62.580'
 'enableUserFraudVerificationRequest&Enable the IAV component make api requests",default:\K!.(?=})&false&s&xpuiJs&1.2.5.954&1.2.62.580'
-'enableVideoAdTerminatedEvent&Fire terminated events for non-complete video ad endings on desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.98.250'
+'enableVideoAdTerminatedEvent&Fire terminated events for non-complete video ad endings on desktop",default:\K!.(?=})&false&s&xpuiJs&1.2.98.250&1.3.3.264'
 'enableYourListeningUpsell&Enable Your Listening Upsell Banner for free . unauth users",default:\K!.(?=})&false&s&xpuiJs&1.2.25.1009&1.2.63.394'
 'hideUpgradeCTA&Hide the Upgrade CTA button on the Top Bar",default:\K!.(?=})&true&s&xpuiJs&1.2.26.1180'
 'homeV2Fix1&("HomeResponsePayload"[\s\S]{0,500}?)0\s*===\s*([A-Za-z_\$][\w\$]*)\.sectionContainer\.sections\.totalCount\s*\|\|\s*0\s*===\s*\2\.sectionContainer\.sections\.items\.length&$1!Array.isArray(null==$2||null==$2.sectionContainer||null==$2.sectionContainer.sections?void 0:$2.sectionContainer.sections.items)||0===$2.sectionContainer.sections.items.length&&homeV2Js&1.1.92.0&1.2.44.9999'
