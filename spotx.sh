@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.4.258.gc60b10b0946a"
-rollbackVer="1.3.3.264.gdaf3b824"
+buildVer="1.3.5.3058.g5d40d5480152"
+rollbackVer="1.3.4.258.gc60b10b0946a"
 
-latestB_X="6182"
-latestB_A="6182"
-rollbackB_X="5860"
-rollbackB_A="5860"
+latestB_X="299"
+latestB_A="299"
+rollbackB_X="6182"
+rollbackB_A="6182"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNzI0ODksIm5iZiI6" \
-  "MTc5MTQ4MDQ4OSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNC4yNTguZ2M2MGIxMGIwOTQ2YS02MTgyLnRi" \
-  "eiJ9.TkoqoiaLkZ4BFxsJKDo--SJ4bpg5HNXQy43GrZHJdb3QOibRIc5PxVhlbyV" \
-  "W8FyAiGpQrsMzRUFTMj5L1eTgXxvSkV_acbs25DtOnPkwbOajH9CdTeXFg1reKFh" \
-  "IZ2RBgizAz8xFTZgVFraxNjw8AOxmnzjfUcjuutwqvJKI-dfIj6RaYacVffozoxH" \
-  "L25ulr_sJMyzEXdlxFIkKtjBtbaPXdTJlGK2iUI7Rd6_8omFrluAZDWt3MkvBmfa" \
-  "15dL02hu3I6Z0l-7yGRHOM-5NE4UDnbY0rc3vOUzLVquPCf_BDBhSJeQPqLKH695" \
-  "nlaAFxa7rgZkqjd5K2J26DwWQcw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ3NTgyODQsIm5iZiI6" \
+  "MTc5MjE2NjI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNS4zMDU4Lmc1ZDQwZDU0ODAxNTItMjk5LnRi" \
+  "eiJ9.USAEIWw2W2GdSSnmCpEQx9jXtRm8Xdft09AxEmZ7_emkS3PeQT2aSGAW-Z-" \
+  "co1gtzJk4Ftghq_jDPdCTC1b79YFqFOa9uDWezHqmAcNonHJwG0nyAYohBuW_fTe" \
+  "GZCaTlOxxeyN3OlNY5tgBYkDJCPz2s1Xsss3lwgm4nYGEoHcBXlHZ4y_r599693P" \
+  "BdlO1rb4vNWroV6BgO6cufPsFuKaf9Ua68ijZSBekU_UK6JIHVzBx4_JXjJlCYbc" \
+  "QF5ZpLLNtN5tYwS2bKIZyRTIof2pP9YO7bNiBbbValVGtUsnNS7OzF2KKYqF8-Es" \
+  "GbiC7SiXIzOUyCU_QiBI5lOhoiQ")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNzI0ODgsIm5iZiI6" \
-  "MTc5MTQ4MDQ4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy40LjI1OC5nYzYwYjEwYjA5NDZhLTYxODIudGJ6" \
-  "In0.ZWg9hyzcsriFpkZGAjVB0TQoOrYTK1nyLqWUwzBevmeTr8K8QEZVn7YVa2-b" \
-  "o1Qeyuns6wh4LeCx9v_7BsNv7fzueXHdW0rg3PXpf4cF_b0aF6mXfTnW8V4OARpt" \
-  "pzorROaI0MwxUfK6FSX6rlC27iOokn3iiVFL4oV7ngNU7JQRFmwAtz4W-1nIIm8A" \
-  "lVx_DED2Abr6UunKnFuTsegroOIKImtue-jSXZu6AStjNwB3AQzaoqbp9u5QWa9S" \
-  "1LUt9dC4KO6qlsRSwAurcGXJCnU720h_8pcB7IpGhEfYLssR9VOOYzmp_e78JX_Q" \
-  "EjkGmjC1R-SrvttVGmsnDNYBJA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ3NTgyODMsIm5iZiI6" \
+  "MTc5MjE2NjI4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy41LjMwNTguZzVkNDBkNTQ4MDE1Mi0yOTkudGJ6" \
+  "In0.S05z2sHVfvBlmw4-R8V0K1ytbCTxN4HJ31t-xsgbuyhvkNtLHcBoziou2Ygv" \
+  "PntXqS4DFHpm0CmKntGXBfl7Sza9s2Zb-y8T3p4tZeD0-8FFec8pvUHzqGrPbFFA" \
+  "mBOy9f_m27JwJxfym-G5g_7T9Q1hHYcMFGgWtcUoORFvaeOel4S5VSnk-5Ye71oY" \
+  "-156bSRpAs2ywi3NO8dO5Vig6yvxRR-cdnaCtwQEwN65AgL4VzO0cgKW24OahoIC" \
+  "R9WAJMOHvBivPtswYDqxQL3QNV3Sc3p-ZlIhJP52Zp2j3MFSHSYrZnq2qc8PwVaa" \
+  "8MlHj0oD-ktyWWjiP10YS7ypvA")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNDkwODUsIm5iZiI6" \
-  "MTc5MTQ1NzA4NSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMy4yNjQuZ2RhZjNiODI0LTU4NjAudGJ6In0." \
-  "LKUbl9FuG7T4uEJQpKrSYLfvERrzPeTVhUio1UUT1o7ubB7dSuAtHXU9xVCECZpE" \
-  "uxjJZDO15HsT4TGR_P3ohbhfDmeugq4GEOdm-D6UL8Zf8cpnX7b17j_QjKB7WSMO" \
-  "cttdhkVreonxqu0ubhNsj8EQZd29kzZIU3QnkjGhd0LDAZIHGfdMBIFKGERFqe9L" \
-  "8H31KzYUOWKWZb1QS2G2YXQ31QyQ6bdvZ82vh9aTraumH3HrRhA7Z4rRT-v-evQj" \
-  "xYgjIgD476WfcYhkU5IlfB-aX4T1bwLXPgXzkDnF-quJ3EoRp0qPXiWW6CACa_bw" \
-  "xdi0yzf6XxmtOnuStISd0w")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ2NDY2ODQsIm5iZiI6" \
+  "MTc5MjA1NDY4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNC4yNTguZ2M2MGIxMGIwOTQ2YS02MTgyLnRi" \
+  "eiJ9.Fs3d7zLAcFj7XADc_cko8qKMj4PuDucVactjphvKQ_TYQo0TAdaUsLzql8H" \
+  "YhLJo5pgdTIFBCsx_YBLiNUBE_dLbsJQv5KYJhSSUhgcFtLzI9r2X8K97NoXh_5i" \
+  "0VLaYJP8D3Mb0YkfxHbu_zwS7Lbjtd5bOPmaOBtEXeiD87Xs-ACqVig2GlFekfNG" \
+  "usTDdbRoZtLWOZfpPpXwMaeH_QPPR1-ZJxZksj8J8FZ6CZhlzB5LLnI0h_SE14C0" \
+  "y4rIzkt2xIrUlsCudaJvksKdiiWQbul-GtW80lCaQponSgTOLsxmudnAijuQTCB3" \
+  "1eSk-aiozlYD-1zL3Qg4Pk0KHqg")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQwNDkwODQsIm5iZiI6" \
-  "MTc5MTQ1NzA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy4zLjI2NC5nZGFmM2I4MjQtNTg2MC50YnoifQ.m" \
-  "6EnPRex1pFtwwMf2SAtbUvu6ax9WS7L4sRazX0aJbG87J9Zq9G0V7r89YLgYm9lf" \
-  "5ckVWPrPhgplixtmp2PCtE-Sz0mOLlWaspKmAQCyqL2P3FrHA8wDIY7w-pcSNb8j" \
-  "L1EteojjuMLhEQm2ayRwUrPA0_PfMo_uHb_rwtkbyoovfe9d19S9fPq3nAsVQ3XK" \
-  "GajfblfNBoCtP5Op3Q3P82e3bwh_PvilgGhWiWP1DCUoQkhc7b2JILCByH30w8Kq" \
-  "kjriDTvIA6kMSSi5tXfJJGI3EMif-A8C8O_L6XNy7PrSnRnSP2BWcdGcslsyNS0B" \
-  "KmRbO6wbDW7UHQVZJPTVQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ2NDY2ODMsIm5iZiI6" \
+  "MTc5MjA1NDY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy40LjI1OC5nYzYwYjEwYjA5NDZhLTYxODIudGJ6" \
+  "In0.iC5tJD2hns5RwWgbhef8scxr_X5uBXnk9bgxHlaYBIMCmAm-37G4PkeqyGXM" \
+  "iVmqFFRTNdx-XkWY1qLF1DHCe26UgT3fknnT-YOTscB1mGoYM30nW_UGYWdjS2cC" \
+  "CqzwXCGpF_eoG5npKQl8dOxuOgwq7BbEaBRXUFaE5ep23ZR1WNXQ_Z_yn3PeN1-9" \
+  "gKWc0r_eNhDfCkptDoyktg4bMrdcHfPlj--47zFVg50QfrSz2h--i6nRavCCHeOT" \
+  "Y4VOP059Us8NPPMFH05Eq7rz_mmZ1wrTx0eSdKAIAHt8zI2qrSE7CNE1X8TqzOqp" \
+  "TNCStbnIxL2h6Muko7MzK-ZBpg")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1242,12 +1242,12 @@ run_finish() {
 }
 
 perlVar="perl -0777pi -w -e"
-hideDLIcon=' .BKsbV2Xl786X9a09XROH, .GWCBhKJqeZal3n5tCQwl, .pX3IkLhEry0wVfiU, .IOXdOZpz_OhQUj2M3A0e {display:none}'
+hideDLIcon=' .BKsbV2Xl786X9a09XROH, .GWCBhKJqeZal3n5tCQwl, .pX3IkLhEry0wVfiU, .IOXdOZpz_OhQUj2M3A0e, .H4wKIFS5E53g0kbGgIwJ {display:none}'
 hideDLMenu=' :is(.pzkhLqffqF_4hucrVVQA, .egE6UQjF_UUoCzvMxREj, .Y98_oiegQgSpY_o7hoKG, .tT_JypfxNakuY1jHgyBN, .zVA1h9TUy8QQBogj, .l7XabbfpobRNm8SpemYx)[role=menuitemcheckbox] {display:none}'
-hideDLQual=' :is(.weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0, .eguwzH_QWTBXry7hiNj3, .qV_CxbowaNkMarye, .Z6yfNoSJ6OjiEBGI5Osr):has([for="desktop.settings.downloadQuality"]) {display: none}'
-hideSubfeed=' .cj6vRk3nFAi80HSVqX91, .c8Z2jJUocJTdV9g741cp, .x_HLN829yDsvJDgl, .g8bL3bGxc63nO5u9gY7g {display:none}'
+hideDLQual=' :is(.weV_qxFz4gF5sPotO10y, .BMtRRwqaJD_95vJFMFD0, .eguwzH_QWTBXry7hiNj3, .qV_CxbowaNkMarye, .Z6yfNoSJ6OjiEBGI5Osr, .pbdjJ8dUPVRT6_BleGKi):has([for="desktop.settings.downloadQuality"]) {display: none}'
+hideSubfeed=' .cj6vRk3nFAi80HSVqX91, .c8Z2jJUocJTdV9g741cp, .x_HLN829yDsvJDgl, .g8bL3bGxc63nO5u9gY7g, .w2WpffC3sNc7GAWa4JVW {display:none}'
 hideVeryHigh=' #desktop\.settings\.streamingQuality>option:nth-child(5) {display:none}'
-lyricsBackgroundNew=' .FUYNhisXTCmbzt9IDxnT,\n .tr8V5eHsUaIkOYVw7eSG,\n .hW9km7ku6_iggdWDR_Lg,\n .lofIAg8Ixko3mfBrbfej,\n .bbJIIopLxggQmv5x,\n .Li269NgzkU2gI4KOP9sM,\n .I2WIloMMjsBeMaIS8H3v,\n .McI3hD7aCfpq015LJa6X,\n .gpDSOimnzH4zTJmE7UR5,\n .dh4zyndPBN0gul_w,\n .zboE1ICtt8SJrJQEVHTf,\n .bqldaBkacR41KxR2Z0jY {\n \t--lyrics-color-active: #C8C8C8 !important;\n \t--lyrics-color-inactive: #575757 !important;\n \t--lyrics-color-passed: #575757 !important;\n \t--lyrics-color-background: #121212 !important;\n }'
+lyricsBackgroundNew=' .FUYNhisXTCmbzt9IDxnT,\n .tr8V5eHsUaIkOYVw7eSG,\n .hW9km7ku6_iggdWDR_Lg,\n .lofIAg8Ixko3mfBrbfej,\n .bbJIIopLxggQmv5x,\n .Li269NgzkU2gI4KOP9sM,\n .I2WIloMMjsBeMaIS8H3v,\n .McI3hD7aCfpq015LJa6X,\n .gpDSOimnzH4zTJmE7UR5,\n .dh4zyndPBN0gul_w,\n .zboE1ICtt8SJrJQEVHTf,\n .bqldaBkacR41KxR2Z0jY,\n .bm5I7yGVN8NXt6vH9eiC,\n .DR40wFCkq02MAMDVavbQ {\n \t--lyrics-color-active: #C8C8C8 !important;\n \t--lyrics-color-inactive: #575757 !important;\n \t--lyrics-color-passed: #575757 !important;\n \t--lyrics-color-background: #121212 !important;\n }'
 updatesEx=(
 'blockUpdates&\x64(?=\x65\x73\x6B\x74\x6F\x70\x2D\x75\x70)&\x00&g&appBinary&1.1.70.610&9.9.9.9&macOS'
 )
@@ -1393,7 +1393,7 @@ aoEx=(
 'slotPre&\x2D(?=\x70\x72\x65\x72\x6F\x6C\x6C)&\x20&g&appBinary&1.0.29.605&1.0.29.605&macOS'
 'sponsors1&ht.{14}\...\..{7}\....\/.{8}ap4p\/&&g&xpuiJs&1.1.70.610&1.2.52.442'
 'sponsors2&ht.{14}\...\..{7}\....\/s.{15}t\/v.\/&&g&xpuiJs&1.1.70.610&1.2.60.564'
-'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710'
+'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710&1.3.4.9999'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
 'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
 'useAdsSurfaceStateForAdOrchestration&Use ads-owned NPV and cinema surface state for ad orchestration",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200&1.3.1.234'
@@ -1475,7 +1475,7 @@ expEx=(
 'enableLyricsNew&new fullscreen lyrics page",default:\K!1&true&s&xpuiJs&1.1.84.716&1.1.86.857'
 'enableLyricsScrollToCurrentLineButton&scroll to current line button in lyrics",default:\K!1&true&s&xpuiJs&1.2.65.255&1.2.77.144'
 'enableMadeForYouEntryPoint&Show "Made For You" entry point in the left sidebar.,default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.95.893'
-'enableMarkBookAsFinished&ability to mark a book as finished",default:\K!1&true&s&xpuiJs&1.2.44.405'
+'enableMarkBookAsFinished&ability to mark a book as finished",default:\K!1&true&s&xpuiJs&1.2.44.405&1.3.4.9999'
 'enableMerchHubWrappedTakeover&Route merchhub url to the new genre page for the wrapped takeover",default:\K!1&true&s&xpuiJs&1.2.22.975&1.2.39.578'
 'enableMoreLikeThisPlaylist&More Like This playlist for playlists the user cannot edit",default:\K!1&true&s&xpuiJs&1.2.32.985&1.2.73.474'
 'enableMusicVideos&available for the current user. Override to true for supported products and markets.",default:\K!1&true&s&xpuiJs&1.2.96.200'
