@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.5.3058.g5d40d5480152"
-rollbackVer="1.3.4.258.gc60b10b0946a"
+buildVer="1.3.6.1921.g7086c071a617"
+rollbackVer="1.3.5.3058.g5d40d5480152"
 
-latestB_X="299"
-latestB_A="299"
-rollbackB_X="6182"
-rollbackB_A="6182"
+latestB_X="69"
+latestB_A="69"
+rollbackB_X="299"
+rollbackB_A="299"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ3NTgyODQsIm5iZiI6" \
-  "MTc5MjE2NjI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNS4zMDU4Lmc1ZDQwZDU0ODAxNTItMjk5LnRi" \
-  "eiJ9.USAEIWw2W2GdSSnmCpEQx9jXtRm8Xdft09AxEmZ7_emkS3PeQT2aSGAW-Z-" \
-  "co1gtzJk4Ftghq_jDPdCTC1b79YFqFOa9uDWezHqmAcNonHJwG0nyAYohBuW_fTe" \
-  "GZCaTlOxxeyN3OlNY5tgBYkDJCPz2s1Xsss3lwgm4nYGEoHcBXlHZ4y_r599693P" \
-  "BdlO1rb4vNWroV6BgO6cufPsFuKaf9Ua68ijZSBekU_UK6JIHVzBx4_JXjJlCYbc" \
-  "QF5ZpLLNtN5tYwS2bKIZyRTIof2pP9YO7bNiBbbValVGtUsnNS7OzF2KKYqF8-Es" \
-  "GbiC7SiXIzOUyCU_QiBI5lOhoiQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTUxODMwODQsIm5iZiI6" \
+  "MTc5MjU5MTA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNi4xOTIxLmc3MDg2YzA3MWE2MTctNjkudGJ6" \
+  "In0.j-YDeLfjXMzEDDwMAKoybKo7g29LAOaF-43CkaOnksw0jqCYxxC4A2nPHMaE" \
+  "jLvUvuJu7hprCrHu8C76pME4Gjvu3ETxqNJgtSIwhJzWzuZdnO1pjmEENx5sHwkf" \
+  "AD6O9BR5BPk9n4bjJxwOt7L_RCo9kDzAmvZvw8PlLd7l4FffadwqsnDjWjIiGojr" \
+  "v0yqOeWsTHMqa4syM_z0Qhp4GJBxTqUKRMgH9vRFRZLGeEDUw02hFeKV9LWD00Np" \
+  "rC0UpUoyv2m2j2YohiA0i4ZtzaG2FFRwLKNwaFGxfm9dHQ7gYhlLd0uP0zVBrNyo" \
+  "b4Qcg1IictJftsFMz8pI6g-3rQ")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ3NTgyODMsIm5iZiI6" \
-  "MTc5MjE2NjI4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy41LjMwNTguZzVkNDBkNTQ4MDE1Mi0yOTkudGJ6" \
-  "In0.S05z2sHVfvBlmw4-R8V0K1ytbCTxN4HJ31t-xsgbuyhvkNtLHcBoziou2Ygv" \
-  "PntXqS4DFHpm0CmKntGXBfl7Sza9s2Zb-y8T3p4tZeD0-8FFec8pvUHzqGrPbFFA" \
-  "mBOy9f_m27JwJxfym-G5g_7T9Q1hHYcMFGgWtcUoORFvaeOel4S5VSnk-5Ye71oY" \
-  "-156bSRpAs2ywi3NO8dO5Vig6yvxRR-cdnaCtwQEwN65AgL4VzO0cgKW24OahoIC" \
-  "R9WAJMOHvBivPtswYDqxQL3QNV3Sc3p-ZlIhJP52Zp2j3MFSHSYrZnq2qc8PwVaa" \
-  "8MlHj0oD-ktyWWjiP10YS7ypvA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTUxODMwODMsIm5iZiI6" \
+  "MTc5MjU5MTA4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy42LjE5MjEuZzcwODZjMDcxYTYxNy02OS50Ynoi" \
+  "fQ.HIBkGczu1_F5XiTiZacLkSvud-kEKWjAJPOwLHpxwo--34szhtFzAi_JKsxA9" \
+  "4tdb-FGfneNk1eHyGayKQqOw-OKmLkEuRk2YHOfUGanDMbhxCQNBU0CL2eBQMhsq" \
+  "7kZIjf9HvCwJy1-A8O1JzrL15dFjoceuwPmJ2v2ZUxAPdsVzuiGj198fxTp62Vnn" \
+  "DhqGPuF4RjNjlm2Q7510S3oj55M8yD7fmqZFkc9-KfqGWAiFL-UDsWAteoD36vJ4" \
+  "kBrSIgJwGFWsm04kvZiJ-5SFJdLn00eSgItmzUmEY9A6xU7TnrZs6MKNz5Mp592c" \
+  "wsYrwFILDtLGmp5HgYMuNlXXw")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ2NDY2ODQsIm5iZiI6" \
-  "MTc5MjA1NDY4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNC4yNTguZ2M2MGIxMGIwOTQ2YS02MTgyLnRi" \
-  "eiJ9.Fs3d7zLAcFj7XADc_cko8qKMj4PuDucVactjphvKQ_TYQo0TAdaUsLzql8H" \
-  "YhLJo5pgdTIFBCsx_YBLiNUBE_dLbsJQv5KYJhSSUhgcFtLzI9r2X8K97NoXh_5i" \
-  "0VLaYJP8D3Mb0YkfxHbu_zwS7Lbjtd5bOPmaOBtEXeiD87Xs-ACqVig2GlFekfNG" \
-  "usTDdbRoZtLWOZfpPpXwMaeH_QPPR1-ZJxZksj8J8FZ6CZhlzB5LLnI0h_SE14C0" \
-  "y4rIzkt2xIrUlsCudaJvksKdiiWQbul-GtW80lCaQponSgTOLsxmudnAijuQTCB3" \
-  "1eSk-aiozlYD-1zL3Qg4Pk0KHqg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTUxNTk2ODMsIm5iZiI6" \
+  "MTc5MjU2NzY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNS4zMDU4Lmc1ZDQwZDU0ODAxNTItMjk5LnRi" \
+  "eiJ9.Ox8hGJA4V639qc-MXA6ADYF-j02mvOJ1RZiVsgt_YjBp8NsRnA4u7uClR1j" \
+  "_urJCY5rVPuM-zBgxmyPdMAiU6fztsu0lw12VFbXDu5H1fSOYxncha2YGpDXDtvJ" \
+  "t-baYavPSclO8DLl_qe0o_dnxMb2yGPnA2bkRM1jO7jD_YDMZyNoceVNHDVMkjjR" \
+  "mjNoqiMCR1O6R8sKd9Q3pG_bhz8nsibtdg5-yxbjq3ZXNZ1e6lFL82yWEhXdXai2" \
+  "5vvlDNVnxjDSfvatxbB9pNi0RRApqV2RVDnYbmt2cjIgJiVSNw7YyOGZceMr0z3x" \
+  "PlIHn5JYBEqsPQff5W7UP1ShNyg")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTQ2NDY2ODMsIm5iZiI6" \
-  "MTc5MjA1NDY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy40LjI1OC5nYzYwYjEwYjA5NDZhLTYxODIudGJ6" \
-  "In0.iC5tJD2hns5RwWgbhef8scxr_X5uBXnk9bgxHlaYBIMCmAm-37G4PkeqyGXM" \
-  "iVmqFFRTNdx-XkWY1qLF1DHCe26UgT3fknnT-YOTscB1mGoYM30nW_UGYWdjS2cC" \
-  "CqzwXCGpF_eoG5npKQl8dOxuOgwq7BbEaBRXUFaE5ep23ZR1WNXQ_Z_yn3PeN1-9" \
-  "gKWc0r_eNhDfCkptDoyktg4bMrdcHfPlj--47zFVg50QfrSz2h--i6nRavCCHeOT" \
-  "Y4VOP059Us8NPPMFH05Eq7rz_mmZ1wrTx0eSdKAIAHt8zI2qrSE7CNE1X8TqzOqp" \
-  "TNCStbnIxL2h6Muko7MzK-ZBpg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTUxNTk2ODIsIm5iZiI6" \
+  "MTc5MjU2NzY4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy41LjMwNTguZzVkNDBkNTQ4MDE1Mi0yOTkudGJ6" \
+  "In0.KzNKTCFd_vJFJByJuCHU74J4HlmkrzbGSg0KjAWcCFTAYTnNH1wa-zWvFQ5a" \
+  "7NwBpHjoJ1vmQaJfqL9PYXccYuuut_mDAvnRxzMxhku9mGSaQgSz-vRrH_EVfMoE" \
+  "vh7NteyesMHXQC2KP3oEOYRwo6ZE3cXjRcM4SfQYzShVGGbW7b2sYIHbg3aPPSEa" \
+  "_kxyrH40XM2_r8ZHdXMuK4N2KiBjV8V9LhbZDqtUb5YPDO5mN63SdECa9pBbGBBr" \
+  "cAUdXc_92thrbpbzt4iQ3Je4l5qDheTlR5KIw05SUYZj9DMIwm_3KI30RK1AVYYu" \
+  "G8wAq-6ZtI6KeEt2O6Usxn4okQ")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
