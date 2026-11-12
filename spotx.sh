@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.8.620.g39b276d5d7ac"
-rollbackVer="1.3.6.1921.g7086c071a617"
+buildVer="1.3.9.2055.g806b5b278de8"
+rollbackVer="1.3.8.620.g39b276d5d7ac"
 
-latestB_X="218"
-latestB_A="218"
-rollbackB_X="69"
-rollbackB_A="69"
+latestB_X="330"
+latestB_A="330"
+rollbackB_X="218"
+rollbackB_A="218"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTY1NzQ0OTUsIm5iZiI6" \
-  "MTc5Mzk4MjQ5NSwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOC42MjAuZzM5YjI3NmQ1ZDdhYy0yMTgudGJ6" \
-  "In0.Ss-vPsIwh9Q4VQFqhxCXgOEMB4oqfKaqTbe5Xt2EsP7T69GuwHbLPyg_aYeG" \
-  "oGI5WmFhn-4yH3B6kO8p33iO5NKWJYPx6AMCtN8dxs3Y7cjsA7o8z1dMvD1lawgT" \
-  "ns2aa65KH8tRd5hGUAX3IJPfQsf7xH3UwvsbvU7E7AcxAbVgvqBAQKIurSvziKqm" \
-  "5vCFsjr_XUl2X6g7ntJ4BB6_GhQpdaOSesLO8prCJCnQr_NIQntm1Q95vZ1qYNox" \
-  "dF9YjDcCw3wVoTkwc0u3gtMs_pTIt9PDEZ56uUAq5KJaEa9fprdNNkZ-6617bE_w" \
-  "9xgNasOfjT9bmcod-3QgSaYSwQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwOTI4ODMsIm5iZiI6" \
+  "MTc5NDUwMDg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOS4yMDU1Lmc4MDZiNWIyNzhkZTgtMzMwLnRi" \
+  "eiJ9.rYnOKpCvwWfQC9_o2gkIj6tSSjfCAFIa-TjygyfZf06z8P2QLmlVzk79mdN" \
+  "hOn_AqqLL8hENj3enHVH9-a1wHd4jXx2LkyV_1bEvL8n6u-9ymERID4BsFkUm151" \
+  "9YNl24cc0BtLJ-trYu3QcAwiETKCccK8eFKdGTbQs45LrGc5urw-r3Faw00D3aSS" \
+  "busuaR_UownSTIZFMEixF4FnTmP-qszXTHxLvaUZq7cYo7zT_BwW_pwWGGuMRSI1" \
+  "4jADuSxa0AQOXP2xukHOkhOMpMOogwGzjrSVMsYRZmx_QjUSQTKaoxbcirVlzFRz" \
+  "IBgMzrx9PuoMJaNwu-dlG3iIbZA")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTY1NzQ0ODgsIm5iZiI6" \
-  "MTc5Mzk4MjQ4OCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy44LjYyMC5nMzliMjc2ZDVkN2FjLTIxOC50Ynoi" \
-  "fQ.rO6sAO-vnu-Cg1p3ZnXBLURfAVH_UtpZYMsdL5xalP5hzGMP7IlaepsfyC_qO" \
-  "dnE1XUdPHVPnRHUfS3Px8LRAkbolAYOnBe_KKBzbJ7xvD0mDdFmiIJ_DemYRQ5tT" \
-  "eC6gLDCwZxbAerzasSS81wmZ0eQ5AjplVlj01k1bA_XwXXBjCAECpWO3x410nXY9" \
-  "0sIQqze0p3knYMOCK0kLSm3hA2qkf6HqK9yeljGgEaY-PPpV1FdRUmeAMQBHc74C" \
-  "IpMepatTl042PA3mBHtrGsgl1J_XIVxmAi2kqGXCW6bQdZWdXQSsQweoIG8aj9m6" \
-  "y-dws_nZZ_mfxIFa_fnC7wwbg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwOTI4ODIsIm5iZiI6" \
+  "MTc5NDUwMDg4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy45LjIwNTUuZzgwNmI1YjI3OGRlOC0zMzAudGJ6" \
+  "In0.gdBCz7COsIhJS9Z4mWlxecQe963KlC1a63UI-vPIgz6ek7mCbFOsxRVubRhs" \
+  "FgbFEUN2c-Y2tzm-lgis9u_IYSSK8065ruuCta3J5wwppJKItkZOIYYngstaKwJ3" \
+  "GbzfRMpCh88RLxGuaI08TL4lWxtPrFlSYUVMtylCYbFtXDYp5XkmphwAq60XIIY6" \
+  "MO_xdXSJRimBbJXnYnZksTBDWM3_jXp-YE9baJzSAYuQzhaI04-bOYmlRtDxrZ07" \
+  "jq4RV1ae5ma6BSt6kJqw_Ti1sJHOei4QiJxAjH65g8ZDPdpAkqvDAVzp_kc2kGbZ" \
+  "yM27Pz0nTmxYaLkWgyEMQxeJsA")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTY1NDIwODQsIm5iZiI6" \
-  "MTc5Mzk1MDA4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuNi4xOTIxLmc3MDg2YzA3MWE2MTctNjkudGJ6" \
-  "In0.kTEm75QT-qjxLRGdhn_dD2_oy323K3oC3TOCSksLpFFuZPnBzx0DscA2a7m8" \
-  "UY16v-8Mg2OJ2zNTMmAO1jP-AbGMPH6Wg6mefxGhAmsrx9ki1AIP2s3evZ58xiWK" \
-  "EQcZs7mKDPDmIWHWnYMDL7JROsVd6Kqe8qFysN6BeMPemvWOnqVRKVoVYoQKUfT0" \
-  "Cv1DXgOaLaexiI0oMznYUiFGoP7olNdmHiqMbuD70Jl8hGAvpYI9m2BdyfDhpeEb" \
-  "bPdtrwpu9EtYEv7EVqNM6ufD1lp2flrEe28bbVtBOM8-7QaYbnb5PAO6HFWqC5On" \
-  "BMaarz06dstS9wTEhwAZvwesbw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwNjIyODQsIm5iZiI6" \
+  "MTc5NDQ3MDI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOC42MjAuZzM5YjI3NmQ1ZDdhYy0yMTgudGJ6" \
+  "In0.RLdSSfmPPtp_TIoe8RMXTDeXr-3vhp09r0zDvCNbcxtOwVGe1XGCCkRgbFJs" \
+  "FvJ8xoT5DeFREFFwEN0q7LKW7f-paDSEETFlFShRE9-TWwnwB1jg0a4mDCeZv1TI" \
+  "2IQL_kvl2Mv0Sjn7Jvkz8OrNrS2I6qGGmT3dBOj0oImUPFUfAk-ALvzLO4K88-eY" \
+  "FQ1hn0D_F6AAeyr7UWNOavC0_M4smJ6bhavpR88cZDJCTmZX0f1YMl0NSOTeNY_6" \
+  "BZh9HuYjFLiij2NPISfW7dvhxqM8e6i59h_fMyZY40oOJp_6oQTASel2L4ZlxzcL" \
+  "T59jinJkxokoGnVMcWuw6Fqecw")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTY1NDIwODMsIm5iZiI6" \
-  "MTc5Mzk1MDA4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy42LjE5MjEuZzcwODZjMDcxYTYxNy02OS50Ynoi" \
-  "fQ.Fic3IjwHdV1f_ce2ms0er03-jfVZZxNnULZ-5aGOepJ6zC0GK6RqFjv-T-7-U" \
-  "m4761FKwn0Uqm7qjlCbpNLjkRermbhwqMwuySEU3hsKRRRN9AZBVVpUmwRHhAdZb" \
-  "8sUpHN_Lpz6zO19SvA2LZPfKcpnsrTEox-Oj7s8ewhfKCwfsWhY3-OTsBuKtfPeb" \
-  "XVMZ-d383vDuuivI9qU-p6btq2R1LPD6iAmnB5nObg9o4S00Pydzda4PtQuxtTp1" \
-  "Jri2aqjvZ-kSUPlKJ0GpEqyAKEuwAzYsIx8fxDRdP40iPLHMvisILwcD85lvplrB" \
-  "N98p4B4FqOYB3Z7-AuGBBb-mQ")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwNjIyODQsIm5iZiI6" \
+  "MTc5NDQ3MDI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy44LjYyMC5nMzliMjc2ZDVkN2FjLTIxOC50Ynoi" \
+  "fQ.HjU6Idr5BqyoAA-Q3QUNklZribnTXXNCa6eeqmkaw8i4EOAYrD7Kxp_jx9QGF" \
+  "Lr4_tJUPgCFC_bgKX1h3O1v-XV5ptFFcg45wSaUIU4Js4XqHAdi7CC-NvbSRNCZT" \
+  "wSvK1rmHIvMU69oS4ceDxm7dfNUd8LVf8315bwlUbYGf8SVChFznjwgjDF_JhW4Y" \
+  "5fkrhQ0zBxpBMy3th032GjP_NY0i3HaOWHig9rdXEZkj2eOUMUcKHD1KwPAf7xWU" \
+  "ay0sWCOWvVaBBYxMsvkXlrsP5KIwRFnI1nkvFwnJ3eLct-7Il_y3S-dqD60mnNiN" \
+  "0bx9Ix9cgOU2dK_o30HFblZwg")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1396,7 +1396,8 @@ aoEx=(
 'sponsors2&ht.{14}\...\..{7}\....\/s.{15}t\/v.\/&&g&xpuiJs&1.1.70.610&1.2.60.564'
 'sponsors3&allSponsorships&&g&xpuiJs&1.1.59.710&1.3.4.9999'
 'sponsors4&\/\K.{7}-ap4p&&g&xpuiJs&1.2.53.437'
-'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235'
+'ucsC&\x00\K\x68(?=.{30}\x2F\x75\x73\x65\x72\x2D)&\x00&s&appBinary&1.2.55.235&1.3.8.9999'
+'ucsC2&\x00\K\x68(?=\x74\x74\x70\x73\x3A\x2F\x2F[\x30-\x39\x61-\x7A\x2D\x2E]+\x2E\x73\x70\x6F\x74\x69\x66\x79\x2E\x63\x6F\x6D(?:\x3A[\x30-\x39]{1,5})?\x2F(?:\x6E\x65\x62\x75\x6C\x61\x2F\x76[\x30-\x39]+\x2F\x63\x6F\x6E\x66\x69\x67\x75\x72\x61\x74\x69\x6F\x6E\x2F\x61\x74\x74\x72\x69\x62\x75\x74\x65\x73|\x72\x65\x6D\x6F\x74\x65\x2D\x63\x6F\x6E\x66\x69\x67\x2D\x72\x65\x73\x6F\x6C\x76\x65\x72\x2F\x76[\x30-\x39]+\x2F\x63\x6F\x6E\x66\x69\x67\x75\x72\x61\x74\x69\x6F\x6E)\x2F?(?:\x3F[^\x00]*)?\x00)&\x00&g&appBinary&1.3.9.2000&&macOS&&2'
 'useAdsSurfaceStateForAdOrchestration&Use ads-owned NPV and cinema surface state for ad orchestration",default:\K!.(?=})&false&s&xpuiJs&1.2.96.200&1.3.1.234'
 'webgateGabo&\@webgate\/(gabo)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
 'webgateRemote&\@webgate\/(remote)&"@" . $1&ge&vendorXpuiJs&1.1.70.610'
@@ -1506,6 +1507,7 @@ expEx=(
 'enablePlaylistCreationFlow&new playlist creation flow in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.93.896'
 'enablePlaylistPermissionsProd&Playlist Permissions flows for Prod",default:\K!.(?=})&true&s&xpuiJs&1.1.75.572&1.2.50.335'
 'enablePlaylistReleaseDateColumn&Enables the release date column in playlist tracklists",default:\K!.(?=})&true&s&xpuiJs&1.2.95.200'
+'enablePlaylistToolbarEverywhere&Playlist Toolbar Everywhere",default:\K!.(?=})&true&s&xpuiJs&1.3.9.100'
 'enablePodcastChaptersInNpv&showing podcast chapters in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.22.975&1.2.50.335'
 'enablePodcastChapterPage&the podcast chapter entity page",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504&1.2.93.667'
 'enablePodcastDescriptionAutomaticLinkification&Linkifies anything looking like a url in a podcast description.",default:\K!1&true&s&xpuiJs&1.2.19.937'
