@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-buildVer="1.3.9.2055.g806b5b278de8"
-rollbackVer="1.3.8.620.g39b276d5d7ac"
+buildVer="1.3.10.2586.g81a118a22460"
+rollbackVer="1.3.9.2055.g806b5b278de8"
 
-latestB_X="330"
-latestB_A="330"
-rollbackB_X="218"
-rollbackB_A="218"
+latestB_X="403"
+latestB_A="403"
+rollbackB_X="330"
+rollbackB_A="330"
 
 clr='\033[0m'
 green='\033[0;32m'
@@ -48,45 +48,45 @@ show_help() {
 }
 
 latestA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwOTI4ODMsIm5iZiI6" \
-  "MTc5NDUwMDg4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOS4yMDU1Lmc4MDZiNWIyNzhkZTgtMzMwLnRi" \
-  "eiJ9.rYnOKpCvwWfQC9_o2gkIj6tSSjfCAFIa-TjygyfZf06z8P2QLmlVzk79mdN" \
-  "hOn_AqqLL8hENj3enHVH9-a1wHd4jXx2LkyV_1bEvL8n6u-9ymERID4BsFkUm151" \
-  "9YNl24cc0BtLJ-trYu3QcAwiETKCccK8eFKdGTbQs45LrGc5urw-r3Faw00D3aSS" \
-  "busuaR_UownSTIZFMEixF4FnTmP-qszXTHxLvaUZq7cYo7zT_BwW_pwWGGuMRSI1" \
-  "4jADuSxa0AQOXP2xukHOkhOMpMOogwGzjrSVMsYRZmx_QjUSQTKaoxbcirVlzFRz" \
-  "IBgMzrx9PuoMJaNwu-dlG3iIbZA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTc2OTA0ODQsIm5iZiI6" \
+  "MTc5NTA5ODQ4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuMTAuMjU4Ni5nODFhMTE4YTIyNDYwLTQwMy50" \
+  "YnoifQ.g-2bLvjdAxdHDCPHzl-2HHU8g1bgN_GZc5gmbldvzj0gjhFnUecFCJiyf" \
+  "75JqRimzrisxLiHGmal3LVqiplSdaXgsxbK77YBMvy03pqtPwnKbdYvcXBVteCWr" \
+  "qYX4eND_Cts1Ms2zWETBE9v2MLylhgtxG_aGBA2jb2pyRGZWTMSlYpVF-EF5DWxP" \
+  "-X16fPWDGZdjsBxeekvVepvFHZ_gY0vzhPXH7qFRVaO75C1EtdA-1_W5ui_v4wsG" \
+  "fX0T_ij4mJ9cWuTijQHd6hLvPbjb2QCvVClLSkyhulIW1macUkt7AfMVjKr8o9fF" \
+  "Jd6IwOlql8k4-UxEUFgbqQkd65DQQ")
 latestA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwOTI4ODIsIm5iZiI6" \
-  "MTc5NDUwMDg4MiwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy45LjIwNTUuZzgwNmI1YjI3OGRlOC0zMzAudGJ6" \
-  "In0.gdBCz7COsIhJS9Z4mWlxecQe963KlC1a63UI-vPIgz6ek7mCbFOsxRVubRhs" \
-  "FgbFEUN2c-Y2tzm-lgis9u_IYSSK8065ruuCta3J5wwppJKItkZOIYYngstaKwJ3" \
-  "GbzfRMpCh88RLxGuaI08TL4lWxtPrFlSYUVMtylCYbFtXDYp5XkmphwAq60XIIY6" \
-  "MO_xdXSJRimBbJXnYnZksTBDWM3_jXp-YE9baJzSAYuQzhaI04-bOYmlRtDxrZ07" \
-  "jq4RV1ae5ma6BSt6kJqw_Ti1sJHOei4QiJxAjH65g8ZDPdpAkqvDAVzp_kc2kGbZ" \
-  "yM27Pz0nTmxYaLkWgyEMQxeJsA")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTc2OTA0ODMsIm5iZiI6" \
+  "MTc5NTA5ODQ4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy4xMC4yNTg2Lmc4MWExMThhMjI0NjAtNDAzLnRi" \
+  "eiJ9.kyWRqTUiFxKexLYhGybCGIRwyLKS_3kZ-pX-ZeLFCE3H1mXS2OudfLs-lFX" \
+  "fOACrpeuxAPYUKGickQn_05BLLOKlIHwi1tiZ9Ry0ECVXSjoJqDmr6D-p-XrEEKP" \
+  "fcA5Q8X4j2MNZ_mg3UByvdiaQWvaZqlmMHhSFvPqdWNCuENPhFI7Myg3ppatx5dt" \
+  "bMAwT2Qr6dL7k14wCUk3Gz6Dnn9QcyWSwdE6Ua3CtUoSvYp8ll885qYnrAk3CJ1L" \
+  "3yU5L7fv6UuQKUy-DMhRJLRmw0QVAt45jZswCGq5prMUks1gt-2mQzSzUaobvEpO" \
+  "WV4Bm9TtVZhowv6LzE9F5JUGTPQ")
 rollbackA_X=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwNjIyODQsIm5iZiI6" \
-  "MTc5NDQ3MDI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
-  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOC42MjAuZzM5YjI3NmQ1ZDdhYy0yMTgudGJ6" \
-  "In0.RLdSSfmPPtp_TIoe8RMXTDeXr-3vhp09r0zDvCNbcxtOwVGe1XGCCkRgbFJs" \
-  "FvJ8xoT5DeFREFFwEN0q7LKW7f-paDSEETFlFShRE9-TWwnwB1jg0a4mDCeZv1TI" \
-  "2IQL_kvl2Mv0Sjn7Jvkz8OrNrS2I6qGGmT3dBOj0oImUPFUfAk-ALvzLO4K88-eY" \
-  "FQ1hn0D_F6AAeyr7UWNOavC0_M4smJ6bhavpR88cZDJCTmZX0f1YMl0NSOTeNY_6" \
-  "BZh9HuYjFLiij2NPISfW7dvhxqM8e6i59h_fMyZY40oOJp_6oQTASel2L4ZlxzcL" \
-  "T59jinJkxokoGnVMcWuw6Fqecw")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTc1OTg2ODQsIm5iZiI6" \
+  "MTc5NTAwNjY4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gteDg2XzY0L3Nw" \
+  "b3RpZnktYXV0b3VwZGF0ZS0xLjMuOS4yMDU1Lmc4MDZiNWIyNzhkZTgtMzMwLnRi" \
+  "eiJ9.YfbXHZQfJSZCbPu3jGDcFtam-D2bLXW2GXNnICFhu09E93Eq0dh7DW_7nL1" \
+  "yOhmGPg3bKeG5tkMFapwlD0YGnEMnnETKI4goqIVgQBIp4-VDCNb9WmRLA6YFCMt" \
+  "XbY_26X6PApaJuuHlaplX7QMsobzrMvcGvjmzaJ9nhsxhOWBFU35vXCoCtwMzZer" \
+  "c_PmyiR3ciCGavODOUEv8ltW6BcMkLy_8W7C9FY-JmHQWK1gkKWIRX6Tjcu1JyWW" \
+  "WsUIKisUWVidPpmG3cgTJxOa7kw2VabliTqIarTkOPlwrJz8Opxx1-6qGVoOF2ZS" \
+  "2wug-4O9gKKFif-s2bpkKoMqlpA")
 rollbackA_A=$(printf "%s" \
-  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTcwNjIyODQsIm5iZiI6" \
-  "MTc5NDQ3MDI4NCwicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
-  "dGlmeS1hdXRvdXBkYXRlLTEuMy44LjYyMC5nMzliMjc2ZDVkN2FjLTIxOC50Ynoi" \
-  "fQ.HjU6Idr5BqyoAA-Q3QUNklZribnTXXNCa6eeqmkaw8i4EOAYrD7Kxp_jx9QGF" \
-  "Lr4_tJUPgCFC_bgKX1h3O1v-XV5ptFFcg45wSaUIU4Js4XqHAdi7CC-NvbSRNCZT" \
-  "wSvK1rmHIvMU69oS4ceDxm7dfNUd8LVf8315bwlUbYGf8SVChFznjwgjDF_JhW4Y" \
-  "5fkrhQ0zBxpBMy3th032GjP_NY0i3HaOWHig9rdXEZkj2eOUMUcKHD1KwPAf7xWU" \
-  "ay0sWCOWvVaBBYxMsvkXlrsP5KIwRFnI1nkvFwnJ3eLct-7Il_y3S-dqD60mnNiN" \
-  "0bx9Ix9cgOU2dK_o30HFblZwg")
+  "eyJpc3MiOiJzY2RuLXVybC1zaWduZXIiLCJleHAiOjE3OTc1OTg2ODMsIm5iZiI6" \
+  "MTc5NTAwNjY4MywicGF0aCI6Ii91cGdyYWRlL2NsaWVudC9vc3gtYXJtNjQvc3Bv" \
+  "dGlmeS1hdXRvdXBkYXRlLTEuMy45LjIwNTUuZzgwNmI1YjI3OGRlOC0zMzAudGJ6" \
+  "In0.SCsQHAFuQAYAZC3mlFbSuzLExWdTCedhWacdxOiEallBCG00uIPRVCswgw_d" \
+  "r0st7tzE-iW1j8y9UvVgoAgNndwHxIRFSZKyY99LPVhOcvZEEbJjm51oWWco6PV6" \
+  "LbC4Q2UA3yqMA4UC_Cbl34zh9T3nIY-nYXSCnSOPPEt_Uw-fYCnnnvh4dFCbnE8o" \
+  "zUVpSCZrI2ZAovhvL5oF69h3Dmd4KLbh9XbgLockj4swMBtzVRPLM69cs4MQ_qrw" \
+  "eNF5_SAx1CT7ENhsmKnqt8VQCf-7dcl4LyWVNOZ8RQhWTXut_4_nF2H8ptZVQkdb" \
+  "hDoM-gdp6O3jz7WHopak-Q-jEw")
 
 while getopts ':BcdefF:hilopP:SvV:-:' flag; do
   case "${flag}" in
@@ -1507,7 +1507,9 @@ expEx=(
 'enablePlaylistCreationFlow&new playlist creation flow in Web Player and DesktopX",default:\K!1&true&s&xpuiJs&1.1.70.610&1.1.93.896'
 'enablePlaylistPermissionsProd&Playlist Permissions flows for Prod",default:\K!.(?=})&true&s&xpuiJs&1.1.75.572&1.2.50.335'
 'enablePlaylistReleaseDateColumn&Enables the release date column in playlist tracklists",default:\K!.(?=})&true&s&xpuiJs&1.2.95.200'
-'enablePlaylistToolbarEverywhere&Playlist Toolbar Everywhere",default:\K!.(?=})&true&s&xpuiJs&1.3.9.100'
+'enablePlaylistToolbarEverywhere&Playlist Toolbar Everywhere",default:\K!.(?=})&true&s&xpuiJs&1.3.9.100&1.3.9.9999'
+'enablePlaylistToolbarOnSpotifySets&Move Spotify-made playlist controls into the playlist toolbar",default:\K!.(?=})&true&s&xpuiJs&1.3.10.200'
+'enablePlaylistToolbarOnUserPlaylists&threshold-based playlist toolbar composition on user playlists",default:\K!.(?=})&true&s&xpuiJs&1.3.4.100'
 'enablePodcastChaptersInNpv&showing podcast chapters in NPV",default:\K!.(?=})&true&s&xpuiJs&1.2.22.975&1.2.50.335'
 'enablePodcastChapterPage&the podcast chapter entity page",default:\K!.(?=})&true&s&xpuiJs&1.2.85.504&1.2.93.667'
 'enablePodcastDescriptionAutomaticLinkification&Linkifies anything looking like a url in a podcast description.",default:\K!1&true&s&xpuiJs&1.2.19.937'
