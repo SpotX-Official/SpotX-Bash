@@ -302,7 +302,7 @@ cacheFile="${cacheDir}/spotify_${safeVersion}_${sourceHash:0:12}.snap"
 
 echo -e "Patching Spotify ${forcedVersion} with SpotX-Bash...\n"
 "${sudoCmd[@]}" env SPOTX_BUILD_MODE=true bash "${spotxScript}" -P "${spotifyPath}" -F "${forcedVersion}" "${spotxArgs[@]}"
-"${sudoCmd[@]}" rm -f -- "${spotifyPath}/spotify.bak" "${spotifyPath}/Apps/xpui.bak"
+"${sudoCmd[@]}" rm -f -- "${spotifyPath}/spotify.bak" "${spotifyPath}/Apps/xpui.bak" "${spotifyPath}/Apps/xpui.bak.info"
 "${sudoCmd[@]}" unzip -tqq "${xpuiSpa}" || error "Patched xpui.spa validation failed."
 has_spotx_marker "${xpuiSpa}" || error "SpotX marker not found in patched xpui.spa."
 

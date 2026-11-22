@@ -30,6 +30,10 @@
 
 ### Usage:
 
+> [!NOTE]
+> Recommended order: **install Spotify, run SpotX-Bash, then open Spotify/sign in.**
+> Repatch before opening an updated client. [Already opened Spotify?](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#how-do-i-use-it)
+
 - Run the following command in terminal:
 ```
 bash <(curl -sSL https://spotx-official.github.io/run.sh)
@@ -42,11 +46,13 @@ bash <(curl -sSL https://raw.githubusercontent.com/SpotX-Official/SpotX-Bash/mai
 ```
 curl -sSL https://spotx-official.github.io/run.sh | bash
 ```
-- See the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#why-does-the-recommended-command-fail-in-my-shell) for more information about shell compatibility and using options with the pipe command
+>See the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#why-does-the-recommended-command-fail-in-my-shell) for more information about shell compatibility and using options with the pipe command
+
 - By default...
   - all supported experimental features are enabled
-  - free-tier user patches are applied, paid-premium users should use  `-p` / `--premium` flag
-  - macOS client auto-updates are NOT disabled, block auto-updates with `-B` / `--blockupdates` flag
+  - free-tier user patches are applied; paid-premium users should use the  `-p` / `--premium` flag
+  - macOS client auto-updates are NOT disabled; blocking them with the `-B` / `--blockupdates` flag is recommended
+- On Linux, controlling client updates through your package manager or installation method is recommended so Spotify can be repatched before opening the updated client
 - View additional flags/options and examples in the `Options` section below
 - For more information, see the [FAQ](https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ)
 

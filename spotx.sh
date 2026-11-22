@@ -20,6 +20,19 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
         *) platformType='Linux' ;;
 esac
 
+runtime_state_init() {
+  unset macRecoveryDir macRecoveryTarget macRecoveryReady macRecoveryIdentity macRecoveryOriginal \
+    macRecoveryCommitted macRecoveryFingerprint macRecoveryCandidateIdentity macWriteProbe \
+    macInstallTemp macInstallTarget macInstallSource macDownloadPath workDir copyTempDir spaTempDir xpuiTempCreated \
+    targetAppPath targetAppBinary targetAppBak targetXpuiPath targetXpuiSpa targetXpuiBak \
+    protectedInstall stagedInstall cleanAB detectedClientVer backupBuild backupCreated clientLockPaths clientLockTargets
+  runtimePid=$$
+  runtimeToken=$(perl -e 'open my $f, "<", "/dev/urandom" or die $!; read($f, my $s, 24) == 24 or die $!; print unpack "H*", $s') || exit 1
+  clientLockPaths=()
+  clientLockTargets=()
+}
+runtime_state_init
+
 show_help() {
   echo -e \
 "Options:
@@ -234,11 +247,17 @@ macos_set_path() {
 }
 
 macos_autoupdate_check() {
-  autoupdatePath="${HOME}/Library/Application Support/Spotify/PersistentCache/Update"
-  [[ -d "${autoupdatePath}" && "$(ls -A "${autoupdatePath}")" ]] && {
-    rm -rf "${autoupdatePath}" 2>/dev/null
-    echo -e "${green}Notice:${clr} Deleted stock auto-update file waiting to be installed"
+  [[ "${SPOTX_BUILD_MODE}" ]] && return 0
+  local autoupdatePath="${1:-${HOME}/Library/Application Support/Spotify/PersistentCache/Update}" contents
+  [[ -d "${autoupdatePath}" ]] || return 0
+  contents=$(ls -A "${autoupdatePath}" 2>&1) || { printf '%s\n' "${contents}" >&2; return 1; }
+  [[ -n "${contents}" ]] || return 0
+  stop_client
+  rm -rf "${autoupdatePath}" && [[ ! -e "${autoupdatePath}" && ! -L "${autoupdatePath}" ]] || {
+    printf '\n%bError:%b Could not remove the pending Spotify update: %s\n' "${red}" "${clr}" "${autoupdatePath}" >&2
+    return 1
   }
+  echo -e "${green}Notice:${clr} Deleted stock auto-update file waiting to be installed"
 }
 
 macos_client_arch() {
@@ -281,7 +300,6 @@ macos_prepare() {
   [[ "${downloadVer}" ]] && (($(ver "${downloadVer}") < $(ver "1.1.59.710"))) && { echo -e "${red}Error:${clr} ${downloadVer} not supported by SpotX-Bash\n" >&2; exit 1; }
   macos_set_path
   [[ "${notInstalled}" && "${legacyMac}" ]] && macos_legacy_notice
-  macos_autoupdate_check
   [[ "${debug}" ]] && echo -e "${green}Debug:${clr} Install directory: ${installOutput}\n"
   appPath="${installPath}/Spotify.app"
   appBinary="${appPath}/Contents/MacOS/Spotify"
@@ -295,7 +313,7 @@ linux_client_variant() {
   [[ "${clientVariant}" == "flatpak" || "${installPath}" == *"flatpak"* ]] && {
     command -v flatpak >/dev/null && flatpak info com.spotify.Client >/dev/null 2>&1 && {
       flatpakVer=$(LC_ALL=C flatpak info com.spotify.Client 2>/dev/null | perl -ne '/Version: (1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/ && print "$1"')
-      [[ -z "${flatpakVer}" ]] && versionFailed='true' || { clientVer="${flatpakVer}"; flatpakClient='true'; }
+      [[ -z "${flatpakVer}" ]] && versionFailed='true' || { [[ "${forceVer+x}" ]] || clientVer="${flatpakVer}"; flatpakClient='true'; }
       cachePath="${HOME}/.var/app/com.spotify.Client/cache/spotify"
       [[ -d "${cachePath}" ]] || unset cachePath
     }
@@ -437,23 +455,24 @@ linux_prepare() {
 }
 
 existing_client_ver() {
-  [[ "${platformType}" == "macOS" ]] && {
-    [[ -z "${installMac+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" ]] && {
-      [[ -f "${appPath}/Contents/Info.plist" ]] && {
-        clientVer=$(defaults read "${appPath}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -pe 's/\.g[0-9a-f]+//')
-        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
-      } || versionFailed='true'
+  local output
+  detectedClientVer=''
+  if [[ "${platformType}" == macOS ]]; then
+    [[ -z "${installMac+x}" || -z "${notInstalled+x}" ]] && {
+      detectedClientVer=$(defaults read "${appPath}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | \
+        perl -ne '/^(1(?:\.[0-9]+){3})(?:\.g[0-9a-f]+)?\s*$/ && print $1')
     }
-    return
-  }
-  [[ "${platformType}" == "Linux" ]] && {
-    [[ -z "${installClient+x}" || -z "${notInstalled+x}" ]] && [[ -z "${forceVer+x}" && -z "${flatpakClient}" ]] && {
-      "${appBinary}" --version >/dev/null 2>/dev/null && {
-        clientVer=$("${appBinary}" --version 2>/dev/null | cut -d " " -f3- | rev | cut -d. -f2- | rev)
-        [[ -z "${clientVer}" ]] && versionFailed='true' ; :
-      } || versionFailed='true'
-    }
-  }
+  elif [[ -z "${SPOTX_BUILD_MODE}" ]]; then
+    if [[ "${flatpakClient}" ]]; then
+      detectedClientVer="${flatpakVer}"
+    elif [[ -z "${installClient+x}" || -z "${notInstalled+x}" ]]; then
+      output=$("${appBinary}" --version 2>/dev/null) && \
+        detectedClientVer=$(printf '%s\n' "${output}" | perl -ne 'if (/\b(1(?:\.[0-9]+){3})(?:\.g[0-9a-f]+)?\b/) { print $1; exit }')
+    fi
+  fi
+  [[ "${detectedClientVer}" ]] && unset versionFailed || versionFailed='true'
+  [[ "${forceVer+x}" ]] || clientVer="${detectedClientVer}"
+  return 0
 }
 
 client_version_output() {
@@ -495,17 +514,353 @@ run_prepare() {
   xpuiJs="${xpuiDir}/xpui.js"
   xpuiRoutesSearchJs="${xpuiDir}/xpui-routes-search.js"
   xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
+  client_lock_acquire || exit 1
   existing_client_ver
   [[ "${platformType}" == "macOS" && "${legacyMac}" && "${clientVer}" ]] && \
     (($(ver "${clientVer}") > $(ver "${legacyMaxVer}"))) && macos_legacy_notice "toohigh"
   client_version_output
   ver_check
-  [[ -z "${SPOTX_BUILD_MODE}" ]] && command pkill -9 '[sS]potify' 2>/dev/null
+  [[ "${platformType}" == "Linux" ]] && stop_client
   [[ -f "${appBinary}" ]] && cleanAB=$(perl -ne '$found1 = 1 if /\x00\x73\x6C\x6F\x74\x73\x00/; $found2 = 1 if /\x2D\x70\x72\x65\x72\x6F\x6C\x6C/; END { print "true" if $found1 && $found2 }' "${appBinary}")
+}
+
+stop_client() {
+  [[ -z "${SPOTX_BUILD_MODE}" ]] && command pkill -9 '[sS]potify' 2>/dev/null
+  return 0
+}
+
+client_check_paths() {
+  perl -MCwd=abs_path -MFile::Basename=dirname -e '
+    my $root = abs_path(shift @ARGV);
+    defined $root && -d $root or die "Error: Client directory could not be resolved.\n";
+    for my $path (@ARGV) {
+      my $parent = abs_path(dirname($path));
+      defined $parent && ($parent eq $root || index($parent, "$root/") == 0)
+        or die "Error: Client path points outside the installation: $path\n";
+      my @st = lstat($path);
+      next unless @st;
+      !-l _ && -f _ or die "Error: Expected a regular client file: $path\n";
+    }
+  ' "$@"
+}
+
+macos_check_bundle_links() {
+  perl -w -MCwd=abs_path -MFile::Find -e '
+    my $root = abs_path($ARGV[0]);
+    my ($check_owner, $owner) = ($ARGV[1] || "", undef);
+    my %groups = map { $_ => 1 } split / /, $);
+    local $SIG{__WARN__} = sub { die @_ };
+    defined $root && -d $root or die "Error: Client directory could not be resolved.\n";
+    find({no_chdir => 1, wanted => sub {
+      my @st = lstat($File::Find::name);
+      $owner = $File::Find::name if $check_owner && !defined($owner) && ($st[4] != $> || !$groups{$st[5]});
+      -f _ && $st[3] > 1 and die "Error: Client file has additional hard links: $File::Find::name\n";
+      return unless -l _;
+      my $target = abs_path($File::Find::name);
+      defined $target && ($target eq $root || index($target, "$root/") == 0)
+        or die "Error: Client link points outside the installation: $File::Find::name\n";
+    }}, $root);
+    print "$owner\n" if defined $owner;
+  ' "$@"
+}
+
+client_lock_acquire() {
+  local target targets key lock existing held
+  [[ "${platformType}" == macOS ]] && {
+    targets=$(perl -MCwd=abs_path -MFile::Basename=dirname -e '
+      my $entry = dirname($ARGV[0]);
+      my $resolved = abs_path($ARGV[0]);
+      my %seen;
+      for my $parent ($entry, defined($resolved) ? dirname($resolved) : ()) {
+        my @st = stat($parent); @st or die "$parent: $!\n";
+        my $key = "macos:$st[0]:$st[1]:Spotify.app";
+        print "$key\n" unless $seen{$key}++;
+      }
+    ' "${appPath}") || return 1
+  } || targets=$(perl -MCwd=abs_path -MFile::Basename=dirname,basename -e '
+    my $entry = (abs_path(dirname($ARGV[0])) // die "Error: Client parent could not be resolved.\n") . "/" . basename($ARGV[0]);
+    my $resolved = abs_path($ARGV[0]) // $entry;
+    my %seen; print "$_\n" for sort grep { !$seen{$_}++ } ($entry, $resolved);
+  ' "${appPath}") || return 1
+  while IFS= read -r target; do
+    held=''
+    for existing in "${clientLockTargets[@]}"; do [[ "${existing}" == "${target}" ]] && held='true'; done
+    [[ "${held}" ]] && continue
+    key=$(printf '%s' "${target}" | perl -MDigest::SHA=sha256_hex -0777ne 'print sha256_hex($_)') || return 1
+    lock="/tmp/spotx-client-${key}.lock"
+    (umask 077; mkdir "${lock}") 2>/dev/null || {
+      printf 'Error: Another SpotX-Bash run may be using this installation. Lock: %s\n' "${lock}" >&2
+      printf '%s\n' 'If no run is active, remove that stale lock directory before trying again.' >&2
+      return 1
+    }
+    clientLockPaths+=("${lock}")
+    clientLockTargets+=("${target}")
+    printf '%s\n' "${runtimeToken}:$$:${target}" > "${lock}/owner" || return 1
+  done <<< "${targets}"
+}
+
+client_lock_release() {
+  local i lock
+  [[ "${runtimePid:-}" == "$$" ]] || return 0
+  for ((i=0; i<${#clientLockPaths[@]}; i++)); do
+    lock="${clientLockPaths[i]}"
+    [[ -d "${lock}" && ! -L "${lock}" && -f "${lock}/owner" && ! -L "${lock}/owner" ]] || continue
+    [[ "$(cat "${lock}/owner")" == "${runtimeToken}:$$:${clientLockTargets[i]}" ]] || continue
+    rm -f -- "${lock}/owner" && rmdir -- "${lock}"
+  done
+  clientLockPaths=()
+  clientLockTargets=()
+}
+
+macos_bind_bundle() {
+  local previous="${appPath}" resolved="$1" name value
+  for name in appBinary appBak xpuiPath xpuiBak xpuiSpa xpuiDir snapshotBinary \
+    dwpPanelSectionJs homeHptoJs homeV2Js indexHtml vendorXpuiJs xpuiCss \
+    xpuiDesktopModalsJs xpuiJs xpuiRoutesSearchJs xpuiSnapshotJs; do
+    value="${!name}"
+    [[ "${value}" == "${previous}/"* ]] && printf -v "${name}" '%s' "${resolved}${value#"${previous}"}"
+  done
+  appPath="${resolved}"
+}
+
+macos_resolve_bundle() {
+  local resolved
+  resolved=$(cd "${appPath}" && pwd -P) || return 1
+  macos_bind_bundle "${resolved}"
+}
+
+macos_probe_cleanup() {
+  [[ "${macWriteProbe:-}" == /* && "${macWriteProbe##*/}" == .spotx-write.* ]] || return 0
+  sudo_run rm -f -- "${macWriteProbe}.file" && sudo_run rm -rf -- "${macWriteProbe}" || {
+    printf 'Could not remove the write-check files: %s\n' "${macWriteProbe}" >&2
+    return 1
+  }
+  unset macWriteProbe
+}
+
+macos_recovery_valid() {
+  [[ "${platformType}" == macOS && "${runtimePid:-}" == "$$" && -n "${runtimeToken:-}" && \
+    "${macRecoveryDir:-}" == "${macRecoveryTarget%/*}/.spotx-recovery."* && \
+    -d "${macRecoveryDir}" && ! -L "${macRecoveryDir}" && \
+    -f "${macRecoveryDir}/owner" && ! -L "${macRecoveryDir}/owner" ]] || return 1
+  [[ "$(stat -f '%d:%i' "${macRecoveryDir}")" == "${macRecoveryIdentity}" && \
+    "$(cat "${macRecoveryDir}/owner")" == "${runtimeToken}:$$:${macRecoveryTarget}" ]]
+}
+
+macos_source_fingerprint() {
+  sudo_run perl -MDigest::SHA -e '
+    my $s = Digest::SHA->new(256);
+    my $root = shift @ARGV;
+    for my $relative (@ARGV) {
+      my $p = "$root/$relative";
+      $s->add($relative);
+      if (-f $p) { open my $f, "<", $p or die "$p: $!\n"; $s->addfile($f); }
+      else { $s->add("missing"); }
+    }
+    print $s->hexdigest;
+  ' "${1:-${macRecoveryTarget}}" Contents/MacOS/Spotify Contents/Resources/Apps/xpui.spa Contents/Info.plist
+}
+
+macos_recovery_begin() {
+  [[ "${SPOTX_BUILD_MODE}" ]] && return 0
+  client_lock_acquire || return 1
+  macRecoveryTarget="${macInstallTarget:-${appPath}}"
+  macRecoveryFingerprint=$(macos_source_fingerprint) || return 1
+  macRecoveryDir=$(sudo_run mktemp -d "${macRecoveryTarget%/*}/.spotx-recovery.XXXXXXXX") || return 1
+  sudo_run chown "${EUID}:$(id -g)" "${macRecoveryDir}" || return 1
+  macRecoveryIdentity=$(stat -f '%d:%i' "${macRecoveryDir}") || return 1
+  printf '%s\n' "${runtimeToken}:$$:${macRecoveryTarget}" > "${macRecoveryDir}/owner" || return 1
+  sudo_run cp -a -- "${appPath}" "${macRecoveryDir}/Spotify.app" || return 1
+  macRecoveryReady='true'
+  macos_bind_bundle "${macRecoveryDir}/Spotify.app"
+  macos_check_bundle_links "${appPath}" || return 1
+}
+
+macos_recovery_discard() {
+  macos_recovery_valid || return 1
+  local error
+  error=$(sudo_run rm -rf -- "${macRecoveryDir}/Spotify.app" "${macRecoveryDir}/original.app" "${macRecoveryDir}/failed.app" 2>&1) || {
+    macos_recovery_valid || return 1
+    error=$({ sudo_run chflags -R -P nouchg,nouappnd "${macRecoveryDir}" &&
+      sudo_run chmod -RP -N "${macRecoveryDir}" &&
+      sudo_run rm -rf -- "${macRecoveryDir}/Spotify.app" "${macRecoveryDir}/original.app" "${macRecoveryDir}/failed.app"; } 2>&1) || {
+      printf '%s\n' "${error%%$'\n'*}" >&2
+      printf 'Could not remove the transaction directory: %s\n' "${macRecoveryDir}" >&2
+      return 1
+    }
+  }
+  sudo_run rm -f -- "${macRecoveryDir}/owner" && sudo_run rmdir -- "${macRecoveryDir}" || {
+    printf 'Could not remove the transaction directory: %s\n' "${macRecoveryDir}" >&2
+    return 1
+  }
+  unset macRecoveryDir macRecoveryTarget macRecoveryReady macRecoveryIdentity macRecoveryOriginal \
+    macRecoveryCommitted macRecoveryFingerprint macRecoveryCandidateIdentity
+}
+
+macos_rename_bundle() {
+  sudo_run env LC_ALL=C perl -e '!-e $ARGV[1] && !-l $ARGV[1] or die "$ARGV[1]: destination already exists\n"; rename($ARGV[0], $ARGV[1]) or die "$ARGV[0]: $!\n"' "$1" "$2"
+}
+
+macos_recovery_finish() {
+  [[ -n "${macRecoveryDir:-}" ]] || return 0
+  macos_recovery_valid && [[ "${macRecoveryReady}" ]] || return 1
+  [[ "$(macos_source_fingerprint)" == "${macRecoveryFingerprint}" ]] || {
+    printf '%s\n' 'Error: Spotify changed during patching. Its installed files were left in place.' >&2
+    return 1
+  }
+  local error
+  macRecoveryCandidateIdentity=$(stat -f '%d:%i' "${macRecoveryDir}/Spotify.app") || return 1
+  stop_client
+  macos_autoupdate_check || return 1
+  [[ ! -e "${macRecoveryTarget}" && ! -L "${macRecoveryTarget}" ]] || {
+    macRecoveryOriginal='true'
+    error=$(macos_rename_bundle "${macRecoveryTarget}" "${macRecoveryDir}/original.app" 2>&1) || {
+      macos_permission_retry "${error}" && \
+        macos_rename_bundle "${macRecoveryTarget}" "${macRecoveryDir}/original.app" || {
+        macos_report_write_failure "${macRecoveryTarget}" "${error}"
+        return 1
+      }
+    }
+  }
+  [[ ! -d "${macRecoveryDir}/original.app" ]] || {
+    [[ "$(macos_source_fingerprint "${macRecoveryDir}/original.app")" == "${macRecoveryFingerprint}" ]] || {
+      printf '%s\n' 'Error: Spotify changed before replacement. The changed original will be preserved.' >&2
+      return 1
+    }
+  }
+  macos_rename_bundle "${macRecoveryDir}/Spotify.app" "${macRecoveryTarget}" || return 1
+  [[ "${skipCodesign}" ]] || codesign --verify --deep --strict "${macRecoveryTarget}" || return 1
+  macRecoveryCommitted='true'
+  [[ "${stagedInstall}" ]] && targetAppPath="${macRecoveryTarget}" || macos_bind_bundle "${macRecoveryTarget}"
+  unset xpuiTempCreated
+  [[ "${macInstallTarget:-}" ]] && printf "Installed Spotify in '%s'\n" "${installOutput}"
+  macos_recovery_discard
+}
+
+macos_recovery_restore() {
+  [[ -n "${macRecoveryDir:-}" ]] || return 0
+  macos_recovery_valid || { printf '%s\n' 'Refusing cleanup of unrecognized transaction state.' >&2; return 1; }
+  [[ "${macRecoveryCommitted:-}" ]] && { macos_recovery_discard; return; }
+  [[ ! -e "${macRecoveryTarget}" && ! -L "${macRecoveryTarget}" ]] || {
+    [[ -n "${macRecoveryCandidateIdentity:-}" && ! -L "${macRecoveryTarget}" && \
+      "$(stat -f '%d:%i' "${macRecoveryTarget}")" == "${macRecoveryCandidateIdentity}" ]] || {
+      [[ ! -d "${macRecoveryDir}/original.app" ]] || {
+        printf 'Another operation placed a bundle at %s. It was left in place. The previous bundle is retained at %s/original.app.\n' \
+          "${macRecoveryTarget}" "${macRecoveryDir}" >&2
+        return 1
+      }
+    }
+    [[ -z "${macRecoveryCandidateIdentity:-}" || -L "${macRecoveryTarget}" || \
+      "$(stat -f '%d:%i' "${macRecoveryTarget}")" != "${macRecoveryCandidateIdentity}" ]] || \
+      macos_rename_bundle "${macRecoveryTarget}" "${macRecoveryDir}/failed.app" || return 1
+  }
+  [[ ! -d "${macRecoveryDir}/original.app" ]] || {
+    macos_rename_bundle "${macRecoveryDir}/original.app" "${macRecoveryTarget}" || {
+      printf 'Could not restore Spotify. Its previous bundle is in %s/original.app.\n' "${macRecoveryDir}" >&2
+      return 1
+    }
+  }
+  [[ "${appPath}" == "${macRecoveryDir}/Spotify.app" ]] && macos_bind_bundle "${macInstallSource:-${macRecoveryTarget}}"
+  unset xpuiTempCreated
+  macos_recovery_discard
+}
+
+macos_check_file_flags() {
+  local path flags
+  for path in "$@"; do
+    [[ -e "${path}" || -L "${path}" ]] || continue
+    flags=$(LC_ALL=C /usr/bin/stat -f '%Sf' "${path}" 2>/dev/null) || continue
+    case ",${flags}," in
+      *,uchg,*|*,schg,*|*,uappnd,*|*,sappnd,*)
+        printf '\n%bError:%b File flags prevent changes to %s.\n' "${red}" "${clr}" "${path}" >&2
+        printf 'Detected flags: %s\n' "${flags}" >&2
+        printf '%s\n' "Remove the immutable or append-only restriction before running SpotX-Bash again." >&2
+        return 1 ;;
+    esac
+  done
+  return 0
+}
+
+macos_report_write_failure() {
+  local dir="$1" message="$2"
+  printf '%s\n' "${message}" >&2
+  macos_check_file_flags "${dir}" "${appPath}" || return 1
+  printf '\n%bError:%b Could not write to %s.\n' "${red}" "${clr}" "${dir}" >&2
+  case "${message}" in
+    *": Permission denied")
+      printf '%s\n' "Write access is still denied. Check the ownership, permissions and ACL below:" >&2
+      LC_ALL=C /bin/ls -ldeO "${dir}" >&2 ;;
+    *": Operation not permitted")
+      printf '%s\n' "The write was denied, see the FAQ for App Management and other access restrictions:" \
+        'https://github.com/SpotX-Official/SpotX-Bash/wiki/SpotX%E2%80%90Bash-FAQ#why-does-macos-report-operation-not-permitted-inside-spotifyapp' >&2 ;;
+    *": Read-only file system")
+      printf '%s\n' "The selected installation is on a read-only filesystem. Install Spotify on a writable volume." >&2 ;;
+    *": No space left on device")
+      printf '%s\n' "The filesystem has no space available for the backup. Free some space and try again." >&2 ;;
+  esac
+  [[ "${debug}" ]] && {
+    printf '\n%s\n' 'Debug: Ownership, permissions, ACLs, file flags and extended attribute names:' >&2
+    LC_ALL=C /bin/ls -ldeO@ "${appPath}" "${dir}" >&2
+  }
+  return 1
+}
+
+macos_permission_retry() {
+  [[ "$1"$'\n' == *": Permission denied"$'\n'* && -z "${protectedInstall}" ]] && ((EUID != 0)) || return 1
+  printf '%s\n' "$1" >&2
+  sudo_check 'SpotX-Bash needs sudo permission to modify this Spotify installation.'
+  protectedInstall='true'
+  stagedInstall='true'
+}
+
+macos_check_write_access() {
+  local dir error owner=''
+  local checkDirs=("${xpuiPath}" "${appBinary%/*}")
+  [[ "${SPOTX_BUILD_MODE}" ]] || checkDirs+=("${appPath%/*}")
+  client_check_paths "${appPath}" "${appBinary}" "${xpuiSpa}" "${appBak}" "${xpuiBak}" "${xpuiBak}.info" || exit 1
+  [[ "${SPOTX_BUILD_MODE}" ]] || { owner=$(macos_check_bundle_links "${appPath}" ownership) || exit 1; }
+  macos_check_file_flags "${appPath}" "${xpuiPath}" "${appBinary%/*}" \
+    "${xpuiSpa}" "${appBinary}" "${xpuiBak}" "${appBak}" "${xpuiBak}.info" || exit 1
+  for dir in "${checkDirs[@]}"; do
+    macWriteProbe=$(sudo_run env LC_ALL=C mktemp -d "${dir}/.spotx-write.XXXXXXXX" 2>&1) || {
+      error="${macWriteProbe}"
+      unset macWriteProbe
+      macos_permission_retry "${error}" && { macos_check_write_access; return; }
+      macos_report_write_failure "${dir}" "${error}"
+      exit 1
+    }
+    error=$({ sudo_run env LC_ALL=C touch "${macWriteProbe}/file" &&
+      sudo_run env LC_ALL=C mv "${macWriteProbe}/file" "${macWriteProbe}.file" &&
+      sudo_run env LC_ALL=C mv "${macWriteProbe}.file" "${macWriteProbe}/file" &&
+      sudo_run env LC_ALL=C rm -f "${macWriteProbe}/file" &&
+      sudo_run env LC_ALL=C rmdir "${macWriteProbe}"; } 2>&1) && { unset macWriteProbe; continue; }
+    macos_permission_retry "${error}" && {
+      macos_probe_cleanup || exit 1
+      macos_check_write_access
+      return
+    }
+    macos_report_write_failure "${dir}" "${error}"
+    macos_probe_cleanup
+    exit 1
+  done
+  [[ -z "${owner}" || "${protectedInstall}" ]] || ((EUID == 0)) || {
+    printf 'Preserving client file ownership requires sudo: %s\n' "${owner}" >&2
+    sudo_check 'SpotX-Bash needs sudo permission to preserve this Spotify installation.'
+    protectedInstall='true'
+    stagedInstall='true'
+    macos_check_write_access
+  }
+  return 0
 }
 
 check_write_permission() {
   local writePath
+  [[ "${platformType}" == "macOS" ]] && {
+    macos_resolve_bundle || exit 1
+    macos_check_write_access
+    return 0
+  }
+  client_check_paths "${appPath}" "${appBinary}" "${xpuiSpa}" "${appBak}" "${xpuiBak}" "${xpuiBak}.info" || exit 1
   [[ "${platformType}" == "Linux" && -z "${SPOTX_BUILD_MODE}" ]] && ((EUID == 0)) && {
     stagedInstall='true'
     protectedInstall='true'
@@ -550,6 +905,7 @@ protected_stage_copy() {
 }
 
 protected_stage_prepare() {
+  targetAppPath="${appPath}"
   targetAppBinary="${appBinary}"
   targetAppBak="${appBak}"
   targetXpuiPath="${xpuiPath}"
@@ -574,41 +930,71 @@ protected_stage_prepare() {
   xpuiRoutesSearchJs="${xpuiDir}/xpui-routes-search.js"
   xpuiSnapshotJs="${xpuiDir}/xpui-snapshot.js"
   mkdir -p "${xpuiPath}" || exit 1
-  protected_stage_copy "${targetAppBinary}" "${appBinary}" || exit 1
-  protected_stage_copy "${targetXpuiSpa}" "${xpuiSpa}" || exit 1
-  [[ -f "${targetAppBak}" ]] && protected_stage_copy "${targetAppBak}" "${appBak}"
-  [[ -f "${targetXpuiBak}" ]] && protected_stage_copy "${targetXpuiBak}" "${xpuiBak}"
+  [[ "${uninstallSpotx}" && ! -f "${targetAppBinary}" ]] || {
+    protected_stage_copy "${targetAppBinary}" "${appBinary}" || exit 1
+  }
+  [[ "${uninstallSpotx}" && ! -f "${targetXpuiSpa}" ]] || {
+    protected_stage_copy "${targetXpuiSpa}" "${xpuiSpa}" || exit 1
+  }
+  [[ ! -f "${targetAppBak}" ]] || {
+    protected_stage_copy "${targetAppBak}" "${appBak}" || exit 1
+  }
+  [[ ! -f "${targetXpuiBak}" ]] || {
+    protected_stage_copy "${targetXpuiBak}" "${xpuiBak}" || exit 1
+  }
+  [[ ! -f "${targetXpuiBak}.info" ]] || {
+    protected_stage_copy "${targetXpuiBak}.info" "${xpuiBak}.info" || exit 1
+  }
 }
 
 protected_prepare_file() {
   local source="${1}" destination="${2}" reference="${3}" tempFile
+  [[ -f "${source}" && ! -L "${source}" ]] || return 1
+  client_check_paths "${5:-${targetAppPath:-${appPath}}}" "${reference}" "${destination}" || return 1
+  [[ -f "${reference}" && ! -L "${reference}" ]] || return 1
   tempFile=$(sudo_run mktemp "${destination}.spotx.XXXXXXXX") || return 1
-  sudo_run cp -a -- "${reference}" "${tempFile}" &&
-    sudo_run chmod u+w -- "${tempFile}" &&
-    sudo_run cp -- "${source}" "${tempFile}" &&
-    sudo_run chown --reference="${reference}" "${tempFile}" &&
-    sudo_run chmod --reference="${reference}" "${tempFile}" &&
+  printf -v "$4" '%s' "${tempFile}"
+  sudo_run cp -aL -- "${reference}" "${tempFile}" &&
+    [[ -f "${tempFile}" && ! -L "${tempFile}" ]] &&
+    case "${platformType}" in
+      macOS)
+        sudo_run chmod u+w "${tempFile}" &&
+          sudo_run tee "${tempFile}" < "${source}" >/dev/null &&
+          sudo_run chmod "$(stat -f '%Lp' "${reference}")" "${tempFile}" ;;
+      *)
+        sudo_run chmod u+w -- "${tempFile}" &&
+          sudo_run cp -- "${source}" "${tempFile}" &&
+          sudo_run chown --reference="${reference}" "${tempFile}" &&
+          sudo_run chmod --reference="${reference}" "${tempFile}" ;;
+    esac &&
     sudo_run touch -r "${reference}" "${tempFile}" || {
       sudo_run rm -f -- "${tempFile}"
       return 1
     }
-  printf '%s\n' "${tempFile}"
 }
 
 protected_save_destination() {
   local destination="${1}" tempFile
-  [[ -e "${destination}" ]] || return 0
+  [[ -e "${destination}" || -L "${destination}" ]] || return 0
+  client_check_paths "${targetAppPath:-${appPath}}" "${destination}" || return 1
   tempFile=$(sudo_run mktemp "${destination}.spotx-rollback.XXXXXXXX") || return 1
-  sudo_run cp -a -- "${destination}" "${tempFile}" || {
+  printf -v "$2" '%s' "${tempFile}"
+  sudo_run cp -aL -- "${destination}" "${tempFile}" || {
     sudo_run rm -f -- "${tempFile}"
     return 1
   }
-  printf '%s\n' "${tempFile}"
 }
 
 protected_restore_destination() {
   local backup="${1}" destination="${2}" existed="${3}"
-  [[ "${existed}" ]] && sudo_run mv -f -- "${backup}" "${destination}" || sudo_run rm -f -- "${destination}"
+  [[ "${existed}" ]] || {
+    sudo_run rm -f -- "${destination}"
+    return $?
+  }
+  sudo_run mv -f -- "${backup}" "${destination}" || {
+    printf 'Could not restore %s. Its previous copy is in %s.\n' "${destination}" "${backup}" >&2
+    return 1
+  }
 }
 
 protected_remove_files() {
@@ -618,63 +1004,69 @@ protected_remove_files() {
   done
 }
 
-protected_commit() {
+protected_commit() (
   local uninstall="${1:-}" appFile spaFile appBakFile='' xpuiBakFile=''
-  local appRollback='' spaRollback='' appBakRollback='' xpuiBakRollback=''
-  local appExisted='' spaExisted='' appBakExisted='' xpuiBakExisted=''
+  local appRollback='' spaRollback='' appBakRollback='' xpuiBakRollback='' infoRollback='' infoFile=''
+  local appExisted='' spaExisted='' appBakExisted='' xpuiBakExisted='' infoExisted=''
   local appBakReference="${targetAppBinary}" xpuiBakReference="${targetXpuiSpa}"
+  local committing='' committed=''
+  cleanup_commit() {
+    [[ "${committing}" && -z "${committed}" ]] && {
+      protected_restore_destination "${appRollback}" "${targetAppBinary}" "${appExisted}" || appRollback=''
+      protected_restore_destination "${spaRollback}" "${targetXpuiSpa}" "${spaExisted}" || spaRollback=''
+      protected_restore_destination "${appBakRollback}" "${targetAppBak}" "${appBakExisted}" || appBakRollback=''
+      protected_restore_destination "${xpuiBakRollback}" "${targetXpuiBak}" "${xpuiBakExisted}" || xpuiBakRollback=''
+      protected_restore_destination "${infoRollback}" "${targetXpuiBak}.info" "${infoExisted}" || infoRollback=''
+    }
+    protected_remove_files "${appFile}" "${spaFile}" "${appBakFile}" "${xpuiBakFile}" "${infoFile}"
+    protected_remove_files "${appRollback}" "${spaRollback}" "${appBakRollback}" "${xpuiBakRollback}" "${infoRollback}"
+    return 0
+  }
+  trap cleanup_commit EXIT
+  trap 'trap - EXIT; cleanup_commit; exit 1' HUP INT TERM
   [[ -f "${appBinary}" && -f "${xpuiSpa}" ]] || return 1
   unzip -tqq "${xpuiSpa}" || return 1
-  appFile=$(protected_prepare_file "${appBinary}" "${targetAppBinary}" "${targetAppBinary}") || return 1
-  spaFile=$(protected_prepare_file "${xpuiSpa}" "${targetXpuiSpa}" "${targetXpuiSpa}") || {
-    sudo_run rm -f -- "${appFile}"
-    return 1
-  }
-  [[ -z "${uninstall}" ]] && {
+  local appReference="${targetAppBinary}" spaReference="${targetXpuiSpa}"
+  [[ -f "${appReference}" ]] || appReference="${targetAppBak}"
+  [[ -f "${spaReference}" ]] || spaReference="${targetXpuiBak}"
+  protected_prepare_file "${appBinary}" "${targetAppBinary}" "${appReference}" appFile || return 1
+  protected_prepare_file "${xpuiSpa}" "${targetXpuiSpa}" "${spaReference}" spaFile || return 1
+  [[ "${uninstall}" ]] || {
     [[ -e "${targetAppBak}" ]] && appBakReference="${targetAppBak}"
     [[ -e "${targetXpuiBak}" ]] && xpuiBakReference="${targetXpuiBak}"
-    appBakFile=$(protected_prepare_file "${appBak}" "${targetAppBak}" "${appBakReference}") || {
-      sudo_run rm -f -- "${appFile}" "${spaFile}"
-      return 1
-    }
-    xpuiBakFile=$(protected_prepare_file "${xpuiBak}" "${targetXpuiBak}" "${xpuiBakReference}") || {
-      sudo_run rm -f -- "${appFile}" "${spaFile}" "${appBakFile}"
-      return 1
+    protected_prepare_file "${appBak}" "${targetAppBak}" "${appBakReference}" appBakFile || return 1
+    protected_prepare_file "${xpuiBak}" "${targetXpuiBak}" "${xpuiBakReference}" xpuiBakFile || return 1
+    [[ ! -f "${xpuiBak}.info" ]] || {
+      local infoReference="${targetXpuiBak}.info"
+      [[ -f "${infoReference}" ]] || infoReference="${xpuiBakReference}"
+      protected_prepare_file "${xpuiBak}.info" "${targetXpuiBak}.info" "${infoReference}" infoFile || return 1
     }
   }
-  [[ -e "${targetAppBinary}" ]] && appExisted='true'
-  [[ -e "${targetXpuiSpa}" ]] && spaExisted='true'
-  [[ -e "${targetAppBak}" ]] && appBakExisted='true'
-  [[ -e "${targetXpuiBak}" ]] && xpuiBakExisted='true'
-  {
-    appRollback=$(protected_save_destination "${targetAppBinary}") &&
-      spaRollback=$(protected_save_destination "${targetXpuiSpa}")
-    [[ "${uninstall}" ]] || {
-      appBakRollback=$(protected_save_destination "${targetAppBak}") &&
-        xpuiBakRollback=$(protected_save_destination "${targetXpuiBak}")
-    }
-  } || {
-    protected_remove_files "${appFile}" "${spaFile}" "${appBakFile}" "${xpuiBakFile}"
-    protected_remove_files "${appRollback}" "${spaRollback}" "${appBakRollback}" "${xpuiBakRollback}"
-    return 1
+  [[ "${platformType}" == "macOS" ]] || {
+    [[ -e "${targetAppBinary}" ]] && appExisted='true'
+    [[ -e "${targetXpuiSpa}" ]] && spaExisted='true'
+    [[ -e "${targetAppBak}" ]] && appBakExisted='true'
+    [[ -e "${targetXpuiBak}" ]] && xpuiBakExisted='true'
+    [[ -e "${targetXpuiBak}.info" ]] && infoExisted='true'
+    protected_save_destination "${targetAppBinary}" appRollback &&
+      protected_save_destination "${targetXpuiSpa}" spaRollback &&
+      protected_save_destination "${targetAppBak}" appBakRollback &&
+      protected_save_destination "${targetXpuiBak}" xpuiBakRollback &&
+      protected_save_destination "${targetXpuiBak}.info" infoRollback || return 1
+    committing='true'
   }
   {
     { [[ "${uninstall}" ]] || sudo_run mv -f -- "${appBakFile}" "${targetAppBak}"; } &&
       { [[ "${uninstall}" ]] || sudo_run mv -f -- "${xpuiBakFile}" "${targetXpuiBak}"; } &&
+      { [[ -z "${infoFile}" ]] || sudo_run mv -f -- "${infoFile}" "${targetXpuiBak}.info"; } &&
       sudo_run mv -f -- "${appFile}" "${targetAppBinary}" &&
       sudo_run mv -f -- "${spaFile}" "${targetXpuiSpa}"
-  } || {
-    protected_restore_destination "${appRollback}" "${targetAppBinary}" "${appExisted}"
-    protected_restore_destination "${spaRollback}" "${targetXpuiSpa}" "${spaExisted}"
-    [[ "${uninstall}" ]] || protected_restore_destination "${appBakRollback}" "${targetAppBak}" "${appBakExisted}"
-    [[ "${uninstall}" ]] || protected_restore_destination "${xpuiBakRollback}" "${targetXpuiBak}" "${xpuiBakExisted}"
-    protected_remove_files "${appFile}" "${spaFile}" "${appBakFile}" "${xpuiBakFile}"
-    return 1
+  } || return 1
+  [[ -z "${uninstall}" ]] || {
+    sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}" "${targetXpuiBak}.info" || return 1
   }
-  protected_remove_files "${appRollback}" "${spaRollback}" "${appBakRollback}" "${xpuiBakRollback}"
-  [[ "${uninstall}" ]] && sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}"
-  return 0
-}
+  committed='true'
+)
 
 atomic_copy() {
   local source="${1}" destination="${2}" tempFile result
@@ -687,42 +1079,197 @@ atomic_copy() {
   return "${result}"
 }
 
-backup_spotx() {
-  atomic_copy "${xpuiSpa}" "${xpuiBak}" && atomic_copy "${appBinary}" "${appBak}" && return 0
-  rm -f "${appBak}" "${xpuiBak}" 2>/dev/null
+client_backup_record_data() {
+  sudo_run perl -MDigest::SHA -e '
+    my ($binary, $spa, $version) = @ARGV;
+    $version =~ /\A(?:1(?:\.[0-9]+){3}(?:\.g[0-9a-f]+)?|unknown)\z/
+      or die "Error: Invalid backup build identity.\n";
+    print "spotx-backup-v1\n$version\n";
+    for my $path ($binary, $spa) {
+      open my $f, "<", $path or die "$path: $!\n";
+      print Digest::SHA->new(256)->addfile($f)->hexdigest, "\n";
+    }
+  ' "$1" "$2" "${3:-unknown}"
+}
+
+client_backup_record_update() {
+  local root="$1" binary="$2" spa="$3" record recordVersion prepared=''
+  [[ -f "${spa}.info" ]] || return 0
+  client_check_paths "${root}" "${binary}" "${spa}" "${spa}.info" || return 1
+  linux_working_dir
+  record="${workDir}/backup-record"
+  recordVersion=$(sed -n '2p' "${spa}.info") || return 1
+  [[ "${recordVersion}" != unknown || -z "${backupCreated}" || -z "${detectedClientVer}" ]] || recordVersion="${detectedClientVer}"
+  client_backup_record_data "${binary}" "${spa}" "${recordVersion}" > "${record}" || return 1
+  cmp -s "${record}" "${spa}.info" && return 0
+  protected_prepare_file "${record}" "${spa}.info" "${spa}.info" prepared "${root}" &&
+    sudo_run mv -f -- "${prepared}" "${spa}.info" || {
+    [[ -z "${prepared}" ]] || sudo_run rm -f -- "${prepared}"
+    return 1
+  }
+}
+
+replace_client_pair() (
+  local sources=("$1" "$3") destinations=("$2" "$4") stages=()
+  local i stage attempted=-1 complete=''
+  cleanup_pair() {
+    [[ "${complete}" ]] || {
+      for ((i=attempted; i>=0; i--)); do
+        stage="${stages[i]}"
+        if [[ -f "${stage}/previous" || -L "${stage}/previous" ]]; then
+          mv -f "${stage}/previous" "${destinations[i]}" || {
+            printf 'Could not restore %s. Its previous copy is in %s/previous.\n' "${destinations[i]}" "${stage}" >&2
+            stages[i]=''
+          }
+        else
+          rm -f -- "${destinations[i]}"
+        fi
+      done
+    }
+    for stage in "${stages[@]}"; do [[ -z "${stage}" ]] || rm -rf -- "${stage}"; done
+    return 0
+  }
+  trap cleanup_pair EXIT
+  trap 'trap - EXIT; cleanup_pair; exit 1' HUP INT TERM
+  [[ -z "${5+x}" ]] || destinations+=("${2}.info")
+  for ((i=0; i<${#destinations[@]}; i++)); do
+    [[ ! -d "${destinations[i]}" ]] || return 1
+    stage=$(mktemp -d "${destinations[i]}.spotx.XXXXXXXX") || return 1
+    stages+=("${stage}")
+    [[ ! -e "${destinations[i]}" && ! -L "${destinations[i]}" ]] || \
+      cp -pP "${destinations[i]}" "${stage}/previous" || return 1
+    if ((i < 2)); then
+      cp "${sources[i]}" "${stage}/new" || return 1
+    else
+      client_backup_record_data "${stages[1]}/new" "${stages[0]}/new" "$5" > "${stage}/new" || return 1
+    fi
+  done
+  for ((i=0; i<${#destinations[@]}; i++)); do
+    attempted=${i}
+    mv -f "${stages[i]}/new" "${destinations[i]}" || return 1
+  done
+  complete='true'
+)
+
+client_copy_files() {
+  local action="$1" error
+  [[ "${action}" == backup || ( ! -f "${xpuiBak}.info" && ( ! -f "${appBak}" || ! -f "${xpuiBak}" ) ) ]] || \
+    client_check_backup_version || return 1
+  client_check_paths "${appPath}" "${appBinary}" "${xpuiSpa}" "${appBak}" "${xpuiBak}" "${xpuiBak}.info" || return 1
+  error=$({
+    case "${action}" in
+      (backup) replace_client_pair "${xpuiSpa}" "${xpuiBak}" "${appBinary}" "${appBak}" "${detectedClientVer}" ;;
+      (restore|uninstall)
+        if [[ -f "${appBak}" && -f "${xpuiBak}" ]]; then
+          replace_client_pair "${xpuiBak}" "${xpuiSpa}" "${appBak}" "${appBinary}"
+        elif [[ -f "${appBak}" ]]; then
+          atomic_copy "${appBak}" "${appBinary}"
+        else
+          atomic_copy "${xpuiBak}" "${xpuiSpa}"
+        fi && {
+          [[ "${action}" != uninstall ]] || { rm -f "${appBak}" "${xpuiBak}" "${xpuiBak}.info" && rm -rf "${xpuiDir}"; }
+        } ;;
+      (*) return 1 ;;
+    esac
+  } 2>&1) && return 0
+  [[ "${platformType}" == "macOS" && -z "${stagedInstall}" && "${macRecoveryReady:-}" ]] && macos_permission_retry "${error}" && {
+    macos_recovery_restore || return 1
+    unset targetAppPath targetAppBinary targetAppBak targetXpuiPath targetXpuiSpa targetXpuiBak
+    macos_recovery_begin || return 1
+    protected_stage_prepare
+    client_copy_files "${action}"
+    return
+  }
+  printf '%s\n' "${error}" >&2
   return 1
 }
 
+backup_spotx() {
+  unzip -tqq "${xpuiSpa}" || { printf '%s\n' 'Error: The installed SPA is not a valid archive. Backups were preserved.' >&2; return 1; }
+  client_copy_files backup || return 1
+  backupCreated='true'
+}
+
 uninstall_spotx() {
-  atomic_copy "${appBak}" "${appBinary}" && atomic_copy "${xpuiBak}" "${xpuiSpa}" || return 1
-  rm -f "${appBak}" "${xpuiBak}" 2>/dev/null
-  rm -rf "${xpuiDir}" 2>/dev/null
+  client_copy_files uninstall
+}
+
+client_check_backup_version() {
+  local backupVersion currentVersion="${detectedClientVer:-unknown}"
+  backupBuild=''
+  unzip -tqq "${xpuiBak}" || {
+    printf '%s\n' 'Error: The SPA backup is not a valid archive. Backups were preserved.' >&2
+    return 1
+  }
+  [[ ! -e "${xpuiBak}.info" && ! -L "${xpuiBak}.info" ]] || {
+    client_check_paths "${appPath}" "${appBak}" "${xpuiBak}" "${xpuiBak}.info" || return 1
+    backupVersion=$(perl -MDigest::SHA -e '
+      my ($info, $binary, $spa) = @ARGV;
+      open my $f, "<", $info or die "$info: $!\n";
+      my @record = <$f>; chomp @record;
+      @record == 4 && $record[0] eq "spotx-backup-v1"
+        && $record[1] =~ /\A(?:1(?:\.[0-9]+){3}(?:\.g[0-9a-f]+)?|unknown)\z/
+        && $record[2] =~ /\A[0-9a-f]{64}\z/ && $record[3] =~ /\A[0-9a-f]{64}\z/
+        or die "Error: Invalid backup record. Backups were preserved.\n";
+      for my $i (0, 1) {
+        my $path = ($binary, $spa)[$i];
+        open my $data, "<", $path or die "$path: $!\n";
+        Digest::SHA->new(256)->addfile($data)->hexdigest eq $record[$i+2]
+          or die "Error: Backup contents do not match their record. Backups were preserved.\n";
+      }
+      print $record[1];
+    ' "${xpuiBak}.info" "${appBak}" "${xpuiBak}") || return 1
+    backupBuild="${backupVersion}"
+    [[ "${1:-}" == inspect ]] && return 0
+    [[ "${currentVersion}" == unknown || "${backupVersion}" == unknown || "${backupVersion}" == "${currentVersion}" ]] || {
+      printf 'Error: Backup build %s cannot be matched to client %s. Backups were preserved.\n' "${backupVersion}" "${currentVersion}" >&2
+      return 1
+    }
+    [[ "${currentVersion}" != unknown && "${backupVersion}" != unknown ]] || \
+      printf '%s\n' 'Warning: The client build could not be verified. Backup hashes were verified.' >&2
+    return 0
+  }
+  backupVersion=$(unzip -p "${xpuiBak}" xpui.js xpui-snapshot.js 2>/dev/null | \
+    perl -ne 'if (/\b(1\.[0-9]+\.[0-9]+\.[0-9]+)\.g[0-9a-f]+/) { print $1; exit }')
+  backupBuild="${backupVersion:-unknown}"
+  [[ "${1:-}" == inspect ]] && return 0
+  [[ -z "${backupVersion}" || "${currentVersion}" == unknown || "${backupVersion}" == "${currentVersion%%.g*}" ]] || {
+    printf 'Error: Backups belong to Spotify %s, but the installed client is %s. Backups were preserved.\n' "${backupVersion}" "${currentVersion}" >&2
+    return 1
+  }
+  [[ -z "${cleanAB}" ]] || {
+    [[ -n "${backupVersion}" ]] && cmp -s "${appBinary}" "${appBak}" || {
+      printf '%s\n' 'Error: The executable appears unpatched, but these older backups cannot be matched to this build. Backups were preserved. Replace Spotify, then run SpotX-Bash before opening it.' >&2
+      return 1
+    }
+  }
+  [[ -n "${backupVersion}" ]] || \
+    printf '%s\n' 'Warning: These older backups have no build record. Continuing with the legacy restore path; their build could not be verified.' >&2
 }
 
 run_uninstall_check() {
   [[ "${uninstallSpotx}" ]] && {
+    client_lock_acquire || exit 1
     [[ ! -f "${appBak}" || ! -f "${xpuiBak}" ]] && {
       echo -e "${red}Error:${clr} No backup found, exiting...\n" >&2
       exit 1
     }
     check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
-    [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_stage_prepare
-    [[ "${cleanAB}" ]] && {
-      echo -e "${yellow}Warning:${clr} SpotX-Bash has detected abnormal behavior.\nClient reinstallation may be required...\n" >&2
-      rm -f "${appBak}" 2>/dev/null
-      rm -f "${xpuiBak}" 2>/dev/null
-      [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && sudo_run rm -f -- "${targetAppBak}" "${targetXpuiBak}"
-    } || {
-      uninstall_spotx || {
-        echo -e "\n${red}Error:${clr} Failed to restore client. Backups were preserved.\n" >&2
+    [[ "${platformType}" == "macOS" ]] && { macos_recovery_begin || exit 1; }
+    [[ "${stagedInstall}" ]] && protected_stage_prepare
+    uninstall_spotx || {
+      echo -e "\n${red}Error:${clr} Client restore or backup cleanup failed. See the error above.\n" >&2
+      exit 1
+    }
+    [[ "${stagedInstall}" ]] && {
+      protected_commit 'true' || {
+        echo -e "\n${red}Error:${clr} Failed to restore client. See the error above.\n" >&2
         exit 1
       }
-      [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
-        protected_commit 'true' || {
-          echo -e "\n${red}Error:${clr} Failed to restore client. Original files restored.\n" >&2
-          exit 1
-        }
-      }
+    }
+    [[ "${platformType}" == "macOS" ]] && {
+      macos_codesign
+      macos_recovery_finish || exit 1
     }
     printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\x20\x75\x6E\x69\x6E\x73\x74\x61\x6C\x6C\n\n"
     exit 0
@@ -805,7 +1352,7 @@ sudo_check() {
     exit 1
   }
   sudo -n true &> /dev/null || {
-    echo -e "This script requires sudo permission to install the client.\nPlease enter your sudo password..."
+    printf '%s\n%s\n' "${1:-This script requires sudo permission to install the client.}" 'Please enter your sudo password...'
     sudo -v || {
       echo -e "\n${red}Error:${clr} Failed to obtain sudo permission. Exiting...\n" >&2
       exit 1
@@ -814,17 +1361,17 @@ sudo_check() {
 }
 
 cleanup_temp_dirs() {
-  [[ -n "${macInstallOld:-}" && -d "${macInstallOld}" && "${macInstallOld%/*}" == "${installPath:-}" && "${macInstallOld##*/}" == .spotx-previous.* ]] && {
-    [[ "${macInstallOldMoved:-}" && -z "${macInstallCommitted:-}" && ! -e "${appPath:-}" ]] && mv -- "${macInstallOld}" "${appPath}"
-    [[ -z "${macInstallOldMoved:-}" && -d "${macInstallOld}" ]] && rm -rf -- "${macInstallOld}"
-    [[ "${macInstallCommitted:-}" && -d "${macInstallOld}" ]] && rm -rf -- "${macInstallOld}"
-  }
+  [[ "${runtimePid:-}" == "$$" ]] || return 0
+  trap '' HUP INT TERM
+  macos_probe_cleanup
+  macos_recovery_restore
   [[ -n "${macInstallTemp:-}" && -d "${macInstallTemp}" && "${macInstallTemp%/*}" == "${installPath:-}" && "${macInstallTemp##*/}" == .spotx-install.* ]] && rm -rf -- "${macInstallTemp}"
   [[ -n "${macDownloadPath:-}" && -f "${macDownloadPath}" && "${macDownloadPath%/*}" == "${HOME}/Downloads" && "${macDownloadPath##*/}" == "${fileVar:-}" ]] && rm -f -- "${macDownloadPath}"
   [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && rm -rf -- "${workDir}"
   [[ -n "${copyTempDir:-}" && -d "${copyTempDir}" && "${copyTempDir##*/}" == *.spotx.* ]] && rm -rf -- "${copyTempDir}"
   [[ -n "${spaTempDir:-}" && -d "${spaTempDir}" && "${spaTempDir##*/}" == .spotx-spa.* ]] && rm -rf -- "${spaTempDir}"
   [[ "${xpuiTempCreated:-}" && -n "${xpuiDir:-}" && -d "${xpuiDir}" && "${xpuiDir##*/}" == "xpui" ]] && rm -rf -- "${xpuiDir}"
+  client_lock_release
 }
 
 linux_working_dir() {
@@ -842,6 +1389,7 @@ linux_working_dir() {
 }
 
 linux_deb_install() {
+  client_lock_acquire || exit 1
   sudo_check
   linux_working_dir
   lc01=$(printf "%s" \
@@ -865,7 +1413,7 @@ linux_deb_install() {
   }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
-  [[ -f "${xpuiBak}" ]] && sudo rm "${xpuiBak}" 2>/dev/null
+  [[ -f "${xpuiBak}" || -f "${xpuiBak}.info" ]] && sudo rm -f -- "${xpuiBak}" "${xpuiBak}.info" 2>/dev/null
   [[ -d "${xpuiDir}" ]] && sudo rm -rf "${xpuiDir}" 2>/dev/null
   sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || {
     sudo apt-get -f install -y &>/dev/null || {
@@ -881,10 +1429,12 @@ linux_deb_install() {
   printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
   rm "${workDir}/${fileVar}" 2>/dev/null
   clientVer=$(echo "${fileVar}" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
+  detectedClientVer=$(dpkg-query -W -f='${Version}' spotify-client 2>/dev/null | perl -ne '/(1(?:\.[0-9]+){3})/ && print $1')
   unset notInstalled versionFailed
 }
 
 macos_client_install() {
+  client_lock_acquire || exit 1
   local downloadPath="${HOME}/Downloads/${fileVar}" stagedApp
   [[ ! -w "${installPath}" ]] && {
     echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
@@ -926,31 +1476,12 @@ macos_client_install() {
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
     exit 1
   }
-  [[ -e "${appPath}" ]] && {
-    macInstallOld=$(mktemp -d "${installPath}/.spotx-previous.XXXXXXXX") || {
-      rm "${downloadPath}" 2>/dev/null
-      echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
-      exit 1
-    }
-    rmdir "${macInstallOld}" && macInstallOldMoved='true' && mv "${appPath}" "${macInstallOld}" || {
-      rm "${downloadPath}" 2>/dev/null
-      echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
-      exit 1
-    }
-  }
-  mv "${stagedApp}" "${appPath}" && macInstallCommitted='true' || {
-    [[ -n "${macInstallOld:-}" && -d "${macInstallOld}" && ! -e "${appPath}" ]] && mv "${macInstallOld}" "${appPath}"
-    rm "${downloadPath}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
-    exit 1
-  }
-  rm -rf "${macInstallTemp}"
-  [[ ! -d "${macInstallTemp}" ]] && unset macInstallTemp
-  [[ -n "${macInstallOld:-}" ]] && rm -rf "${macInstallOld}"
-  [[ -z "${macInstallOld:-}" || ! -d "${macInstallOld}" ]] && unset macInstallOld macInstallOldMoved macInstallCommitted
-  printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
+  macInstallTarget="${appPath}"
+  macInstallSource="${stagedApp}"
+  macos_bind_bundle "${stagedApp}"
   rm "${downloadPath}" && unset macDownloadPath
   clientVer=$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')
+  detectedClientVer=$(defaults read "${stagedApp}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -ne '/^(1(?:\.[0-9]+){3})/ && print $1')
   unset notInstalled versionFailed
 }
 
@@ -962,13 +1493,25 @@ run_install_check() {
 }
 
 macos_codesign() {
-  /usr/bin/xattr -cr "${appPath}" 2>/dev/null || {
+  local bundlePath="${targetAppPath:-${appPath}}" signingError
+  client_check_paths "${bundlePath}" "${bundlePath}/Contents/MacOS/Spotify" \
+    "${bundlePath}/Contents/Resources/Apps/xpui.spa" "${bundlePath}/Contents/MacOS/Spotify.bak" \
+    "${bundlePath}/Contents/Resources/Apps/xpui.bak" "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" || exit 1
+  [[ "${SPOTX_BUILD_MODE}" ]] || macos_check_bundle_links "${bundlePath}" || exit 1
+  sudo_run /usr/bin/xattr -cr "${bundlePath}" || {
     echo -e "\n${red}Error:${clr} Failed to clear Spotify security attributes. Exiting...\n" >&2
     exit 1
   }
-  [[ "${skipCodesign}" ]] && return
-  codesign -f --deep -s - "${appPath}" >/dev/null 2>&1 &&
-    codesign --verify --deep --strict "${appPath}" >/dev/null 2>&1 || {
+  [[ "${skipCodesign}" ]] && {
+    client_backup_record_update "${bundlePath}" "${bundlePath}/Contents/MacOS/Spotify.bak" "${bundlePath}/Contents/Resources/Apps/xpui.bak" || exit 1
+    return
+  }
+  [[ ! -f "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" ]] || linux_working_dir
+  signingError=$({ sudo_run codesign -f --deep -s - "${bundlePath}" &&
+    client_backup_record_update "${bundlePath}" "${bundlePath}/Contents/MacOS/Spotify.bak" "${bundlePath}/Contents/Resources/Apps/xpui.bak" &&
+    { [[ ! -f "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" ]] || sudo_run codesign -f -s - "${bundlePath}"; } &&
+    codesign --verify --deep --strict "${bundlePath}"; } 2>&1) || {
+    printf '%s\n' "${signingError}" >&2
     echo -e "\n${red}Error:${clr} Failed to codesign Spotify. Exiting...\n" >&2
     exit 1
   }
@@ -1015,31 +1558,68 @@ perlVar() {
   done
 }
 
+check_already_patched() {
+  [[ (-f "${appBak}" || -f "${xpuiBak}") && -z "${cleanAB}" && -z "${forceSpotx+x}" ]] || return 0
+  printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+  echo -e "\n${yellow}Warning:${clr} SpotX-Bash has already been installed." >&2
+  echo -e "Use the '-f' flag to force SpotX-Bash to run.\n" >&2
+  case "${platformType}" in
+    macOS)
+      macos_autoupdate_check || exit 1
+      [[ "${clearCache}" ]] && { stop_client; run_cache_check; } ;;
+    *) rm -rf "${xpuiDir}" 2>/dev/null ;;
+  esac
+  printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"
+  exit 0
+}
+
+client_spa_has_spotx() {
+  unzip -p "${xpuiSpa}" xpui.js xpui-snapshot.js 2>/dev/null | LC_ALL=C grep -Fq 'SpotX'
+}
+
 xpui_detect() {
-  [[ (-f "${appBak}" || -f "${xpuiBak}") && "${cleanAB}" ]] && {
-    backup_spotx || {
-      echo -e "\n${red}Error:${clr} Failed to create client backup. Exiting...\n" >&2
-      exit 1
+  [[ -f "${appBak}" || -f "${xpuiBak}" ]] && {
+    [[ "${cleanAB}" ]] && {
+      [[ -f "${appBak}" && -f "${xpuiBak}" ]] || {
+        [[ "${forceSpotx}" && ! -e "${xpuiBak}.info" && ! -L "${xpuiBak}.info" ]] && client_copy_files restore || {
+          printf '%s\n' 'Error: Existing backups could not be verified. Backups were preserved.' >&2
+          exit 1
+        }
+        printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+        return 0
+      }
+      client_check_backup_version inspect || {
+        printf '%s\n' 'Error: Existing backups could not be verified. Backups were preserved.' >&2
+        exit 1
+      }
+      [[ "${detectedClientVer}" && "${backupBuild}" != unknown && "${detectedClientVer}" != "${backupBuild}" ]] && {
+        client_spa_has_spotx && {
+          printf '%s\n' 'Error: Client versions differ, but the installed SPA still contains SpotX. Backups were preserved. Reinstall Spotify before patching.' >&2
+          exit 1
+        }
+        backup_spotx || { printf '%s\n' 'Error: Failed to refresh client backups.' >&2; exit 1; }
+        printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+        return 0
+      }
+      [[ "${forceSpotx}" || ( "${detectedClientVer}" && "${backupBuild}" == "${detectedClientVer}" ) ]] || {
+        client_check_backup_version >/dev/null 2>&1 && {
+          printf '%s\n' 'Error: A client update could not be confirmed. Backups were preserved. Use -f to restore and repatch the existing backup, or reinstall Spotify.' >&2
+        } || {
+          printf '%s\n' 'Error: Existing backups could not be matched to this client. Backups were preserved. Replace Spotify, then run SpotX-Bash before opening it.' >&2
+        }
+        exit 1
+      }
     }
-    printf "\xE2\x9C\x94\x20\x43\x72\x65\x61\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    return
-  }
-  [[ (-f "${appBak}" || -f "${xpuiBak}") && "${forceSpotx}" ]] && {
-    { [[ ! -f "${appBak}" ]] || atomic_copy "${appBak}" "${appBinary}"; } &&
-      { [[ ! -f "${xpuiBak}" ]] || atomic_copy "${xpuiBak}" "${xpuiSpa}"; } || {
-      echo -e "\n${red}Error:${clr} Failed to restore client backup. Exiting...\n" >&2
-      exit 1
+    [[ "${cleanAB}" || "${forceSpotx}" ]] && {
+      client_copy_files restore || { printf '%s\n' 'Error: Failed to restore client backups. Backups were preserved.' >&2; exit 1; }
+      printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
+      return 0
     }
-    printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x26\x20\x72\x65\x73\x74\x6F\x72\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    return
+    check_already_patched
   }
-  [[ (-f "${appBak}" || -f "${xpuiBak}") && -z "${forceSpotx+x}" ]] && {
-    rm -rf "${xpuiDir}" 2>/dev/null
-    xpuiSkip='true'
-    printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x62\x61\x63\x6B\x75\x70\n"
-    echo -e "\n${yellow}Warning:${clr} SpotX-Bash has already been installed." >&2
-    echo -e "Use the '-f' flag to force SpotX-Bash to run.\n" >&2
-    return
+  client_spa_has_spotx && {
+    printf '%s\n' 'Error: SpotX was detected in the installed SPA without a usable backup. Reinstall Spotify before patching.' >&2
+    exit 1
   }
   backup_spotx || {
     echo -e "\n${red}Error:${clr} Failed to create client backup. Exiting...\n" >&2
@@ -1121,6 +1701,7 @@ xpui_open() {
       echo -e "${red}Error:${clr} Empty client version\n" >&2
       exit 1
     }
+    [[ -z "${clientVer}" ]] || detectedClientVer="${clientVer}"
     [[ -z "${clientVer}" ]] && {
       clientVer="${sxbVer}"
       unknownVer='true'
@@ -1136,18 +1717,21 @@ xpui_open() {
     [[ -z "${unknownVer+x}" ]] && (( $(ver "${clientVer}") > $(ver "${sxbVer}") )) && printf "\xE2\x9C\x94\x20\x44\x65\x74\x65\x63\x74\x65\x64\x20\x53\x70\x6F\x74\x69\x66\x79\x20${red}${clientVer}${clr}\n"
   }
   grep -Fq "SpotX" "${xpuiJs}" && {
-    rm -rf "${xpuiBak}" "${xpuiDir}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Detected SpotX-Bash but no backup file! Reinstall client. Exiting...\n" >&2
+    rm -rf "${xpuiDir}" 2>/dev/null
+    echo -e "\n${red}Error:${clr} Detected SpotX-Bash in client content. Backups were preserved. Reinstall client. Exiting...\n" >&2
     exit 1
   }
 }
 
 run_core_start() {
+  client_lock_acquire || exit 1
   final_setup_check
+  [[ "${platformType}" == "macOS" ]] && check_already_patched
   check_write_permission "${appPath}" "${appBinary}" "${xpuiPath}" "${xpuiSpa}"
-  [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_stage_prepare
+  [[ "${platformType}" == "macOS" ]] && { macos_recovery_begin || exit 1; }
+  [[ "${stagedInstall}" ]] && protected_stage_prepare
+  [[ "${platformType}" == "Linux" ]] && check_already_patched
   xpui_detect
-  [[ "${xpuiSkip}" ]] && { printf "\xE2\x9C\x94\x20\x46\x69\x6E\x69\x73\x68\x65\x64\n\n"; exit 0; }
   xpui_open
   (($(ver "${clientVer}") > $(ver "1.2.56.9999"))) && vendorXpuiJs="${xpuiJs}"
 }
@@ -1229,15 +1813,20 @@ run_finish() {
   [[ ! -d "${spaTempDir}" ]] && unset spaTempDir
   rm -rf "${xpuiDir}"
   unset xpuiTempCreated
-  [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && protected_commit || {
-    [[ "${platformType}" == "Linux" && "${stagedInstall}" ]] && {
-      echo -e "\n${red}Error:${clr} Failed to install patched client. Original files restored.\n" >&2
+  [[ "${platformType}" != Linux ]] || \
+    client_backup_record_update "${appPath}" "${appBak}" "${xpuiBak}" || exit 1
+  [[ "${stagedInstall}" ]] && {
+    protected_commit || {
+      echo -e "\n${red}Error:${clr} Failed to install patched client. See the error above.\n" >&2
       exit 1
     }
   }
   [[ "${platformType}" == "macOS" ]] && {
     macos_codesign
+    macos_recovery_finish || exit 1
+    run_cache_check
   }
+  return 0
 }
 
 perlVar="perl -0777pi -w -e"
@@ -1608,7 +2197,7 @@ run_prepare
 run_uninstall_check
 run_interactive_check
 run_install_check
-run_cache_check
+[[ "${platformType}" == "Linux" ]] && run_cache_check
 run_core_start
 run_patches
 run_finish
