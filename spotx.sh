@@ -194,7 +194,7 @@ macos_requirements_check() {
     exit 1
   }
   [[ -z "${skipCodesign+x}" ]] && {
-    command -v codesign >/dev/null || {
+    [[ -x /usr/bin/codesign ]] || {
       echo -e "\n${red}Error:${clr} codesign command not found.\nInstall Xcode Command Line Tools then try again.\n\nEnter the following command in Terminal to install:\n${yellow}xcode-select --install${clr}\n" >&2
       exit 1
     }
@@ -643,7 +643,7 @@ macos_recovery_valid() {
     "${macRecoveryDir:-}" == "${macRecoveryTarget%/*}/.spotx-recovery."* && \
     -d "${macRecoveryDir}" && ! -L "${macRecoveryDir}" && \
     -f "${macRecoveryDir}/owner" && ! -L "${macRecoveryDir}/owner" ]] || return 1
-  [[ "$(stat -f '%d:%i' "${macRecoveryDir}")" == "${macRecoveryIdentity}" && \
+  [[ "$(/usr/bin/stat -f '%d:%i' "${macRecoveryDir}")" == "${macRecoveryIdentity}" && \
     "$(cat "${macRecoveryDir}/owner")" == "${runtimeToken}:$$:${macRecoveryTarget}" ]]
 }
 
@@ -668,7 +668,7 @@ macos_recovery_begin() {
   macRecoveryFingerprint=$(macos_source_fingerprint) || return 1
   macRecoveryDir=$(sudo_run mktemp -d "${macRecoveryTarget%/*}/.spotx-recovery.XXXXXXXX") || return 1
   sudo_run chown "${EUID}:$(id -g)" "${macRecoveryDir}" || return 1
-  macRecoveryIdentity=$(stat -f '%d:%i' "${macRecoveryDir}") || return 1
+  macRecoveryIdentity=$(/usr/bin/stat -f '%d:%i' "${macRecoveryDir}") || return 1
   printf '%s\n' "${runtimeToken}:$$:${macRecoveryTarget}" > "${macRecoveryDir}/owner" || return 1
   sudo_run cp -a -- "${appPath}" "${macRecoveryDir}/Spotify.app" || return 1
   macRecoveryReady='true'
@@ -681,8 +681,8 @@ macos_recovery_discard() {
   local error
   error=$(sudo_run rm -rf -- "${macRecoveryDir}/Spotify.app" "${macRecoveryDir}/original.app" "${macRecoveryDir}/failed.app" 2>&1) || {
     macos_recovery_valid || return 1
-    error=$({ sudo_run chflags -R -P nouchg,nouappnd "${macRecoveryDir}" &&
-      sudo_run chmod -RP -N "${macRecoveryDir}" &&
+    error=$({ sudo_run /usr/bin/chflags -R -P nouchg,nouappnd "${macRecoveryDir}" &&
+      sudo_run /bin/chmod -RP -N "${macRecoveryDir}" &&
       sudo_run rm -rf -- "${macRecoveryDir}/Spotify.app" "${macRecoveryDir}/original.app" "${macRecoveryDir}/failed.app"; } 2>&1) || {
       printf '%s\n' "${error%%$'\n'*}" >&2
       printf 'Could not remove the transaction directory: %s\n' "${macRecoveryDir}" >&2
@@ -709,7 +709,7 @@ macos_recovery_finish() {
     return 1
   }
   local error
-  macRecoveryCandidateIdentity=$(stat -f '%d:%i' "${macRecoveryDir}/Spotify.app") || return 1
+  macRecoveryCandidateIdentity=$(/usr/bin/stat -f '%d:%i' "${macRecoveryDir}/Spotify.app") || return 1
   stop_client
   macos_autoupdate_check || return 1
   [[ ! -e "${macRecoveryTarget}" && ! -L "${macRecoveryTarget}" ]] || {
@@ -729,7 +729,7 @@ macos_recovery_finish() {
     }
   }
   macos_rename_bundle "${macRecoveryDir}/Spotify.app" "${macRecoveryTarget}" || return 1
-  [[ "${skipCodesign}" ]] || codesign --verify --deep --strict "${macRecoveryTarget}" || return 1
+  [[ "${skipCodesign}" ]] || /usr/bin/codesign --verify --deep --strict "${macRecoveryTarget}" || return 1
   macRecoveryCommitted='true'
   [[ "${stagedInstall}" ]] && targetAppPath="${macRecoveryTarget}" || macos_bind_bundle "${macRecoveryTarget}"
   unset xpuiTempCreated
@@ -743,7 +743,7 @@ macos_recovery_restore() {
   [[ "${macRecoveryCommitted:-}" ]] && { macos_recovery_discard; return; }
   [[ ! -e "${macRecoveryTarget}" && ! -L "${macRecoveryTarget}" ]] || {
     [[ -n "${macRecoveryCandidateIdentity:-}" && ! -L "${macRecoveryTarget}" && \
-      "$(stat -f '%d:%i' "${macRecoveryTarget}")" == "${macRecoveryCandidateIdentity}" ]] || {
+      "$(/usr/bin/stat -f '%d:%i' "${macRecoveryTarget}")" == "${macRecoveryCandidateIdentity}" ]] || {
       [[ ! -d "${macRecoveryDir}/original.app" ]] || {
         printf 'Another operation placed a bundle at %s. It was left in place. The previous bundle is retained at %s/original.app.\n' \
           "${macRecoveryTarget}" "${macRecoveryDir}" >&2
@@ -751,7 +751,7 @@ macos_recovery_restore() {
       }
     }
     [[ -z "${macRecoveryCandidateIdentity:-}" || -L "${macRecoveryTarget}" || \
-      "$(stat -f '%d:%i' "${macRecoveryTarget}")" != "${macRecoveryCandidateIdentity}" ]] || \
+      "$(/usr/bin/stat -f '%d:%i' "${macRecoveryTarget}")" != "${macRecoveryCandidateIdentity}" ]] || \
       macos_rename_bundle "${macRecoveryTarget}" "${macRecoveryDir}/failed.app" || return 1
   }
   [[ ! -d "${macRecoveryDir}/original.app" ]] || {
@@ -960,7 +960,7 @@ protected_prepare_file() {
       macOS)
         sudo_run chmod u+w "${tempFile}" &&
           sudo_run tee "${tempFile}" < "${source}" >/dev/null &&
-          sudo_run chmod "$(stat -f '%Lp' "${reference}")" "${tempFile}" ;;
+          sudo_run chmod "$(/usr/bin/stat -f '%Lp' "${reference}")" "${tempFile}" ;;
       *)
         sudo_run chmod u+w -- "${tempFile}" &&
           sudo_run cp -- "${source}" "${tempFile}" &&
@@ -1507,10 +1507,10 @@ macos_codesign() {
     return
   }
   [[ ! -f "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" ]] || linux_working_dir
-  signingError=$({ sudo_run codesign -f --deep -s - "${bundlePath}" &&
+  signingError=$({ sudo_run /usr/bin/codesign -f --deep -s - "${bundlePath}" &&
     client_backup_record_update "${bundlePath}" "${bundlePath}/Contents/MacOS/Spotify.bak" "${bundlePath}/Contents/Resources/Apps/xpui.bak" &&
-    { [[ ! -f "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" ]] || sudo_run codesign -f -s - "${bundlePath}"; } &&
-    codesign --verify --deep --strict "${bundlePath}"; } 2>&1) || {
+    { [[ ! -f "${bundlePath}/Contents/Resources/Apps/xpui.bak.info" ]] || sudo_run /usr/bin/codesign -f -s - "${bundlePath}"; } &&
+    /usr/bin/codesign --verify --deep --strict "${bundlePath}"; } 2>&1) || {
     printf '%s\n' "${signingError}" >&2
     echo -e "\n${red}Error:${clr} Failed to codesign Spotify. Exiting...\n" >&2
     exit 1
