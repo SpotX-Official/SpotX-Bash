@@ -564,6 +564,28 @@ macos_check_bundle_links() {
   ' "$@"
 }
 
+client_sha256() {
+  local hash
+  if [[ "${platformType}" == macOS ]]; then
+    sudo_run perl -MDigest::SHA -e '
+      my $s = Digest::SHA->new(256);
+      if (@ARGV) { open my $f, "<", $ARGV[0] or die "$ARGV[0]: $!\n"; $s->addfile($f); }
+      else { $s->addfile(*STDIN); }
+      print $s->hexdigest;
+    ' "$@"
+  else
+    command -v sha256sum >/dev/null || {
+      printf '%s\n' 'Error: sha256sum command not found. Install coreutils, then try again.' >&2
+      return 1
+    }
+    hash=$(sudo_run sha256sum -- "$@") || return 1
+    hash=${hash#\\}
+    hash=${hash%% *}
+    [[ "${hash}" =~ ^[0-9a-f]{64}$ ]] || return 1
+    printf '%s' "${hash}"
+  fi
+}
+
 client_lock_acquire() {
   local target targets key lock existing held
   [[ "${platformType}" == macOS ]] && {
@@ -586,7 +608,7 @@ client_lock_acquire() {
     held=''
     for existing in "${clientLockTargets[@]}"; do [[ "${existing}" == "${target}" ]] && held='true'; done
     [[ "${held}" ]] && continue
-    key=$(printf '%s' "${target}" | perl -MDigest::SHA=sha256_hex -0777ne 'print sha256_hex($_)') || return 1
+    key=$(printf '%s' "${target}" | client_sha256) || return 1
     lock="/tmp/spotx-client-${key}.lock"
     (umask 077; mkdir "${lock}") 2>/dev/null || {
       printf 'Error: Another SpotX-Bash run may be using this installation. Lock: %s\n' "${lock}" >&2
@@ -1080,16 +1102,11 @@ atomic_copy() {
 }
 
 client_backup_record_data() {
-  sudo_run perl -MDigest::SHA -e '
-    my ($binary, $spa, $version) = @ARGV;
-    $version =~ /\A(?:1(?:\.[0-9]+){3}(?:\.g[0-9a-f]+)?|unknown)\z/
-      or die "Error: Invalid backup build identity.\n";
-    print "spotx-backup-v1\n$version\n";
-    for my $path ($binary, $spa) {
-      open my $f, "<", $path or die "$path: $!\n";
-      print Digest::SHA->new(256)->addfile($f)->hexdigest, "\n";
-    }
-  ' "$1" "$2" "${3:-unknown}"
+  local binaryHash spaHash
+  perl -e '$ARGV[0] =~ /\A(?:1(?:\.[0-9]+){3}(?:\.g[0-9a-f]+)?|unknown)\z/
+    or die "Error: Invalid backup build identity.\n"' "${3:-unknown}" || return 1
+  binaryHash=$(client_sha256 "$1") && spaHash=$(client_sha256 "$2") || return 1
+  printf 'spotx-backup-v1\n%s\n%s\n%s\n' "${3:-unknown}" "${binaryHash}" "${spaHash}"
 }
 
 client_backup_record_update() {
@@ -1195,7 +1212,7 @@ uninstall_spotx() {
 }
 
 client_check_backup_version() {
-  local backupVersion currentVersion="${detectedClientVer:-unknown}"
+  local backupVersion binaryHash spaHash currentVersion="${detectedClientVer:-unknown}"
   backupBuild=''
   unzip -tqq "${xpuiBak}" || {
     printf '%s\n' 'Error: The SPA backup is not a valid archive. Backups were preserved.' >&2
@@ -1203,22 +1220,19 @@ client_check_backup_version() {
   }
   [[ ! -e "${xpuiBak}.info" && ! -L "${xpuiBak}.info" ]] || {
     client_check_paths "${appPath}" "${appBak}" "${xpuiBak}" "${xpuiBak}.info" || return 1
-    backupVersion=$(perl -MDigest::SHA -e '
-      my ($info, $binary, $spa) = @ARGV;
+    binaryHash=$(client_sha256 "${appBak}") && spaHash=$(client_sha256 "${xpuiBak}") || return 1
+    backupVersion=$(perl -e '
+      my ($info, @hashes) = @ARGV;
       open my $f, "<", $info or die "$info: $!\n";
       my @record = <$f>; chomp @record;
       @record == 4 && $record[0] eq "spotx-backup-v1"
         && $record[1] =~ /\A(?:1(?:\.[0-9]+){3}(?:\.g[0-9a-f]+)?|unknown)\z/
         && $record[2] =~ /\A[0-9a-f]{64}\z/ && $record[3] =~ /\A[0-9a-f]{64}\z/
         or die "Error: Invalid backup record. Backups were preserved.\n";
-      for my $i (0, 1) {
-        my $path = ($binary, $spa)[$i];
-        open my $data, "<", $path or die "$path: $!\n";
-        Digest::SHA->new(256)->addfile($data)->hexdigest eq $record[$i+2]
-          or die "Error: Backup contents do not match their record. Backups were preserved.\n";
-      }
+      $hashes[0] eq $record[2] && $hashes[1] eq $record[3]
+        or die "Error: Backup contents do not match their record. Backups were preserved.\n";
       print $record[1];
-    ' "${xpuiBak}.info" "${appBak}" "${xpuiBak}") || return 1
+    ' "${xpuiBak}.info" "${binaryHash}" "${spaHash}") || return 1
     backupBuild="${backupVersion}"
     [[ "${1:-}" == inspect ]] && return 0
     [[ "${currentVersion}" == unknown || "${backupVersion}" == unknown || "${backupVersion}" == "${currentVersion}" ]] || {
