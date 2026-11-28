@@ -23,7 +23,7 @@ esac
 runtime_state_init() {
   unset macRecoveryDir macRecoveryTarget macRecoveryReady macRecoveryIdentity macRecoveryOriginal \
     macRecoveryCommitted macRecoveryFingerprint macRecoveryCandidateIdentity macWriteProbe \
-    macInstallTemp macInstallTarget macInstallSource macDownloadPath workDir copyTempDir spaTempDir xpuiTempCreated \
+    macInstallTemp macInstallTarget macInstallSource workDir copyTempDir spaTempDir xpuiTempCreated \
     targetAppPath targetAppBinary targetAppBak targetXpuiPath targetXpuiSpa targetXpuiBak \
     protectedInstall stagedInstall cleanAB detectedClientVer backupBuild backupCreated clientLockPaths clientLockTargets
   runtimePid=$$
@@ -48,7 +48,7 @@ show_help() {
 --installmac           : install latest supported client version [macOS]
 -l, --lyricsbg         : set lyrics background color to black
 --nocolor              : remove colors from SpotX-Bash output
---noninteractive       : disable interactive prompts
+--noninteractive       : skip prompts (authorize required sudo access in advance)
 -o, --oldui            : use old home screen UI
 -p, --premium          : paid premium-tier subscriber
 -P <path>              : set path to client
@@ -216,7 +216,9 @@ macos_set_version() {
 macos_legacy_notice() {
   local reason="${1}"
   [[ "${reason}" == "toohigh" ]] && { echo -e "\n${red}Error:${clr} v${clientVer} not supported on macOS ${macOSVer} (max: ${legacyMaxVer}).\nInstall a compatible Spotify version manually, then re-run SpotX-Bash.\n" >&2; exit 1; }
-  echo -e "\n${yellow}Warning:${clr} Automatic Spotify installation is unavailable on macOS ${macOSVer}.\nInstall a compatible Spotify version manually (max: ${legacyMaxVer}), then re-run SpotX-Bash.\n"
+  local notice="Automatic Spotify installation is unavailable on macOS ${macOSVer}.\nInstall a compatible Spotify version manually (max: ${legacyMaxVer}), then re-run SpotX-Bash."
+  [[ "${installMac}" ]] && { echo -e "\n${red}Error:${clr} ${notice}\n" >&2; exit 1; }
+  echo -e "\n${yellow}Warning:${clr} ${notice}\n"
   exit 0
 }
 
@@ -333,15 +335,30 @@ linux_deb_prepare() {
   installOutput="${installPath}"
   linux_client_variant
   installClient='true'
-  grab1=$(echo "=0TP3xEd5ITW1tmbaBnUzI2dO5GT1o0MiBDbyMmdChlW5lTeMZTTINGMShUY" | rev | base64 --decode | base64 --decode)
-  [[ "${stableVar}" ]] && \
-  grab2=$(echo "==QP9cWS6ZlMahGdykFaCFDTwkFRaRnRXxUNKhVW1xWbZZXVXpVeadFT1lTbiZXVHJWaGdEZ6lTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode) || \
-  grab2=$(echo "==QPJl3YsR2VZJnTXlVU5MkTyE1VihWMTVWeG1mYwpkMMxmVtNWbxkmY2VjMM5WNXFGMOhlWwkTejBjTYF2axgVTpZUbj5GdIpUaBl3Y0F0UjRXQDJWeWNTW" | rev | base64 --decode | base64 --decode)
-  grab3=$(eval "${grab2}" 2>/dev/null)
-  grab4=$(echo "${grab3}" | grep -m 1 "^Filename: " | perl -pe 's/^Filename: //')
-  grab5="${grab1}${grab4}"
-  fileVar=$(basename "${grab4}")
-  downloadVer=$(echo "${fileVar}" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
+  local suite='testing' keyFingerprint='E1096BCBFF6D418796DE78515384CE82BA52C83A'
+  [[ "${stableVar}" ]] && suite='stable'
+  linux_working_dir
+  local aptDir="${workDir}/apt"
+  mkdir -p "${aptDir}/keys" "${aptDir}/lists/partial" || exit 1
+  debAptOptions=(
+    -o "Dir::Etc::sourcelist=${aptDir}/spotify.list" -o 'Dir::Etc::sourceparts=-'
+    -o "Dir::Etc::trustedparts=${aptDir}/keys" -o 'Dir::Etc::trusted='
+    -o "Dir::State::lists=${aptDir}/lists" -o 'Dir::State::status=/dev/null'
+    -o 'Dir::Cache::pkgcache=' -o 'Dir::Cache::srcpkgcache='
+    -o 'APT::Architecture=amd64' -o 'APT::Default-Release=' -o 'APT::Get::AllowUnauthenticated=false'
+  )
+  printf 'deb [arch=amd64 signed-by=%s] https://repository.spotify.com %s non-free\n' "${keyFingerprint}" "${suite}" > "${aptDir}/spotify.list" &&
+    curl -q -fsSL --retry 3 "https://download.spotify.com/debian/pubkey_${keyFingerprint: -16}.gpg" -o "${aptDir}/keys/spotify.gpg" &&
+    apt-get "${debAptOptions[@]}" update >/dev/null || {
+    echo -e "\n${red}Error:${clr} Could not load Spotify's signed ${suite} repository.\n" >&2
+    exit 1
+  }
+  debVersion=$(LC_ALL=C apt-cache "${debAptOptions[@]}" policy spotify-client:amd64 | awk '$1 == "Candidate:" { print $2; exit }')
+  [[ "${debVersion#*:}" =~ ^(1\.[0-9]+\.[0-9]+\.[0-9]+)([.+~-]|$) ]] || {
+    echo -e "\n${red}Error:${clr} Spotify client version not found in the ${suite} repository.\n" >&2
+    exit 1
+  }
+  downloadVer="${BASH_REMATCH[1]}"
   [[ ! -f "${installPath}/Apps/xpui.spa" ]] && notInstalled='true'
 }
 
@@ -352,6 +369,8 @@ linux_no_client() {
   }
   command -v apt >/dev/null && {
     interactiveMode='true'
+    notInstalled='true'
+    prepare_interactive_input || exit 1
     linux_deb_prepare
     echo -e "\n${yellow}Warning:${clr} Client not found. Starting interactive mode...\n" >&2
     return
@@ -893,28 +912,14 @@ check_write_permission() {
     [[ ! -w "${writePath}" || ( "${platformType}" == "Linux" && -f "${path_to_check}" && ! -O "${path_to_check}" ) ]] && {
       stagedInstall='true'
       protectedInstall='true'
-      ((EUID == 0)) && continue
-      command -v sudo >/dev/null || {
-        echo -e "\n${red}Error:${clr} sudo command not found. Install sudo or run this script as root.\n" >&2
-        exit 1
-      }
-      sudo -n true 2>/dev/null || {
-        echo -e "${yellow}Warning:${clr} SpotX-Bash does not have write permission in client directory.\nRequesting sudo permission..." >&2
-        sudo -v || {
-          echo -e "\n${red}Error:${clr} SpotX-Bash was not given sudo permission. Exiting...\n" >&2
-          exit 1
-        }
-      }
+      sudo_check 'SpotX-Bash needs sudo permission to modify this Spotify installation.'
     }
   done
 }
 
 sudo_run() {
-  if ((EUID == 0)) || [[ -z "${protectedInstall+x}" ]]; then
-    command "$@"
-  else
-    sudo "$@"
-  fi
+  [[ "${protectedInstall+x}" ]] && ((EUID != 0)) || { command "$@"; return; }
+  sudo ${nonInteractive:+-n} "$@"
 }
 
 protected_stage_copy() {
@@ -1361,11 +1366,16 @@ run_interactive_check() {
 }
 
 sudo_check() {
+  ((EUID == 0)) && return 0
   command -v sudo &> /dev/null || {
     echo -e "\n${red}Error:${clr} sudo command not found. Install sudo or run this script as root.\n" >&2
     exit 1
   }
   sudo -n true &> /dev/null || {
+    [[ "${nonInteractive}" ]] && {
+      echo -e "\n${red}Error:${clr} Sudo permission is required. Authorize sudo before running with '--noninteractive'.\n" >&2
+      exit 1
+    }
     printf '%s\n%s\n' "${1:-This script requires sudo permission to install the client.}" 'Please enter your sudo password...'
     sudo -v || {
       echo -e "\n${red}Error:${clr} Failed to obtain sudo permission. Exiting...\n" >&2
@@ -1380,7 +1390,6 @@ cleanup_temp_dirs() {
   macos_probe_cleanup
   macos_recovery_restore
   [[ -n "${macInstallTemp:-}" && -d "${macInstallTemp}" && "${macInstallTemp%/*}" == "${installPath:-}" && "${macInstallTemp##*/}" == .spotx-install.* ]] && rm -rf -- "${macInstallTemp}"
-  [[ -n "${macDownloadPath:-}" && -f "${macDownloadPath}" && "${macDownloadPath%/*}" == "${HOME}/Downloads" && "${macDownloadPath##*/}" == "${fileVar:-}" ]] && rm -f -- "${macDownloadPath}"
   [[ -n "${workDir:-}" && -d "${workDir}" && "${workDir##*/}" == spotx-bash.* ]] && rm -rf -- "${workDir}"
   [[ -n "${copyTempDir:-}" && -d "${copyTempDir}" && "${copyTempDir##*/}" == *.spotx.* ]] && rm -rf -- "${copyTempDir}"
   [[ -n "${spaTempDir:-}" && -d "${spaTempDir}" && "${spaTempDir##*/}" == .spotx-spa.* ]] && rm -rf -- "${spaTempDir}"
@@ -1405,78 +1414,68 @@ linux_working_dir() {
 linux_deb_install() {
   client_lock_acquire || exit 1
   sudo_check
-  linux_working_dir
-  lc01=$(printf "%s" \
-    "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlb" \
-    "ixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUe" \
-    "ld2dIZ2ZJNlTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0U" \
-    "jRXQDJWeWNTW" \
-    | rev | base64 --decode | base64 --decode)
-  lc02=$(printf "%s" \
-    "9ADSJdTRElEMsdUZsJUePlXWpB1ZJlmYjJ1VaNHbXlVbCNkWolzRiVHZzI2aCNEZ" \
-    "1Z1VhNnTFlUOKhkYqRHSKZTSzIWeKhlU5I1ValHdIpUd4xWSnV1VMdGOHFmaWdUS" \
-    "3I0QmhjQplUMJdVW5R2RKlWQplUOKhVWXZ1RiBnWyU2a4MlZ5x2RSJnSzI2M0hkS" \
-    "pFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EWalHZyIWeChFT" \
-    "0F0UjRXQDJWeWNTW" \
-    | rev | base64 --decode | base64 --decode)
-  eval "${lc01}"; eval "${lc02}"
-  dpkg-deb --info "${workDir}/${fileVar}" &>/dev/null || {
-    rm "${workDir}/${fileVar}" 2>/dev/null
-    echo -e "\n${red}Error:${clr} Downloaded client package is corrupt or incomplete. Exiting...\n" >&2
+  local protectedInstall='true' aptEnv=() aptFlags=()
+  [[ "${nonInteractive}" ]] && {
+    aptEnv=(DEBIAN_FRONTEND=noninteractive)
+    aptFlags=(-o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold')
+  }
+  (cd "${workDir}" && apt-get "${debAptOptions[@]}" download "spotify-client:amd64=${debVersion}") || {
+    echo -e "\n${red}Error:${clr} Could not download the verified Spotify package.\n" >&2
+    exit 1
+  }
+  local packages=("${workDir}"/spotify-client_*_amd64.deb)
+  [[ "${#packages[@]}" == 1 && -f "${packages[0]}" ]] || {
+    echo -e "\n${red}Error:${clr} Expected one downloaded Spotify package.\n" >&2
     exit 1
   }
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
-  [[ -f "${appBak}" ]] && sudo rm "${appBak}" 2>/dev/null
-  [[ -f "${xpuiBak}" || -f "${xpuiBak}.info" ]] && sudo rm -f -- "${xpuiBak}" "${xpuiBak}.info" 2>/dev/null
-  [[ -d "${xpuiDir}" ]] && sudo rm -rf "${xpuiDir}" 2>/dev/null
-  sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || {
-    sudo apt-get -f install -y &>/dev/null || {
-      rm "${workDir}/${fileVar}" 2>/dev/null
-      echo -e "\n${red}Error:${clr} Failed to install missing dependencies. Exiting...\n" >&2
-      exit 1
-    }
-  } && sudo dpkg -i "${workDir}/${fileVar}" &>/dev/null || {
-    rm "${workDir}/${fileVar}" 2>/dev/null
+  sudo_run env "${aptEnv[@]}" apt-get "${aptFlags[@]}" -y --reinstall --allow-downgrades --no-remove --no-install-recommends install "${packages[0]}" || {
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
     exit 1
   }
-  printf "\xE2\x9C\x94\x20\x49\x6E\x73\x74\x61\x6C\x6C\x65\x64\x20\x69\x6E\x20'"${installOutput}"'\n"
-  rm "${workDir}/${fileVar}" 2>/dev/null
-  clientVer=$(echo "${fileVar}" | perl -pe 's/^[a-z-]+_([0-9.]+)\.g.*/\1/')
-  detectedClientVer=$(dpkg-query -W -f='${Version}' spotify-client 2>/dev/null | perl -ne '/(1(?:\.[0-9]+){3})/ && print $1')
+  [[ "$(dpkg-query -W -f='${db:Status-Status} ${Version}' spotify-client:amd64)" == "installed ${debVersion}" ]] || {
+    echo -e "\n${red}Error:${clr} Could not confirm the requested Spotify package was installed.\n" >&2
+    exit 1
+  }
+  [[ -e "${appBak}" || -e "${xpuiBak}" || -e "${xpuiBak}.info" || -d "${xpuiDir}" ]] && {
+    (set -o pipefail
+      [[ -f "${appBinary}" && -s "${appBinary}" && -x "${appBinary}" && -f "${xpuiSpa}" ]] && cd / &&
+        dpkg-query --control-show spotify-client:amd64 md5sums |
+          awk -v bin="${appBinary#/}" -v spa="${xpuiSpa#/}" '
+            length($1) != 32 || $1 !~ /^[0-9a-f]+$/ { next }
+            $2 == bin { binary++; print }
+            $2 == spa { archive++; print }
+            END { exit !(binary == 1 && archive == 1) }' |
+          md5sum -c - >/dev/null
+    ) || { printf '%s\n' 'Error: Could not verify the installed Spotify files. Backups were preserved.' >&2; exit 1; }
+  }
+  sudo_run rm -f -- "${appBak}" "${xpuiBak}" "${xpuiBak}.info" &&
+    sudo_run rm -rf -- "${xpuiDir}" || { echo -e "${red}Error:${clr} Could not clean the previous installation." >&2; exit 1; }
+  printf "\xE2\x9C\x94 Installed in '%s'\n" "${installOutput}"
+  clientVer="${downloadVer}"
+  detectedClientVer="${downloadVer}"
   unset notInstalled versionFailed
 }
 
 macos_client_install() {
   client_lock_acquire || exit 1
-  local downloadPath="${HOME}/Downloads/${fileVar}" stagedApp
+  local downloadPath stagedApp
   [[ ! -w "${installPath}" ]] && {
     echo -e "${red}Error:${clr} SpotX-Bash does not have write permission in ${installOutput}.\nConfirm permissions or set custom install path to writable directory.\n" >&2
     exit 1
   }
-  mc01=$(printf "%s" \
-    "=kjQ59EeBNEZwhGWad2cq1Ub0QUSpRzRYtmVHJGcG1mWnF1VZZHetJ2M5ckWnFlb" \
-    "ixGbHJGRCNlZ5hnMZdjUp9Ue502Y5ZVVmtmVtN2NSlmYjp0QJxWMDlkdoJTWsJUe" \
-    "ld2dIZ2ZJlXTpZUbj5mUpl0Z3dkYxUjMMJjVHpldBlnY0FUejRXQTNFdBlmW0F0U" \
-    "jRXQDJWeWNTW" \
-    | rev | base64 --decode | base64 --decode)
-  mc02=$(printf "%s" \
-    "=0TPRZ2ZzRVTnFFWhRjVHl0NJpmSrEUaJVHeGpFb4dVYop1RJtmRyI2c1IDZ2J1R" \
-    "JBTNXpFc4JTUnBjbjNnTyU2avp2Y2pkbjZUMIpFbKNTZrRzRYlWQTpFdBlnYv50V" \
-    "ad2cIlEO4hUSp1kaZhmSzo1aJNUSpBjbjhmWWp1cs1mW3IVeMpnUXlld41mYzkzR" \
-    "SZXVVRFUoVkSpFUeiRXQT50Zr52YwYVbjRHMDlEdBlXU0FUaaRXQpNGaKdFT65EW" \
-    "alHZyIWeChFT0F0UjRXQDJWeWNTW" \
-    | rev | base64 --decode | base64 --decode)
-  eval "${mc01}"; eval "${mc02}"
+  linux_working_dir
+  downloadPath="${workDir}/spotify.tbz"
+  curl -q --progress-bar -f -C - --retry 5 -o "${downloadPath}" "${grab3}" || {
+    echo -e "\n${red}Error:${clr} Client download failed\n" >&2
+    exit 1
+  }
   tar -tf "${downloadPath}" >/dev/null 2>&1 || {
-    rm "${downloadPath}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Downloaded client archive is corrupt or incomplete. Exiting...\n" >&2
     exit 1
   }
-  macDownloadPath="${downloadPath}"
   printf "\xE2\x9C\x94\x20\x44\x6F\x77\x6E\x6C\x6F\x61\x64\x65\x64\x20\x61\x6E\x64\x20\x69\x6E\x73\x74\x61\x6C\x6C\x69\x6E\x67\x20\x53\x70\x6F\x74\x69\x66\x79\n"
   macInstallTemp=$(mktemp -d "${installPath}/.spotx-install.XXXXXXXX") || {
-    rm "${downloadPath}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
     exit 1
   }
@@ -1486,14 +1485,13 @@ macos_client_install() {
     [[ -x "${stagedApp}/Contents/MacOS/Spotify" ]] &&
     [[ -f "${stagedApp}/Contents/Info.plist" ]] &&
     [[ -f "${stagedApp}/Contents/Resources/Apps/xpui.spa" ]] || {
-    rm "${downloadPath}" 2>/dev/null
     echo -e "\n${red}Error:${clr} Client install failed. Exiting...\n" >&2
     exit 1
   }
   macInstallTarget="${appPath}"
   macInstallSource="${stagedApp}"
   macos_bind_bundle "${stagedApp}"
-  rm "${downloadPath}" && unset macDownloadPath
+  rm -f -- "${downloadPath}"
   clientVer=$(echo "${fileVar}" | perl -ne '/te-(.*)\..*\./ && print "$1"')
   detectedClientVer=$(defaults read "${stagedApp}/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null | perl -ne '/^(1(?:\.[0-9]+){3})/ && print $1')
   unset notInstalled versionFailed

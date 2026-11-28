@@ -17,6 +17,7 @@ Helper options:
 --channel <channel>   : select stable, candidate, beta, or edge with '--download'
 --download            : download Spotify snap instead of using a local source
 --help                : print this help message
+--noninteractive      : require sudo authorization in advance and skip prompts
 --output-dir <path>   : set output directory for '--build-only'
 --restore             : restore official store-managed Spotify snap
 --snap-file <path>    : use a specific local Spotify snap
@@ -50,43 +51,46 @@ has_spotx_marker() {
   return 1
 }
 
+fetch_snap_assertions() {
+  local revision declaration snapId storeRev
+  revision=$(LC_ALL=C timeout 20 snap known --remote snap-revision snap-sha3-384="$1") || return 1
+  snapId=$(awk '$1 == "snap-id:" { print $2; exit }' <<< "${revision}")
+  [[ -n "${snapId}" ]] || return 1
+  declaration=$(LC_ALL=C timeout 20 snap known --remote snap-declaration series=16 snap-id="${snapId}") &&
+    printf '%s\n\n%s\n' "${declaration}" "${revision}" > "${workDir}/remote.assert" &&
+    "${sudoCmd[@]}" snap ack "${workDir}/remote.assert" >/dev/null 2>&1 && return 0
+  storeRev=$(awk '$1 == "snap-revision:" { print $2; exit }' <<< "${revision}")
+  [[ "${storeRev}" =~ ^[1-9][0-9]*$ ]] || return 1
+  (cd "${workDir}" && snap download spotify --revision="${storeRev}" --basename=official >/dev/null) &&
+    rm -f -- "${workDir}/official.snap" &&
+    "${sudoCmd[@]}" snap ack "${workDir}/official.assert"
+}
+
 verify_snap_source() {
-  local snap="${1}" digest size assertion assertedDigest snapId assertedSize declaration declaredName candidate remoteAssertion
-  digest=$("${sudoCmd[@]}" snap info --verbose "${snap}" 2>/dev/null | awk '$1 == "sha3-384:" { print $2; exit }')
-  size=$("${sudoCmd[@]}" stat -c '%s' "${snap}")
+  local snap="${1}" digest size assertion assertedDigest snapId assertedSize declaration declaredName candidate
+  digest=$(LC_ALL=C "${sudoCmd[@]}" snap info --verbose "${snap}" 2>/dev/null | awk '$1 == "sha3-384:" { print $2 }') || return 1
+  size=$("${sudoCmd[@]}" stat -c '%s' "${snap}") || return 1
   [[ -n "${digest}" ]] || return 1
-  assertion=$(LC_ALL=C snap known snap-revision snap-sha3-384="${digest}" 2>/dev/null || true)
+  assertion=$(LC_ALL=C snap known snap-revision snap-sha3-384="${digest}" 2>/dev/null) || assertion=''
   [[ -n "${assertion}" ]] || {
     for candidate in "$(dirname -- "${sourceSnap}")"/*.assert; do
       [[ -f "${candidate}" ]] || continue
       "${sudoCmd[@]}" grep -Fqx "snap-sha3-384: ${digest}" "${candidate}" 2>/dev/null || continue
       "${sudoCmd[@]}" snap ack "${candidate}" >/dev/null 2>&1 || continue
-      assertion=$(LC_ALL=C snap known snap-revision snap-sha3-384="${digest}" 2>/dev/null || true)
+      assertion=$(LC_ALL=C snap known snap-revision snap-sha3-384="${digest}" 2>/dev/null) || assertion=''
       [[ -n "${assertion}" ]] && break
     done
   }
   [[ -n "${assertion}" ]] || {
-    remoteAssertion=$(LC_ALL=C timeout 20 snap known --remote snap-revision snap-sha3-384="${digest}" 2>/dev/null || true)
-    [[ -n "${remoteAssertion}" ]] && {
-      printf '%s\n' "${remoteAssertion}" > "${workDir}/snap-revision.assert"
-      "${sudoCmd[@]}" snap ack "${workDir}/snap-revision.assert" >/dev/null 2>&1 || true
-      assertion="${remoteAssertion}"
-    }
+    fetch_snap_assertions "${digest}" &&
+      assertion=$(LC_ALL=C snap known snap-revision snap-sha3-384="${digest}") || return 1
   }
   [[ -n "${assertion}" ]] || return 1
   assertedDigest=$(awk '$1 == "snap-sha3-384:" { print $2; exit }' <<< "${assertion}")
   snapId=$(awk '$1 == "snap-id:" { print $2; exit }' <<< "${assertion}")
   assertedSize=$(awk '$1 == "snap-size:" { print $2; exit }' <<< "${assertion}")
   [[ "${assertedDigest}" == "${digest}" && -n "${snapId}" && "${assertedSize}" == "${size}" ]] || return 1
-  declaration=$(LC_ALL=C snap known snap-declaration snap-id="${snapId}" 2>/dev/null || true)
-  [[ -n "${declaration}" ]] || {
-    remoteAssertion=$(LC_ALL=C timeout 20 snap known --remote snap-declaration snap-id="${snapId}" 2>/dev/null || true)
-    [[ -n "${remoteAssertion}" ]] && {
-      printf '%s\n' "${remoteAssertion}" > "${workDir}/snap-declaration.assert"
-      "${sudoCmd[@]}" snap ack "${workDir}/snap-declaration.assert" >/dev/null 2>&1 || true
-      declaration="${remoteAssertion}"
-    }
-  }
+  declaration=$(LC_ALL=C snap known snap-declaration series=16 snap-id="${snapId}") || return 1
   declaredName=$(awk '$1 == "snap-name:" { print $2; exit }' <<< "${declaration}")
   [[ "${declaredName}" == "spotify" ]] || return 1
   sourceVerified='true'
@@ -102,6 +106,7 @@ allowUnverified=''
 downloadSnap=''
 buildOnly=''
 restoreSnap=''
+nonInteractive=''
 channelSet=''
 outputSet=''
 outputDir="${PWD}"
@@ -122,6 +127,7 @@ while (($#)); do
       ;;
     --download) downloadSnap='true' ;;
     --help) show_help; exit 0 ;;
+    --noninteractive) nonInteractive='true' ;;
     --output-dir)
       (($# > 1)) || error "'--output-dir' requires an argument."
       outputDir="${2}"
@@ -165,32 +171,29 @@ done
 }
 [[ "${snapChannel}" =~ ^(stable|candidate|beta|edge)$ ]] || error "Invalid snap channel '${snapChannel}'."
 
-scriptDir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-spotxScript="${scriptDir}/spotx.sh"
-[[ -f "${spotxScript}" ]] || error "spotx.sh not found beside spotx-snap.sh."
+command -v snap >/dev/null || error "snap command not found."
+snap version >/dev/null 2>&1 || error "snapd is not available."
+[[ "${restoreSnap}" ]] || {
+  scriptDir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+  spotxScript="${scriptDir}/spotx.sh"
+  [[ -f "${spotxScript}" ]] || error "spotx.sh not found beside spotx-snap.sh."
 
-for requirement in snap unsquashfs unzip zip perl awk grep sha256sum mktemp getent install stat timeout; do
-  command -v "${requirement}" >/dev/null || error "${requirement} command not found."
-done
-
-runUser="${SUDO_USER:-$(id -un)}"
-runUid=$(id -u "${runUser}")
-runGid=$(id -g "${runUser}")
-runHome=$(getent passwd "${runUser}" 2>/dev/null | awk -F: 'NR == 1 { print $6 }')
-[[ -n "${runHome}" ]] || runHome="${HOME}"
-cacheBase="${runHome}/.cache/spotx-bash"
-cacheDir="${cacheBase}/snap"
+  for requirement in unsquashfs unzip zip perl awk grep sha256sum mktemp getent install stat timeout; do
+    command -v "${requirement}" >/dev/null || error "${requirement} command not found."
+  done
+}
 sudoCmd=()
 ((EUID == 0)) || {
   command -v sudo >/dev/null || error "sudo command not found."
   sudo -n true >/dev/null 2>&1 || {
+    [[ -z "${nonInteractive}" ]] || error "Authorize sudo before running with '--noninteractive'."
     echo -e "This script requires sudo permission to preserve and install snap files.\nPlease enter your sudo password..."
     sudo -v || error "Failed to obtain sudo permission."
   }
   sudoCmd=(sudo)
+  [[ -z "${nonInteractive}" ]] || sudoCmd+=(-n)
 }
 
-snap version >/dev/null 2>&1 || error "snapd is not available."
 [[ "${restoreSnap}" ]] && {
   LC_ALL=C snap list spotify >/dev/null 2>&1 || error "Spotify snap is not installed."
   command pkill -9 '[sS]potify' 2>/dev/null || true
@@ -200,6 +203,15 @@ snap version >/dev/null 2>&1 || error "snapd is not available."
   echo -e "${green}Finished${clr}\n"
   exit 0
 }
+
+runUser="${SUDO_USER:-$(id -un)}"
+runUid=$(id -u "${runUser}")
+runGid=$(id -g "${runUser}")
+runHome=$(getent passwd "${runUser}" 2>/dev/null | awk -F: 'NR == 1 { print $6 }')
+[[ -n "${runHome}" ]] || runHome="${HOME}"
+cacheBase="${runHome}/.cache/spotx-bash"
+cacheDir="${cacheBase}/snap"
+[[ -z "${nonInteractive}" ]] || spotxArgs+=(--noninteractive)
 
 tempBase="${TMPDIR:-/tmp}"
 tempBase="${tempBase%/}"
@@ -265,7 +277,7 @@ sourceVerified=''
 verify_snap_source "${sourceCopy}" && {
   echo -e "${green}Verified official Spotify snap${clr}\n"
 } || {
-  [[ "${allowUnverified}" ]] || error "Selected snap could not be authenticated as an official Spotify snap.\nConnect to the internet, place its matching assertion beside it or use '--allow-unverified'."
+  [[ "${allowUnverified}" ]] || error "Selected snap could not be authenticated as an official Spotify snap.\nUse '--download', place its matching assertion bundle beside it or use '--allow-unverified'."
   echo -e "${yellow}Warning:${clr} Selected snap could not be authenticated and will not be cached.\n"
 }
 "${sudoCmd[@]}" unsquashfs -d "${snapRoot}" "${sourceCopy}" >/dev/null
